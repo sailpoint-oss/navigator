@@ -70,57 +70,45 @@ runner.RunAll(ctx, g, uri)
 
 ## Package Layout
 
-| Package | Import Path | Description |
-|---------|-------------|-------------|
-| Core | `github.com/LukasParke/navigator` | All types, parsing, indexing, single-file and cross-file resolution, workspace infrastructure, and the project facade. |
-| Graph | `github.com/LukasParke/navigator/graph` | LSP-grade workspace graph management with pipeline processing and snapshot support. |
+| Package | Import Path                             | Description                                                                                                            |
+| ------- | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Core    | `github.com/LukasParke/navigator`       | All types, parsing, indexing, single-file and cross-file resolution, workspace infrastructure, and the project facade. |
+| Graph   | `github.com/LukasParke/navigator/graph` | LSP-grade workspace graph management with pipeline processing and snapshot support.                                    |
 
 ### Core Package Highlights
 
-| Area | Key Types / Functions |
-|------|----------------------|
-| Parsing | `Parse`, `ParseURI` (standalone, no CGO) / `ParseContent`, `ParseTree` (tree-sitter) |
+| Area           | Key Types / Functions                                                                |
+| -------------- | ------------------------------------------------------------------------------------ |
+| Parsing        | `Parse`, `ParseURI` (standalone, no CGO) / `ParseContent`, `ParseTree` (tree-sitter) |
 | Document Model | `Document`, `PathItem`, `Operation`, `Schema`, `Components`, `Parameter`, `Response` |
-| Indexing | `Index`, `PointerIndex`, `IndexCache` |
-| Resolution | `ResolveRef` (local), `CrossFileResolver` (cross-file) |
-| Workspace | `Project`, `Workspace`, `FileGraph`, `Discovery` |
-| Sources | `DocumentSource`, `FilesystemSource`, `MemorySource` |
-| Locations | `Loc`, `Range`, `Position`, `SemanticNode` |
+| Indexing       | `Index`, `PointerIndex`, `IndexCache`                                                |
+| Resolution     | `ResolveRef` (local), `CrossFileResolver` (cross-file)                               |
+| Workspace      | `Project`, `Workspace`, `FileGraph`, `Discovery`                                     |
+| Sources        | `DocumentSource`, `FilesystemSource`, `MemorySource`                                 |
+| Locations      | `Loc`, `Range`, `Position`, `SemanticNode`                                           |
 
 ## Tree-sitter vs Standalone Parsing
 
 Navigator provides two parsing paths:
 
-| | Standalone (`Parse` / `ParseURI`) | Tree-sitter (`ParseContent` / `ParseTree`) |
-|---|---|---|
-| **CGO required** | No | Yes |
-| **Source locations** | Approximate (yaml.v3 line/column) | Precise (tree-sitter byte offsets) |
-| **`idx.Tree()`** | `nil` | `*tree_sitter.Tree` |
-| **`idx.SemanticRoot()`** | `nil` | `*SemanticNode` |
-| **Best for** | CLI tools, CI, contract testing | LSP, linting with precise diagnostics |
+|                          | Standalone (`Parse` / `ParseURI`) | Tree-sitter (`ParseContent` / `ParseTree`) |
+| ------------------------ | --------------------------------- | ------------------------------------------ |
+| **CGO required**         | No                                | Yes                                        |
+| **Source locations**     | Approximate (yaml.v3 line/column) | Precise (tree-sitter byte offsets)         |
+| **`idx.Tree()`**         | `nil`                             | `*tree_sitter.Tree`                        |
+| **`idx.SemanticRoot()`** | `nil`                             | `*SemanticNode`                            |
+| **Best for**             | CLI tools, CI, contract testing   | LSP, linting with precise diagnostics      |
 
 Both parsers produce logically equivalent `*Index` output. The same operations, schemas, refs, and document structure are present regardless of parser.
 
 ## Dependencies
 
-| Dependency | Purpose |
-|------------|---------|
+| Dependency                                                               | Purpose                                   |
+| ------------------------------------------------------------------------ | ----------------------------------------- |
 | [tree-sitter-openapi](https://github.com/LukasParke/tree-sitter-openapi) | Tree-sitter grammar for OpenAPI YAML/JSON |
-| [go-tree-sitter](https://github.com/tree-sitter/go-tree-sitter) | Tree-sitter Go runtime |
-| [fsnotify](https://github.com/fsnotify/fsnotify) | Filesystem watching |
-| [yaml.v3](https://gopkg.in/yaml.v3) | Standalone YAML parsing (no CGO) |
-
-## Consumer Guide
-
-See [CONSUMING.md](CONSUMING.md) for the full integration handbook covering:
-
-- Consumer profiles for simple single-file parsing, multi-file projects, and full LSP workspace graphs
-- Complete code examples for each pattern
-- Break-glass access at every layer
-- Concurrency and thread safety guarantees
-- URI handling conventions
-- Error handling and edge cases
-- Type migration tables from telescope internals
+| [go-tree-sitter](https://github.com/tree-sitter/go-tree-sitter)          | Tree-sitter Go runtime                    |
+| [fsnotify](https://github.com/fsnotify/fsnotify)                         | Filesystem watching                       |
+| [yaml.v3](https://gopkg.in/yaml.v3)                                      | Standalone YAML parsing (no CGO)          |
 
 ## Releasing
 
