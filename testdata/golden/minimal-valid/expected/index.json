@@ -1,0 +1,13 @@
+{
+  "version": "3.0",
+  "doctype": "root",
+  "operation_count": 1,
+  "schema_count": 1,
+  "ref_count": 0,
+  "operation_ids": [
+    "sayHello"
+  ],
+  "schema_names": [
+    "Greeting"
+  ]
+}

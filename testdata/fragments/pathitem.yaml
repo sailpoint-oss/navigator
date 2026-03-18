@@ -1,0 +1,10 @@
+get:
+  operationId: listThings
+  responses:
+    "200":
+      description: OK
+post:
+  operationId: createThing
+  responses:
+    "201":
+      description: Created

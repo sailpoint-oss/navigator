@@ -1,0 +1,25 @@
+openapi: "3.0.3"
+info:
+  title: Diamond API
+  version: "1.0.0"
+paths:
+  /orders:
+    get:
+      operationId: listOrders
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas/Order.yaml"
+  /invoices:
+    get:
+      operationId: listInvoices
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "./schemas/Invoice.yaml"

@@ -1,0 +1,18 @@
+openapi: "3.0.3"
+info:
+  title: Minimal Valid
+  version: "1.0.0"
+paths:
+  /hello:
+    get:
+      operationId: sayHello
+      responses:
+        "200":
+          description: Success
+components:
+  schemas:
+    Greeting:
+      type: object
+      properties:
+        message:
+          type: string

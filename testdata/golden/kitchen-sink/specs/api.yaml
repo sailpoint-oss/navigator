@@ -1,0 +1,97 @@
+openapi: "3.1.0"
+info:
+  title: Kitchen Sink API
+  description: Tests all major OpenAPI features
+  version: "2.0.0"
+  contact:
+    name: Test
+    email: test@example.com
+  license:
+    name: MIT
+servers:
+  - url: https://api.example.com
+    description: Production
+tags:
+  - name: users
+    description: User management
+  - name: items
+    description: Item management
+paths:
+  /users:
+    get:
+      operationId: listUsers
+      tags: [users]
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+    post:
+      operationId: createUser
+      tags: [users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "201":
+          description: Created
+  /items:
+    get:
+      operationId: listItems
+      tags: [items]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Item"
+components:
+  schemas:
+    User:
+      type: object
+      required: [name]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+    Item:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        owner:
+          $ref: "#/components/schemas/User"
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+security:
+  - BearerAuth: []

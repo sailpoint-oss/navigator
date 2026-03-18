@@ -1,0 +1,6 @@
+type: object
+properties:
+  id:
+    type: integer
+  customer:
+    $ref: "../shared/Customer.yaml"

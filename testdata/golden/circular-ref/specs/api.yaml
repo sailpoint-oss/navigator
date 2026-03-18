@@ -1,0 +1,26 @@
+openapi: "3.0.3"
+info:
+  title: Circular
+  version: "1.0.0"
+paths:
+  /tree:
+    get:
+      operationId: getTree
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TreeNode"
+components:
+  schemas:
+    TreeNode:
+      type: object
+      properties:
+        value:
+          type: string
+        children:
+          type: array
+          items:
+            $ref: "#/components/schemas/TreeNode"
