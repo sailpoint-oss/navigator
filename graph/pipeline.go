@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	navigator "github.com/LukasParke/navigator"
+	navigator "github.com/sailpoint-oss/navigator"
 )
 
 // Stage defines a processing stage in the pipeline.

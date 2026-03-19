@@ -4,7 +4,7 @@ import (
 	"sync"
 	"time"
 
-	navigator "github.com/LukasParke/navigator"
+	navigator "github.com/sailpoint-oss/navigator"
 )
 
 // ChangeAction describes what kind of graph mutation occurred.

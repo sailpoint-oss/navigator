@@ -38,7 +38,7 @@
 //
 // Full workspace graph (telescope pattern):
 //
-//	import "github.com/LukasParke/navigator/graph"
+//	import "github.com/sailpoint-oss/navigator/graph"
 //	ws := navigator.NewWorkspace()
 //	g := graph.New(ws.Cache, ws.Graph)
 //	g.AddSource(navigator.NewMemorySource(uri, content))
@@ -57,6 +57,6 @@
 // The main navigator package contains all types, parsing, indexing, single-file
 // and cross-file resolution, workspace infrastructure, and the project facade.
 //
-// The [github.com/LukasParke/navigator/graph] sub-package adds LSP-grade
+// The [github.com/sailpoint-oss/navigator/graph] sub-package adds LSP-grade
 // workspace graph management with pipeline processing and snapshot support.
 package navigator

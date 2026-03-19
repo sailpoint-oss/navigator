@@ -60,7 +60,7 @@ func TestMemorySource_Watch(t *testing.T) {
 	src := NewMemorySource("file:///watch.yaml", []byte("initial"))
 
 	called := make(chan struct{}, 1)
-	src.Watch(context.Background(), func() {
+	src.Watch(context.Background(), func(uri string, event WatchEvent) {
 		called <- struct{}{}
 	})
 

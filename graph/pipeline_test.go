@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	navigator "github.com/LukasParke/navigator"
+	navigator "github.com/sailpoint-oss/navigator"
 )
 
 func TestPipelineRunner_DefaultStages(t *testing.T) {

@@ -4,8 +4,8 @@ import (
 	"strings"
 	"unsafe"
 
-	ts_yaml "github.com/LukasParke/tree-sitter-openapi/bindings/go/openapi"
-	ts_json "github.com/LukasParke/tree-sitter-openapi/bindings/go/openapi_json"
+	ts_yaml "github.com/sailpoint-oss/tree-sitter-openapi/bindings/go/openapi"
+	ts_json "github.com/sailpoint-oss/tree-sitter-openapi/bindings/go/openapi_json"
 	tree_sitter "github.com/tree-sitter/go-tree-sitter"
 )
 

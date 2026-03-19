@@ -1,14 +1,14 @@
 # Navigator
 
-[![Go Reference](https://pkg.go.dev/badge/github.com/LukasParke/navigator.svg)](https://pkg.go.dev/github.com/LukasParke/navigator)
-[![CI](https://github.com/LukasParke/navigator/actions/workflows/ci.yml/badge.svg)](https://github.com/LukasParke/navigator/actions/workflows/ci.yml)
+[![Go Reference](https://pkg.go.dev/badge/github.com/sailpoint-oss/navigator.svg)](https://pkg.go.dev/github.com/sailpoint-oss/navigator)
+[![CI](https://github.com/sailpoint-oss/navigator/actions/workflows/ci.yml/badge.svg)](https://github.com/sailpoint-oss/navigator/actions/workflows/ci.yml)
 
 Uniform OpenAPI file handling for the entire workspace toolchain. Navigator parses, indexes, and resolves `$ref`s across single-file and massively multi-file OpenAPI specifications (Swagger 2.0, OpenAPI 3.0--3.2).
 
 ## Installation
 
 ```bash
-go get github.com/LukasParke/navigator
+go get github.com/sailpoint-oss/navigator
 ```
 
 ## Quick Start
@@ -16,7 +16,7 @@ go get github.com/LukasParke/navigator
 ### Parse a Single File
 
 ```go
-import navigator "github.com/LukasParke/navigator"
+import navigator "github.com/sailpoint-oss/navigator"
 
 idx := navigator.Parse(content)
 if idx == nil {
@@ -48,8 +48,8 @@ fmt.Printf("Resolved to %s (pointer: %s)\n", result.TargetURI, result.Pointer)
 
 ```go
 import (
-    navigator "github.com/LukasParke/navigator"
-    navgraph  "github.com/LukasParke/navigator/graph"
+    navigator "github.com/sailpoint-oss/navigator"
+    navgraph  "github.com/sailpoint-oss/navigator/graph"
 )
 
 ws := navigator.NewWorkspace()
@@ -72,8 +72,8 @@ runner.RunAll(ctx, g, uri)
 
 | Package | Import Path                             | Description                                                                                                            |
 | ------- | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| Core    | `github.com/LukasParke/navigator`       | All types, parsing, indexing, single-file and cross-file resolution, workspace infrastructure, and the project facade. |
-| Graph   | `github.com/LukasParke/navigator/graph` | LSP-grade workspace graph management with pipeline processing and snapshot support.                                    |
+| Core    | `github.com/sailpoint-oss/navigator`       | All types, parsing, indexing, single-file and cross-file resolution, workspace infrastructure, and the project facade. |
+| Graph   | `github.com/sailpoint-oss/navigator/graph` | LSP-grade workspace graph management with pipeline processing and snapshot support.                                    |
 
 ### Core Package Highlights
 
@@ -105,7 +105,7 @@ Both parsers produce logically equivalent `*Index` output. The same operations, 
 
 | Dependency                                                               | Purpose                                   |
 | ------------------------------------------------------------------------ | ----------------------------------------- |
-| [tree-sitter-openapi](https://github.com/LukasParke/tree-sitter-openapi) | Tree-sitter grammar for OpenAPI YAML/JSON |
+| [tree-sitter-openapi](https://github.com/sailpoint-oss/tree-sitter-openapi) | Tree-sitter grammar for OpenAPI YAML/JSON |
 | [go-tree-sitter](https://github.com/tree-sitter/go-tree-sitter)          | Tree-sitter Go runtime                    |
 | [fsnotify](https://github.com/fsnotify/fsnotify)                         | Filesystem watching                       |
 | [yaml.v3](https://gopkg.in/yaml.v3)                                      | Standalone YAML parsing (no CGO)          |

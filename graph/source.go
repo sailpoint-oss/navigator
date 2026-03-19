@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	navigator "github.com/LukasParke/navigator"
+	navigator "github.com/sailpoint-oss/navigator"
 )
 
 // LSPSource adapts an external LSP document provider into navigator's
@@ -42,7 +42,7 @@ func (s *LSPSource) Read(_ context.Context) ([]byte, int64, error) {
 	return []byte(text), int64(version), nil
 }
 
-func (s *LSPSource) Watch(_ context.Context, _ func()) func() {
+func (s *LSPSource) Watch(_ context.Context, _ func(string, navigator.WatchEvent)) func() {
 	return func() {}
 }
 
