@@ -317,12 +317,30 @@ func (tp *treeParser) parseInfoSN(sn *SemanticNode) *Info {
 	if sn == nil || sn.Kind != NodeMapping {
 		return nil
 	}
-	return &Info{
-		Title:       snStr(sn, "title"),
-		Description: snDescription(sn),
-		Version:     snStr(sn, "version"),
-		Loc:         locFromSN(sn),
+	info := &Info{
+		Title:          snStr(sn, "title"),
+		Description:    snDescription(sn),
+		TermsOfService: snStr(sn, "termsOfService"),
+		Version:        snStr(sn, "version"),
+		Loc:            locFromSN(sn),
 	}
+	if contactSN := sn.Get("contact"); contactSN != nil && contactSN.Kind == NodeMapping {
+		info.Contact = &Contact{
+			Name:  snStr(contactSN, "name"),
+			URL:   snStr(contactSN, "url"),
+			Email: snStr(contactSN, "email"),
+			Loc:   locFromSN(contactSN),
+		}
+	}
+	if licenseSN := sn.Get("license"); licenseSN != nil && licenseSN.Kind == NodeMapping {
+		info.License = &License{
+			Name:       snStr(licenseSN, "name"),
+			Identifier: snStr(licenseSN, "identifier"),
+			URL:        snStr(licenseSN, "url"),
+			Loc:        locFromSN(licenseSN),
+		}
+	}
+	return info
 }
 
 func (tp *treeParser) parseServersSN(sn *SemanticNode) []Server {
@@ -472,16 +490,7 @@ func (tp *treeParser) parseRequestBodySN(sn *SemanticNode) *RequestBody {
 		Ref:         snStr(sn, "$ref"),
 		Loc:         locFromSN(sn),
 	}
-	if contentSN := sn.Get("content"); contentSN != nil && contentSN.Kind == NodeMapping {
-		rb.Content = make(map[string]*MediaType)
-		for mt, mtSN := range contentSN.Children {
-			mediaType := &MediaType{Loc: locFromSN(mtSN)}
-			if schemaSN := mtSN.Get("schema"); schemaSN != nil {
-				mediaType.Schema = tp.parseSchemaSN(schemaSN)
-			}
-			rb.Content[mt] = mediaType
-		}
-	}
+	rb.Content = tp.parseContentMediaTypesSN(sn.Get("content"))
 	return rb
 }
 
@@ -494,17 +503,53 @@ func (tp *treeParser) parseResponseSN(sn *SemanticNode) *Response {
 		Ref:         snStr(sn, "$ref"),
 		Loc:         locFromSN(sn),
 	}
-	if contentSN := sn.Get("content"); contentSN != nil && contentSN.Kind == NodeMapping {
-		r.Content = make(map[string]*MediaType)
-		for mt, mtSN := range contentSN.Children {
-			mediaType := &MediaType{Loc: locFromSN(mtSN)}
-			if schemaSN := mtSN.Get("schema"); schemaSN != nil {
-				mediaType.Schema = tp.parseSchemaSN(schemaSN)
-			}
-			r.Content[mt] = mediaType
-		}
-	}
+	r.Content = tp.parseContentMediaTypesSN(sn.Get("content"))
 	return r
+}
+
+func (tp *treeParser) parseContentMediaTypesSN(contentSN *SemanticNode) map[string]*MediaType {
+	if contentSN == nil || contentSN.Kind != NodeMapping {
+		return nil
+	}
+	result := make(map[string]*MediaType)
+	for mt, mtSN := range contentSN.Children {
+		mediaType := &MediaType{Loc: locFromSN(mtSN)}
+		if schemaSN := mtSN.Get("schema"); schemaSN != nil {
+			mediaType.Schema = tp.parseSchemaSN(schemaSN)
+		}
+		if exSN := mtSN.Get("example"); exSN != nil {
+			mediaType.Example = snToNode(exSN)
+		}
+		if exsSN := mtSN.Get("examples"); exsSN != nil {
+			mediaType.Examples = tp.parseExamplesSN(exsSN)
+		}
+		result[mt] = mediaType
+	}
+	return result
+}
+
+func (tp *treeParser) parseExamplesSN(sn *SemanticNode) map[string]*Example {
+	if sn == nil || sn.Kind != NodeMapping {
+		return nil
+	}
+	examples := make(map[string]*Example)
+	for name, eSN := range sn.Children {
+		if eSN.Kind != NodeMapping {
+			continue
+		}
+		ex := &Example{
+			Summary:       snStr(eSN, "summary"),
+			Description:   snDescription(eSN),
+			ExternalValue: snStr(eSN, "externalValue"),
+			Ref:           snStr(eSN, "$ref"),
+			Loc:           locFromSN(eSN),
+		}
+		if valSN := eSN.Get("value"); valSN != nil {
+			ex.Value = snToNode(valSN)
+		}
+		examples[name] = ex
+	}
+	return examples
 }
 
 func (tp *treeParser) parseSchemaSN(sn *SemanticNode) *Schema {
@@ -556,6 +601,10 @@ func (tp *treeParser) parseSchemaSN(sn *SemanticNode) *Schema {
 		for _, item := range enumSN.Items {
 			s.Enum = append(s.Enum, item.StringValue())
 		}
+	}
+
+	if exSN := sn.Get("example"); exSN != nil {
+		s.Example = snToNode(exSN)
 	}
 
 	return s
@@ -739,6 +788,16 @@ func locFromSN(sn *SemanticNode) Loc {
 		l.Node = sn.CST
 	}
 	return l
+}
+
+func snToNode(sn *SemanticNode) *Node {
+	if sn == nil {
+		return nil
+	}
+	return &Node{
+		Value: sn.StringValue(),
+		Loc:   locFromSN(sn),
+	}
 }
 
 func snStr(sn *SemanticNode, key string) string {
