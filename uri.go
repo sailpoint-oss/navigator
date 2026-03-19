@@ -2,6 +2,7 @@ package navigator
 
 import (
 	"net/url"
+	"path"
 	"path/filepath"
 	"strings"
 )
@@ -22,7 +23,7 @@ func NormalizeURI(uri string) string {
 	u.Host = ""
 	u.RawQuery = ""
 	u.Fragment = ""
-	u.Path = filepath.Clean(u.Path)
+	u.Path = path.Clean(u.Path)
 	return u.String()
 }
 
@@ -52,11 +53,12 @@ func URIToPath(uri string) string {
 }
 
 // ResolveRelativeURI resolves a relative path against a base URI.
+// It operates on URI paths (forward-slash) rather than OS paths so the
+// result is correct on all platforms including Windows.
 func ResolveRelativeURI(baseURI, relPath string) string {
 	if strings.Contains(relPath, "://") {
 		return relPath
 	}
-	// Split off fragment from relPath
 	fragment := ""
 	if i := strings.Index(relPath, "#"); i >= 0 {
 		fragment = relPath[i:]
@@ -66,12 +68,18 @@ func ResolveRelativeURI(baseURI, relPath string) string {
 		return baseURI + fragment
 	}
 
-	basePath := URIToPath(baseURI)
-	baseDir := filepath.Dir(basePath)
-	resolved := filepath.Join(baseDir, relPath)
-	resolved = filepath.Clean(resolved)
+	u, err := url.Parse(baseURI)
+	if err != nil {
+		return baseURI + fragment
+	}
+	baseDir := path.Dir(u.Path)
+	resolved := path.Join(baseDir, relPath)
+	resolved = path.Clean(resolved)
 
-	return PathToURI(resolved) + fragment
+	u.Path = resolved
+	u.RawQuery = ""
+	u.Fragment = ""
+	return u.String() + fragment
 }
 
 // SplitRefURI splits a $ref value into its file URI and JSON pointer fragment.

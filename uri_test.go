@@ -1,6 +1,9 @@
 package navigator
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
 func TestPathToURI(t *testing.T) {
 	uri := PathToURI("/home/user/api.yaml")
@@ -75,6 +78,64 @@ func TestResolveRelativeURI_EmptyRel(t *testing.T) {
 	got := ResolveRelativeURI(base, "#/components/schemas/Pet")
 	if got != "file:///workspace/api.yaml#/components/schemas/Pet" {
 		t.Errorf("got %q", got)
+	}
+}
+
+func TestResolveRelativeURI_ParentDir(t *testing.T) {
+	base := "file:///workspace/api.yaml"
+	got := ResolveRelativeURI(base, "../common/error.yaml")
+	want := "file:///common/error.yaml"
+	if got != want {
+		t.Errorf("ResolveRelativeURI parent = %q, want %q", got, want)
+	}
+}
+
+func TestResolveRelativeURI_AbsoluteURL(t *testing.T) {
+	got := ResolveRelativeURI("file:///workspace/api.yaml", "https://example.com/schema.json")
+	if got != "https://example.com/schema.json" {
+		t.Errorf("absolute URL = %q", got)
+	}
+}
+
+func TestResolveRelativeURI_ForwardSlashes(t *testing.T) {
+	tests := []struct {
+		base string
+		rel  string
+		want string
+	}{
+		{"file:///workspace/api.yaml", "./schemas/user.yaml", "file:///workspace/schemas/user.yaml"},
+		{"file:///workspace/api.yaml", "../common/error.yaml", "file:///common/error.yaml"},
+		{"file:///a/b/c/api.yaml", "../../d.yaml", "file:///a/d.yaml"},
+		{"file:///workspace/api.yaml", "./schemas/user.yaml#/User", "file:///workspace/schemas/user.yaml#/User"},
+	}
+	for _, tt := range tests {
+		got := ResolveRelativeURI(tt.base, tt.rel)
+		if got != tt.want {
+			t.Errorf("ResolveRelativeURI(%q, %q) = %q, want %q", tt.base, tt.rel, got, tt.want)
+		}
+		if strings.Contains(got, "%5C") || strings.Contains(got, "\\") {
+			t.Errorf("result contains backslash: %q", got)
+		}
+	}
+}
+
+func TestNormalizeURI_NoBackslashes(t *testing.T) {
+	tests := []struct {
+		input string
+		want  string
+	}{
+		{"file:///home/user/./api.yaml", "file:///home/user/api.yaml"},
+		{"file:///home//user/api.yaml", "file:///home/user/api.yaml"},
+		{"file:///a/b/../c/api.yaml", "file:///a/c/api.yaml"},
+	}
+	for _, tt := range tests {
+		got := NormalizeURI(tt.input)
+		if got != tt.want {
+			t.Errorf("NormalizeURI(%q) = %q, want %q", tt.input, got, tt.want)
+		}
+		if strings.Contains(got, "%5C") || strings.Contains(got, "\\") {
+			t.Errorf("result contains backslash: %q", got)
+		}
 	}
 }
 
