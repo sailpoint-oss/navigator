@@ -15,6 +15,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Meta schemas (no drift)
+        run: |
+          bun install --frozen-lockfile
+          bun run schemas:build
+          git diff --exit-code schemas/meta/
+
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
@@ -24,3 +34,6 @@ jobs:
 
       - name: Test
         run: go test -race -count=1 ./...
+
+      - name: Build validation-preview
+        run: go build -o /dev/null ./cmd/validation-preview

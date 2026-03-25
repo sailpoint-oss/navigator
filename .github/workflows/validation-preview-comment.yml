@@ -1,0 +1,47 @@
+# Posts (and updates) a single PR comment with Markdown tables of navigator
+# diagnostics for every YAML file under testdata/.
+#
+# Same-repo PRs: works with default token permissions. Fork PRs: the repository
+# must allow "Workflow permissions" → read and write for GITHUB_TOKEN, or this
+# job may fail when updating the comment.
+name: Validation preview (PR comment)
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: validation-preview-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Meta schemas (same as CI)
+        run: |
+          bun install --frozen-lockfile
+          bun run schemas:build
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Generate Markdown report
+        run: go run ./cmd/validation-preview -root . -out validation-preview.md
+
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: navigator-validation-preview
+          path: validation-preview.md
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -5,8 +5,17 @@ import (
 )
 
 // Index provides fast lookups into a parsed OpenAPI document.
+//
+// Document may be nil when the source is not a YAML/JSON mapping (e.g. a bare
+// sequence or scalar). In that case Issues will contain a structural diagnostic
+// and the lookup maps will be empty. Callers should check IsOpenAPI before
+// assuming Document fields are populated.
 type Index struct {
 	Document         *Document
+	// Issues holds syntax, structural, and schema-shape diagnostics produced
+	// during parsing. Always populated when an Index is returned from any parse
+	// function; use Revalidate to re-run with custom ValidationOptions.
+	Issues           []Issue
 	Operations       map[string]*OperationRef   // operationId -> ref
 	OperationsByPath map[string][]OperationRef  // path template -> operations
 	Schemas          map[string]*Schema         // component name -> schema
@@ -141,6 +150,7 @@ func mapKeys[V any](m map[string]V) []string {
 // NewIndexFromDocument builds a fully indexed Index from an existing Document.
 // Useful when the Document was obtained from another source (e.g. a telescope
 // SDK Index) and you need navigator's ResolveRef and lookup methods.
+// Issues is always populated via default validation.
 func NewIndexFromDocument(doc *Document) *Index {
 	idx := newEmptyIndex()
 	idx.Document = doc
@@ -150,6 +160,7 @@ func NewIndexFromDocument(doc *Document) *Index {
 	idx.indexPaths()
 	idx.indexComponents()
 	idx.indexTags()
+	idx.applyDefaultValidation()
 	return idx
 }
 

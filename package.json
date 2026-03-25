@@ -1,0 +1,10 @@
+{
+  "name": "@sailpoint-oss/navigator-meta-schemas",
+  "private": true,
+  "scripts": {
+    "schemas:build": "bun run schemas/ts/build.ts"
+  },
+  "devDependencies": {
+    "zod": "^4.2.1"
+  }
+}

@@ -52,6 +52,29 @@
 // element. The standalone [Parse] and [ParseURI] functions use gopkg.in/yaml.v3
 // and require no CGO, making them suitable for CLI tools and CI environments.
 //
+// # Validation
+//
+// Every successful parse populates [Index.Issues] with [Issue] values covering
+// syntax (CST/yaml duplicate keys, tree-sitter ERROR nodes), structural OpenAPI
+// rules (root shape, info, paths, operations.responses), lightweight
+// schema-shaped checks (parameters, component schema types, security schemes),
+// and meta-schema validation (embedded Draft 2020-12 JSON Schemas for root vs
+// fragment documents via github.com/santhosh-tekuri/jsonschema/v6 with ECMA-262
+// pattern matching via github.com/dlclark/regexp2). Those JSON
+// files are generated from Zod 4 sources under schemas/ts/ (Telescope schema
+// tree in schemas/ts/openapi/, bun run schemas:build).
+// Meta-schema
+// runs on decoded source bytes, not the IR; [Issue] messages for [CategoryMeta]
+// are navigator-curated, not raw engine strings. Meta-schema is on by default;
+// set [ValidationOptions.SkipMetaSchema] to disable it. Indexes built without
+// source bytes (e.g. [NewIndexFromDocument]) skip the meta pass. Use
+// [Index.Revalidate] with [ValidationOptions] to re-run or tune passes.
+// Tree-sitter and standalone parsers produce equivalent structural and
+// schema-shape diagnostics.
+//
+// [Index.Document] may be nil when the source is not a YAML/JSON mapping;
+// callers should check [Index.IsOpenAPI] before accessing Document fields.
+//
 // # Package Layout
 //
 // The main navigator package contains all types, parsing, indexing, single-file
@@ -59,4 +82,7 @@
 //
 // The [github.com/sailpoint-oss/navigator/graph] sub-package adds LSP-grade
 // workspace graph management with pipeline processing and snapshot support.
+//
+// Directory cmd/validation-preview is a CLI that writes Markdown tables of
+// [Issue] lines for YAML under testdata/ (PR validation preview in CI).
 package navigator

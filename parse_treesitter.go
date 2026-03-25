@@ -20,7 +20,9 @@ func JSONLanguage() *tree_sitter.Language {
 }
 
 // ParseTree parses using an existing tree-sitter CST for full source locations
-// and break-glass access to tree-sitter nodes.
+// and break-glass access to tree-sitter nodes. Returns nil only when tree is
+// nil; otherwise the returned Index always has Issues populated. Document may
+// be nil when the root is not a mapping.
 func ParseTree(tree *tree_sitter.Tree, content []byte, uri string, format FileFormat) *Index {
 	if tree == nil {
 		return nil
@@ -54,10 +56,13 @@ func ParseTree(tree *tree_sitter.Tree, content []byte, uri string, format FileFo
 	idx.indexTags()
 	tp.collectRefs(root, idx, uri)
 
+	idx.applyDefaultValidation()
 	return idx
 }
 
 // ParseContent parses raw content using tree-sitter, creating the tree internally.
+// Returns nil only for empty input; the returned Index always has Issues populated.
+// Document may be nil when the root is not a mapping.
 func ParseContent(content []byte, uri string) *Index {
 	if len(content) == 0 {
 		return nil

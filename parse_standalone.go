@@ -10,6 +10,8 @@ import (
 
 // Parse parses raw YAML/JSON content into a fully indexed OpenAPI document.
 // Uses the standalone yaml.v3 parser (no CGO or tree-sitter required).
+// Returns nil when yaml.Unmarshal fails; otherwise Issues is always populated.
+// Document may be nil when the root is not a mapping.
 func Parse(content []byte) *Index {
 	return ParseURI("", content)
 }
@@ -20,6 +22,8 @@ func ParseAndIndex(content []byte) *Index {
 }
 
 // ParseURI is like Parse but associates a URI with the result for ref tracking.
+// Returns nil when yaml.Unmarshal fails; otherwise Issues is always populated.
+// Document may be nil when the root is not a mapping.
 func ParseURI(uri string, content []byte) *Index {
 	var root yaml.Node
 	if err := yaml.Unmarshal(content, &root); err != nil {
@@ -35,6 +39,7 @@ func ParseURI(uri string, content []byte) *Index {
 	idx.Format = DetectFormat(uri, content)
 
 	sp := &standaloneParser{root: &root, uri: uri}
+	idx.semanticRoot = shallowSemanticRoot(sp.docNode())
 	idx.Document = sp.parseDocument()
 	if idx.Document != nil {
 		idx.Version = idx.Document.ParsedVersion
@@ -45,6 +50,7 @@ func ParseURI(uri string, content []byte) *Index {
 	idx.indexTags()
 	sp.collectRefs(idx)
 
+	idx.applyDefaultValidation()
 	return idx
 }
 
@@ -911,6 +917,44 @@ func (sp *standaloneParser) docNode() *yaml.Node {
 		return sp.root.Content[0]
 	}
 	return sp.root
+}
+
+// shallowSemanticRoot builds a one-level-deep SemanticNode from a yaml.Node
+// root so that validateStructural can perform IR-type checks identically for
+// standalone and tree-sitter parses.
+func shallowSemanticRoot(node *yaml.Node) *SemanticNode {
+	if node == nil {
+		return nil
+	}
+	sn := &SemanticNode{Range: yamlLoc(node).Range}
+	switch node.Kind {
+	case yaml.MappingNode:
+		sn.Kind = NodeMapping
+		sn.Children = make(map[string]*SemanticNode, len(node.Content)/2)
+		for i := 0; i+1 < len(node.Content); i += 2 {
+			key, val := node.Content[i], node.Content[i+1]
+			child := &SemanticNode{
+				Key:   key.Value,
+				Range: yamlLoc(val).Range,
+			}
+			switch val.Kind {
+			case yaml.MappingNode:
+				child.Kind = NodeMapping
+			case yaml.SequenceNode:
+				child.Kind = NodeSequence
+			default:
+				child.Kind = NodeScalar
+				child.Value = val.Value
+			}
+			sn.Children[key.Value] = child
+		}
+	case yaml.SequenceNode:
+		sn.Kind = NodeSequence
+	default:
+		sn.Kind = NodeScalar
+		sn.Value = node.Value
+	}
+	return sn
 }
 
 // --- yaml.Node helpers ---
