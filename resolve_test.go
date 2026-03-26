@@ -89,6 +89,21 @@ func TestResolveRef_Operation(t *testing.T) {
 	}
 }
 
+func TestResolveRef_DeepSchemaProperty(t *testing.T) {
+	idx := mustParse(t, loadFixture(t, "single/minimal.yaml"))
+	val, err := idx.ResolveRef("#/components/schemas/Pet/properties/name")
+	if err != nil {
+		t.Fatal(err)
+	}
+	schema, ok := val.(*Schema)
+	if !ok {
+		t.Fatalf("expected *Schema, got %T", val)
+	}
+	if schema.Type != "string" {
+		t.Errorf("property schema type = %q, want %q", schema.Type, "string")
+	}
+}
+
 func TestResolveRef_Info(t *testing.T) {
 	idx := mustParse(t, loadFixture(t, "single/minimal.yaml"))
 	val, err := idx.ResolveRef("#/info")
@@ -101,6 +116,68 @@ func TestResolveRef_Info(t *testing.T) {
 	}
 	if info.Title != "Minimal API" {
 		t.Errorf("title = %q", info.Title)
+	}
+}
+
+func TestResolveRef_FragmentSchemaWholeFileAndProperty(t *testing.T) {
+	idx := ParseURI("file:///schemas/Pet.yaml", loadFixture(t, "multifile/v1/schemas/Pet.yaml"))
+	if idx == nil {
+		t.Fatal("ParseURI returned nil")
+	}
+
+	val, err := idx.ResolveRef("#")
+	if err != nil {
+		t.Fatal(err)
+	}
+	rootSchema, ok := val.(*Schema)
+	if !ok {
+		t.Fatalf("expected whole-file schema, got %T", val)
+	}
+	if rootSchema.Type != "object" {
+		t.Errorf("root schema type = %q, want object", rootSchema.Type)
+	}
+
+	val, err = idx.ResolveRef("#/properties/owner")
+	if err != nil {
+		t.Fatal(err)
+	}
+	owner, ok := val.(*Schema)
+	if !ok {
+		t.Fatalf("expected owner schema, got %T", val)
+	}
+	if owner.Ref != "./User.yaml" {
+		t.Errorf("owner ref = %q, want %q", owner.Ref, "./User.yaml")
+	}
+}
+
+func TestResolveRef_FragmentNamedParameter(t *testing.T) {
+	idx := ParseURI("file:///components/parameters.yaml", loadFixture(t, "multifile/v1/components/parameters.yaml"))
+	if idx == nil {
+		t.Fatal("ParseURI returned nil")
+	}
+
+	val, err := idx.ResolveRef("#/Limit")
+	if err != nil {
+		t.Fatal(err)
+	}
+	param, ok := val.(*Parameter)
+	if !ok {
+		t.Fatalf("expected *Parameter, got %T", val)
+	}
+	if param.Name != "limit" {
+		t.Errorf("parameter name = %q, want %q", param.Name, "limit")
+	}
+
+	val, err = idx.ResolveRef("#/Limit/schema")
+	if err != nil {
+		t.Fatal(err)
+	}
+	schema, ok := val.(*Schema)
+	if !ok {
+		t.Fatalf("expected *Schema, got %T", val)
+	}
+	if schema.Type != "integer" {
+		t.Errorf("parameter schema type = %q, want %q", schema.Type, "integer")
 	}
 }
 

@@ -65,50 +65,50 @@ import "context"
 // knownIssueCodes is the canonical set of Issue.Code values. Tests assert that
 // no validation pass emits a code outside this set.
 var knownIssueCodes = map[string]struct{}{
-	"syntax.parse-error":                    {},
-	"syntax.duplicate-key":                  {},
-	"structural.root-not-mapping":           {},
-	"structural.ir-wrong-type":              {},
-	"structural.unsupported-version":        {},
-	"structural.missing-info":               {},
-	"structural.missing-info-title":         {},
-	"structural.missing-info-version":       {},
-	"structural.missing-responses":          {},
-	"schema.parameter-missing-name":         {},
-	"schema.parameter-missing-in":           {},
-	"schema.unknown-type":                   {},
-	"schema.security-scheme-missing-type":   {},
-	"schema.security-scheme-unknown-type":   {},
-	"schema.security-scheme-apikey-fields":  {},
-	"schema.security-scheme-http-fields":    {},
-	"schema.security-scheme-oauth2-fields":  {},
-	"schema.security-scheme-openid-fields":  {},
-	"meta.compiler":                           {},
-	"meta.decode":                             {},
-	"meta.required":                           {},
-	"meta.type":                               {},
-	"meta.enum":                               {},
-	"meta.one-of":                             {},
-	"meta.any-of":                             {},
-	"meta.all-of":                             {},
-	"meta.additional-property":                {},
-	"meta.format":                             {},
-	"meta.const":                              {},
-	"meta.not":                                {},
-	"meta.property-names":                     {},
-	"meta.property-count":                     {},
-	"meta.items":                              {},
-	"meta.unique-items":                       {},
-	"meta.contains":                           {},
-	"meta.string":                             {},
-	"meta.number":                             {},
-	"meta.dependency":                         {},
-	"meta.instance-type":                      {},
-	"meta.false-schema":                       {},
-	"meta.ref":                                {},
-	"meta.group":                              {},
-	"meta.catchall":                           {},
-	"meta.truncated":                          {},
+	"syntax.parse-error":                   {},
+	"syntax.duplicate-key":                 {},
+	"structural.root-not-mapping":          {},
+	"structural.ir-wrong-type":             {},
+	"structural.unsupported-version":       {},
+	"structural.missing-info":              {},
+	"structural.missing-info-title":        {},
+	"structural.missing-info-version":      {},
+	"structural.missing-responses":         {},
+	"schema.parameter-missing-name":        {},
+	"schema.parameter-missing-in":          {},
+	"schema.unknown-type":                  {},
+	"schema.security-scheme-missing-type":  {},
+	"schema.security-scheme-unknown-type":  {},
+	"schema.security-scheme-apikey-fields": {},
+	"schema.security-scheme-http-fields":   {},
+	"schema.security-scheme-oauth2-fields": {},
+	"schema.security-scheme-openid-fields": {},
+	"meta.compiler":                        {},
+	"meta.decode":                          {},
+	"meta.required":                        {},
+	"meta.type":                            {},
+	"meta.enum":                            {},
+	"meta.one-of":                          {},
+	"meta.any-of":                          {},
+	"meta.all-of":                          {},
+	"meta.additional-property":             {},
+	"meta.format":                          {},
+	"meta.const":                           {},
+	"meta.not":                             {},
+	"meta.property-names":                  {},
+	"meta.property-count":                  {},
+	"meta.items":                           {},
+	"meta.unique-items":                    {},
+	"meta.contains":                        {},
+	"meta.string":                          {},
+	"meta.number":                          {},
+	"meta.dependency":                      {},
+	"meta.instance-type":                   {},
+	"meta.false-schema":                    {},
+	"meta.ref":                             {},
+	"meta.group":                           {},
+	"meta.catchall":                        {},
+	"meta.truncated":                       {},
 }
 
 // ValidationOptions configures validation passes run after indexing.
@@ -117,6 +117,10 @@ type ValidationOptions struct {
 	MaxIssues int
 	// Context, when non-nil, aborts further issues when Done.
 	Context context.Context
+	// TargetVersion overrides the effective OpenAPI version used for
+	// version-sensitive validation when the document itself does not declare one
+	// (for example standalone fragments opened in an editor).
+	TargetVersion Version
 	// SkipSyntax skips CST / YAML duplicate-key and ERROR-node checks.
 	SkipSyntax bool
 	// SkipStructural skips root/info/paths/operation structural rules.
@@ -181,6 +185,19 @@ type issueSink struct {
 	idx    *Index
 }
 
+func (s *issueSink) effectiveVersion() Version {
+	if s == nil {
+		return VersionUnknown
+	}
+	if s.opts.TargetVersion != VersionUnknown {
+		return s.opts.TargetVersion
+	}
+	if s.idx != nil {
+		return s.idx.Version
+	}
+	return VersionUnknown
+}
+
 func (s *issueSink) canAdd() bool {
 	if s.opts.MaxIssues > 0 && len(*s.issues) >= s.opts.MaxIssues {
 		return false
@@ -199,8 +216,8 @@ func (s *issueSink) add(iss Issue) {
 	if !s.canAdd() {
 		return
 	}
-	if s.idx != nil && iss.SpecVersion == VersionUnknown {
-		iss.SpecVersion = s.idx.Version
+	if iss.SpecVersion == VersionUnknown {
+		iss.SpecVersion = s.effectiveVersion()
 	}
 	*s.issues = append(*s.issues, iss)
 }

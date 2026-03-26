@@ -1,0 +1,1675 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://navigator.local/meta/openapi-2.0-operation.json",
+  "title": "Operation",
+  "type": "object",
+  "properties": {
+    "tags": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "summary": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "description": {
+      "$ref": "#/$defs/__schema4"
+    },
+    "externalDocs": {
+      "$ref": "#/$defs/__schema6"
+    },
+    "operationId": {
+      "$ref": "#/$defs/__schema12"
+    },
+    "consumes": {
+      "$ref": "#/$defs/__schema14"
+    },
+    "produces": {
+      "$ref": "#/$defs/__schema17"
+    },
+    "parameters": {
+      "$ref": "#/$defs/__schema19"
+    },
+    "responses": {
+      "$ref": "#/$defs/__schema186"
+    },
+    "schemes": {
+      "$ref": "#/$defs/__schema233"
+    },
+    "deprecated": {
+      "$ref": "#/$defs/__schema235"
+    },
+    "security": {
+      "$ref": "#/$defs/__schema237"
+    }
+  },
+  "required": [
+    "responses"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "__schema0": {
+      "title": "tags",
+      "$ref": "#/$defs/__schema1"
+    },
+    "__schema1": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "__schema2": {
+      "title": "summary",
+      "$ref": "#/$defs/__schema3"
+    },
+    "__schema3": {
+      "type": "string"
+    },
+    "__schema4": {
+      "title": "description",
+      "$ref": "#/$defs/__schema5"
+    },
+    "__schema5": {
+      "type": "string"
+    },
+    "__schema6": {
+      "title": "externalDocs",
+      "$ref": "#/$defs/__schema7"
+    },
+    "__schema7": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "$ref": "#/$defs/__schema8"
+        },
+        "url": {
+          "$ref": "#/$defs/__schema10"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "additionalProperties": false,
+      "title": "ExternalDocumentation",
+      "patternProperties": {
+        "^x-": true
+      }
+    },
+    "__schema8": {
+      "description": "A short description of the target documentation.",
+      "title": "description",
+      "$ref": "#/$defs/__schema9"
+    },
+    "__schema9": {
+      "type": "string"
+    },
+    "__schema10": {
+      "type": "string",
+      "title": "url",
+      "examples": [
+        "https://example.com/docs"
+      ],
+      "description": "REQUIRED. The URL for the target documentation."
+    },
+    "__schema11": {},
+    "__schema12": {
+      "title": "operationId",
+      "$ref": "#/$defs/__schema13"
+    },
+    "__schema13": {
+      "type": "string"
+    },
+    "__schema14": {
+      "title": "consumes",
+      "$ref": "#/$defs/__schema15"
+    },
+    "__schema15": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema16"
+      }
+    },
+    "__schema16": {
+      "type": "string",
+      "title": "MimeTypeString",
+      "examples": [
+        "application/json"
+      ],
+      "description": "A MIME type string (RFC 6838)."
+    },
+    "__schema17": {
+      "title": "produces",
+      "$ref": "#/$defs/__schema18"
+    },
+    "__schema18": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema16"
+      }
+    },
+    "__schema19": {
+      "title": "parameters",
+      "$ref": "#/$defs/__schema20"
+    },
+    "__schema20": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/__schema21"
+              },
+              {
+                "$ref": "#/$defs/__schema140"
+              },
+              {
+                "$ref": "#/$defs/__schema182"
+              }
+            ],
+            "title": "Parameter"
+          },
+          {
+            "$ref": "#/$defs/__schema182"
+          }
+        ]
+      }
+    },
+    "__schema21": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/__schema22"
+        },
+        "in": {
+          "$ref": "#/$defs/__schema23"
+        },
+        "description": {
+          "$ref": "#/$defs/__schema24"
+        },
+        "required": {
+          "$ref": "#/$defs/__schema26"
+        },
+        "schema": {
+          "$ref": "#/$defs/__schema28"
+        },
+        "patternProperties": {
+          "^x-": true
+        }
+      },
+      "required": [
+        "name",
+        "in",
+        "schema"
+      ],
+      "additionalProperties": false,
+      "title": "BodyParameter",
+      "patternProperties": {
+        "^x-": true
+      }
+    },
+    "__schema22": {
+      "type": "string",
+      "title": "name"
+    },
+    "__schema23": {
+      "type": "string",
+      "const": "body",
+      "title": "in"
+    },
+    "__schema24": {
+      "title": "description",
+      "$ref": "#/$defs/__schema25"
+    },
+    "__schema25": {
+      "type": "string"
+    },
+    "__schema26": {
+      "title": "required",
+      "$ref": "#/$defs/__schema27"
+    },
+    "__schema27": {
+      "type": "boolean"
+    },
+    "__schema28": {
+      "type": "object",
+      "properties": {
+        "$ref": {
+          "$ref": "#/$defs/__schema29"
+        },
+        "title": {
+          "$ref": "#/$defs/__schema34"
+        },
+        "description": {
+          "$ref": "#/$defs/__schema36"
+        },
+        "type": {
+          "$ref": "#/$defs/__schema38"
+        },
+        "format": {
+          "$ref": "#/$defs/__schema40"
+        },
+        "required": {
+          "$ref": "#/$defs/__schema42"
+        },
+        "properties": {
+          "$ref": "#/$defs/__schema44"
+        },
+        "additionalProperties": {
+          "$ref": "#/$defs/__schema47"
+        },
+        "items": {
+          "$ref": "#/$defs/__schema49"
+        },
+        "allOf": {
+          "$ref": "#/$defs/__schema86"
+        },
+        "default": {
+          "$ref": "#/$defs/__schema88"
+        },
+        "discriminator": {
+          "$ref": "#/$defs/__schema90"
+        },
+        "readOnly": {
+          "$ref": "#/$defs/__schema92"
+        },
+        "xml": {
+          "$ref": "#/$defs/__schema94"
+        },
+        "externalDocs": {
+          "$ref": "#/$defs/__schema107"
+        },
+        "example": {
+          "$ref": "#/$defs/__schema108"
+        },
+        "maximum": {
+          "$ref": "#/$defs/__schema110"
+        },
+        "exclusiveMaximum": {
+          "$ref": "#/$defs/__schema112"
+        },
+        "minimum": {
+          "$ref": "#/$defs/__schema114"
+        },
+        "exclusiveMinimum": {
+          "$ref": "#/$defs/__schema116"
+        },
+        "maxLength": {
+          "$ref": "#/$defs/__schema118"
+        },
+        "minLength": {
+          "$ref": "#/$defs/__schema120"
+        },
+        "pattern": {
+          "$ref": "#/$defs/__schema122"
+        },
+        "maxItems": {
+          "$ref": "#/$defs/__schema124"
+        },
+        "minItems": {
+          "$ref": "#/$defs/__schema126"
+        },
+        "uniqueItems": {
+          "$ref": "#/$defs/__schema128"
+        },
+        "maxProperties": {
+          "$ref": "#/$defs/__schema130"
+        },
+        "minProperties": {
+          "$ref": "#/$defs/__schema132"
+        },
+        "enum": {
+          "$ref": "#/$defs/__schema134"
+        },
+        "multipleOf": {
+          "$ref": "#/$defs/__schema136"
+        },
+        "patternProperties": {
+          "^x-": true
+        }
+      },
+      "additionalProperties": false,
+      "title": "schema",
+      "description": "REQUIRED. The schema defining the type.",
+      "$ref": "#/$defs/__schema46",
+      "patternProperties": {
+        "^x-": true
+      }
+    },
+    "__schema29": {
+      "title": "$ref",
+      "$ref": "#/$defs/__schema30"
+    },
+    "__schema30": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema31"
+        },
+        {
+          "$ref": "#/$defs/__schema32"
+        },
+        {
+          "$ref": "#/$defs/__schema33"
+        }
+      ],
+      "title": "Reference",
+      "description": "A reference to another component in the specification.",
+      "examples": [
+        "#/components/schemas/Pet",
+        "https://example.com/schemas/Pet.yaml",
+        "./schemas/Pet.yaml"
+      ]
+    },
+    "__schema31": {
+      "type": "string",
+      "pattern": "^#.*",
+      "title": "Internal JSON Pointer Reference",
+      "description": "Internal JSON Pointer reference",
+      "examples": [
+        "#/components/schemas/User",
+        "#/components/schemas/Error",
+        "#/components/responses/NotFound",
+        "#/components/parameters/PageParam",
+        "#/components/requestBodies/UserInput"
+      ]
+    },
+    "__schema32": {
+      "type": "string",
+      "pattern": "^https?:\\/\\/",
+      "title": "URL Reference",
+      "description": "URL reference",
+      "examples": [
+        "https://example.com/schemas/Pet.yaml",
+        "https://example.com/schemas/User.json",
+        "https://example.com/responses/Not-Found-Error.yaml",
+        "https://example.com/parameters.yaml#/PageParam",
+        "https://example.com/requestBodies.yaml#/requestBodies/UserInput"
+      ]
+    },
+    "__schema33": {
+      "type": "string",
+      "pattern": "^[^#\\s]+(\\.ya?ml|\\.json)(#\\/.*)?$",
+      "title": "Relative File Reference",
+      "description": "Relative file reference",
+      "examples": [
+        "./schemas/Pet.yaml",
+        "../common/types.yaml",
+        "schemas/Pet.yaml",
+        "./v2/components/parameters.yaml#/components/parameters/LimitParam",
+        "../common/types.yaml#/properties/id",
+        "schemas/Pet.yaml#/properties/name"
+      ]
+    },
+    "__schema34": {
+      "title": "title",
+      "$ref": "#/$defs/__schema35"
+    },
+    "__schema35": {
+      "type": "string"
+    },
+    "__schema36": {
+      "title": "description",
+      "$ref": "#/$defs/__schema37"
+    },
+    "__schema37": {
+      "type": "string"
+    },
+    "__schema38": {
+      "title": "type",
+      "$ref": "#/$defs/__schema39"
+    },
+    "__schema39": {
+      "type": "string",
+      "enum": [
+        "string",
+        "number",
+        "integer",
+        "boolean",
+        "array",
+        "object"
+      ]
+    },
+    "__schema40": {
+      "title": "format",
+      "$ref": "#/$defs/__schema41"
+    },
+    "__schema41": {
+      "type": "string"
+    },
+    "__schema42": {
+      "title": "required",
+      "$ref": "#/$defs/__schema43"
+    },
+    "__schema43": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "__schema44": {
+      "title": "properties",
+      "$ref": "#/$defs/__schema45"
+    },
+    "__schema45": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema46"
+      },
+      "patternProperties": {
+        "^x-": true
+      }
+    },
+    "__schema46": {
+      "type": "object",
+      "properties": {
+        "$ref": {
+          "$ref": "#/$defs/__schema29"
+        },
+        "title": {
+          "$ref": "#/$defs/__schema34"
+        },
+        "description": {
+          "$ref": "#/$defs/__schema36"
+        },
+        "type": {
+          "$ref": "#/$defs/__schema38"
+        },
+        "format": {
+          "$ref": "#/$defs/__schema40"
+        },
+        "required": {
+          "$ref": "#/$defs/__schema42"
+        },
+        "properties": {
+          "$ref": "#/$defs/__schema44"
+        },
+        "additionalProperties": {
+          "$ref": "#/$defs/__schema47"
+        },
+        "items": {
+          "$ref": "#/$defs/__schema49"
+        },
+        "allOf": {
+          "$ref": "#/$defs/__schema86"
+        },
+        "default": {
+          "$ref": "#/$defs/__schema88"
+        },
+        "discriminator": {
+          "$ref": "#/$defs/__schema90"
+        },
+        "readOnly": {
+          "$ref": "#/$defs/__schema92"
+        },
+        "xml": {
+          "$ref": "#/$defs/__schema94"
+        },
+        "externalDocs": {
+          "$ref": "#/$defs/__schema107"
+        },
+        "example": {
+          "$ref": "#/$defs/__schema108"
+        },
+        "maximum": {
+          "$ref": "#/$defs/__schema110"
+        },
+        "exclusiveMaximum": {
+          "$ref": "#/$defs/__schema112"
+        },
+        "minimum": {
+          "$ref": "#/$defs/__schema114"
+        },
+        "exclusiveMinimum": {
+          "$ref": "#/$defs/__schema116"
+        },
+        "maxLength": {
+          "$ref": "#/$defs/__schema118"
+        },
+        "minLength": {
+          "$ref": "#/$defs/__schema120"
+        },
+        "pattern": {
+          "$ref": "#/$defs/__schema122"
+        },
+        "maxItems": {
+          "$ref": "#/$defs/__schema124"
+        },
+        "minItems": {
+          "$ref": "#/$defs/__schema126"
+        },
+        "uniqueItems": {
+          "$ref": "#/$defs/__schema128"
+        },
+        "maxProperties": {
+          "$ref": "#/$defs/__schema130"
+        },
+        "minProperties": {
+          "$ref": "#/$defs/__schema132"
+        },
+        "enum": {
+          "$ref": "#/$defs/__schema134"
+        },
+        "multipleOf": {
+          "$ref": "#/$defs/__schema136"
+        },
+        "patternProperties": {
+          "^x-": true
+        }
+      },
+      "additionalProperties": false,
+      "title": "Schema",
+      "patternProperties": {
+        "^x-": true
+      }
+    },
+    "__schema47": {
+      "title": "additionalProperties",
+      "$ref": "#/$defs/__schema48"
+    },
+    "__schema48": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "$ref": "#/$defs/__schema46"
+        }
+      ]
+    },
+    "__schema49": {
+      "title": "items",
+      "$ref": "#/$defs/__schema50"
+    },
+    "__schema50": {
+      "type": "object",
+      "properties": {
+        "$ref": {
+          "$ref": "#/$defs/__schema51"
+        },
+        "type": {
+          "$ref": "#/$defs/__schema52"
+        },
+        "format": {
+          "$ref": "#/$defs/__schema54"
+        },
+        "items": {
+          "$ref": "#/$defs/__schema56"
+        },
+        "collectionFormat": {
+          "$ref": "#/$defs/__schema57"
+        },
+        "default": {
+          "$ref": "#/$defs/__schema59"
+        },
+        "maximum": {
+          "$ref": "#/$defs/__schema61"
+        },
+        "exclusiveMaximum": {
+          "$ref": "#/$defs/__schema63"
+        },
+        "minimum": {
+          "$ref": "#/$defs/__schema65"
+        },
+        "exclusiveMinimum": {
+          "$ref": "#/$defs/__schema67"
+        },
+        "maxLength": {
+          "$ref": "#/$defs/__schema69"
+        },
+        "minLength": {
+          "$ref": "#/$defs/__schema71"
+        },
+        "pattern": {
+          "$ref": "#/$defs/__schema73"
+        },
+        "maxItems": {
+          "$ref": "#/$defs/__schema75"
+        },
+        "minItems": {
+          "$ref": "#/$defs/__schema77"
+        },
+        "uniqueItems": {
+          "$ref": "#/$defs/__schema79"
+        },
+        "enum": {
+          "$ref": "#/$defs/__schema81"
+        },
+        "multipleOf": {
+          "$ref": "#/$defs/__schema83"
+        }
+      },
+      "additionalProperties": false,
+      "title": "Items",
+      "patternProperties": {
+        "^x-": true
+      }
+    },
+    "__schema51": {
+      "$ref": "#/$defs/__schema30"
+    },
+    "__schema52": {
+      "title": "type",
+      "$ref": "#/$defs/__schema53"
+    },
+    "__schema53": {
+      "type": "string",
+      "enum": [
+        "string",
+        "number",
+        "integer",
+        "boolean",
+        "array",
+        "object"
+      ]
+    },
+    "__schema54": {
+      "title": "format",
+      "$ref": "#/$defs/__schema55"
+    },
+    "__schema55": {
+      "type": "string"
+    },
+    "__schema56": {
+      "title": "items",
+      "$ref": "#/$defs/__schema50"
+    },
+    "__schema57": {
+      "title": "collectionFormat",
+      "$ref": "#/$defs/__schema58"
+    },
+    "__schema58": {
+      "type": "string",
+      "enum": [
+        "csv",
+        "ssv",
+        "tsv",
+        "pipes"
+      ]
+    },
+    "__schema59": {
+      "title": "default",
+      "$ref": "#/$defs/__schema60"
+    },
+    "__schema60": {},
+    "__schema61": {
+      "title": "maximum",
+      "$ref": "#/$defs/__schema62"
+    },
+    "__schema62": {
+      "type": "number"
+    },
+    "__schema63": {
+      "title": "exclusiveMaximum",
+      "$ref": "#/$defs/__schema64"
+    },
+    "__schema64": {
+      "type": "boolean"
+    },
+    "__schema65": {
+      "title": "minimum",
+      "$ref": "#/$defs/__schema66"
+    },
+    "__schema66": {
+      "type": "number"
+    },
+    "__schema67": {
+      "title": "exclusiveMinimum",
+      "$ref": "#/$defs/__schema68"
+    },
+    "__schema68": {
+      "type": "boolean"
+    },
+    "__schema69": {
+      "title": "maxLength",
+      "$ref": "#/$defs/__schema70"
+    },
+    "__schema70": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "__schema71": {
+      "title": "minLength",
+      "$ref": "#/$defs/__schema72"
+    },
+    "__schema72": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "__schema73": {
+      "title": "pattern",
+      "$ref": "#/$defs/__schema74"
+    },
+    "__schema74": {
+      "type": "string"
+    },
+    "__schema75": {
+      "title": "maxItems",
+      "$ref": "#/$defs/__schema76"
+    },
+    "__schema76": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "__schema77": {
+      "title": "minItems",
+      "$ref": "#/$defs/__schema78"
+    },
+    "__schema78": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "__schema79": {
+      "title": "uniqueItems",
+      "$ref": "#/$defs/__schema80"
+    },
+    "__schema80": {
+      "type": "boolean"
+    },
+    "__schema81": {
+      "title": "enum",
+      "$ref": "#/$defs/__schema82"
+    },
+    "__schema82": {
+      "type": "array",
+      "items": {}
+    },
+    "__schema83": {
+      "title": "multipleOf",
+      "$ref": "#/$defs/__schema84"
+    },
+    "__schema84": {
+      "type": "number"
+    },
+    "__schema85": {},
+    "__schema86": {
+      "title": "allOf",
+      "$ref": "#/$defs/__schema87"
+    },
+    "__schema87": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema46"
+      }
+    },
+    "__schema88": {
+      "title": "default",
+      "$ref": "#/$defs/__schema89"
+    },
+    "__schema89": {},
+    "__schema90": {
+      "title": "discriminator",
+      "$ref": "#/$defs/__schema91"
+    },
+    "__schema91": {
+      "type": "string"
+    },
+    "__schema92": {
+      "title": "readOnly",
+      "$ref": "#/$defs/__schema93"
+    },
+    "__schema93": {
+      "type": "boolean"
+    },
+    "__schema94": {
+      "title": "xml",
+      "$ref": "#/$defs/__schema95"
+    },
+    "__schema95": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/__schema96"
+        },
+        "namespace": {
+          "$ref": "#/$defs/__schema98"
+        },
+        "prefix": {
+          "$ref": "#/$defs/__schema100"
+        },
+        "attribute": {
+          "$ref": "#/$defs/__schema102"
+        },
+        "wrapped": {
+          "$ref": "#/$defs/__schema104"
+        }
+      },
+      "additionalProperties": false,
+      "title": "XML",
+      "patternProperties": {
+        "^x-": true
+      }
+    },
+    "__schema96": {
+      "title": "name",
+      "$ref": "#/$defs/__schema97"
+    },
+    "__schema97": {
+      "type": "string"
+    },
+    "__schema98": {
+      "title": "namespace",
+      "$ref": "#/$defs/__schema99"
+    },
+    "__schema99": {
+      "type": "string"
+    },
+    "__schema100": {
+      "title": "prefix",
+      "$ref": "#/$defs/__schema101"
+    },
+    "__schema101": {
+      "type": "string"
+    },
+    "__schema102": {
+      "title": "attribute",
+      "$ref": "#/$defs/__schema103"
+    },
+    "__schema103": {
+      "type": "boolean"
+    },
+    "__schema104": {
+      "title": "wrapped",
+      "$ref": "#/$defs/__schema105"
+    },
+    "__schema105": {
+      "type": "boolean"
+    },
+    "__schema106": {},
+    "__schema107": {
+      "title": "externalDocs",
+      "$ref": "#/$defs/__schema7"
+    },
+    "__schema108": {
+      "title": "example",
+      "$ref": "#/$defs/__schema109"
+    },
+    "__schema109": {},
+    "__schema110": {
+      "title": "maximum",
+      "$ref": "#/$defs/__schema111"
+    },
+    "__schema111": {
+      "type": "number"
+    },
+    "__schema112": {
+      "title": "exclusiveMaximum",
+      "$ref": "#/$defs/__schema113"
+    },
+    "__schema113": {
+      "type": "boolean"
+    },
+    "__schema114": {
+      "title": "minimum",
+      "$ref": "#/$defs/__schema115"
+    },
+    "__schema115": {
+      "type": "number"
+    },
+    "__schema116": {
+      "title": "exclusiveMinimum",
+      "$ref": "#/$defs/__schema117"
+    },
+    "__schema117": {
+      "type": "boolean"
+    },
+    "__schema118": {
+      "title": "maxLength",
+      "$ref": "#/$defs/__schema119"
+    },
+    "__schema119": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "__schema120": {
+      "title": "minLength",
+      "$ref": "#/$defs/__schema121"
+    },
+    "__schema121": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "__schema122": {
+      "title": "pattern",
+      "$ref": "#/$defs/__schema123"
+    },
+    "__schema123": {
+      "type": "string"
+    },
+    "__schema124": {
+      "title": "maxItems",
+      "$ref": "#/$defs/__schema125"
+    },
+    "__schema125": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "__schema126": {
+      "title": "minItems",
+      "$ref": "#/$defs/__schema127"
+    },
+    "__schema127": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "__schema128": {
+      "title": "uniqueItems",
+      "$ref": "#/$defs/__schema129"
+    },
+    "__schema129": {
+      "type": "boolean"
+    },
+    "__schema130": {
+      "title": "maxProperties",
+      "$ref": "#/$defs/__schema131"
+    },
+    "__schema131": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "__schema132": {
+      "title": "minProperties",
+      "$ref": "#/$defs/__schema133"
+    },
+    "__schema133": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "__schema134": {
+      "title": "enum",
+      "$ref": "#/$defs/__schema135"
+    },
+    "__schema135": {
+      "type": "array",
+      "items": {}
+    },
+    "__schema136": {
+      "title": "multipleOf",
+      "$ref": "#/$defs/__schema137"
+    },
+    "__schema137": {
+      "type": "number"
+    },
+    "__schema138": {},
+    "__schema139": {},
+    "__schema140": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/__schema141"
+        },
+        "in": {
+          "$ref": "#/$defs/__schema142"
+        },
+        "description": {
+          "$ref": "#/$defs/__schema143"
+        },
+        "required": {
+          "$ref": "#/$defs/__schema145"
+        },
+        "type": {
+          "$ref": "#/$defs/__schema147"
+        },
+        "format": {
+          "$ref": "#/$defs/__schema148"
+        },
+        "allowEmptyValue": {
+          "$ref": "#/$defs/__schema150"
+        },
+        "items": {
+          "$ref": "#/$defs/__schema152"
+        },
+        "collectionFormat": {
+          "$ref": "#/$defs/__schema153"
+        },
+        "default": {
+          "$ref": "#/$defs/__schema155"
+        },
+        "maximum": {
+          "$ref": "#/$defs/__schema157"
+        },
+        "exclusiveMaximum": {
+          "$ref": "#/$defs/__schema159"
+        },
+        "minimum": {
+          "$ref": "#/$defs/__schema161"
+        },
+        "exclusiveMinimum": {
+          "$ref": "#/$defs/__schema163"
+        },
+        "maxLength": {
+          "$ref": "#/$defs/__schema165"
+        },
+        "minLength": {
+          "$ref": "#/$defs/__schema167"
+        },
+        "pattern": {
+          "$ref": "#/$defs/__schema169"
+        },
+        "maxItems": {
+          "$ref": "#/$defs/__schema171"
+        },
+        "minItems": {
+          "$ref": "#/$defs/__schema173"
+        },
+        "uniqueItems": {
+          "$ref": "#/$defs/__schema175"
+        },
+        "enum": {
+          "$ref": "#/$defs/__schema177"
+        },
+        "multipleOf": {
+          "$ref": "#/$defs/__schema179"
+        },
+        "patternProperties": {
+          "^x-": true
+        }
+      },
+      "required": [
+        "name",
+        "in",
+        "type"
+      ],
+      "additionalProperties": false,
+      "title": "NonBodyParameter",
+      "patternProperties": {
+        "^x-": true
+      }
+    },
+    "__schema141": {
+      "type": "string",
+      "description": "REQUIRED. The name of the parameter.",
+      "title": "name"
+    },
+    "__schema142": {
+      "type": "string",
+      "enum": [
+        "query",
+        "header",
+        "path",
+        "formData",
+        "body"
+      ],
+      "description": "REQUIRED. The location of the parameter.",
+      "title": "in"
+    },
+    "__schema143": {
+      "title": "description",
+      "$ref": "#/$defs/__schema144"
+    },
+    "__schema144": {
+      "type": "string"
+    },
+    "__schema145": {
+      "title": "required",
+      "$ref": "#/$defs/__schema146"
+    },
+    "__schema146": {
+      "type": "boolean"
+    },
+    "__schema147": {
+      "type": "string",
+      "enum": [
+        "string",
+        "number",
+        "integer",
+        "boolean",
+        "array",
+        "file"
+      ],
+      "description": "REQUIRED. The type of the parameter.",
+      "title": "type"
+    },
+    "__schema148": {
+      "title": "format",
+      "$ref": "#/$defs/__schema149"
+    },
+    "__schema149": {
+      "type": "string"
+    },
+    "__schema150": {
+      "title": "allowEmptyValue",
+      "$ref": "#/$defs/__schema151"
+    },
+    "__schema151": {
+      "type": "boolean"
+    },
+    "__schema152": {
+      "title": "items",
+      "$ref": "#/$defs/__schema50"
+    },
+    "__schema153": {
+      "title": "collectionFormat",
+      "$ref": "#/$defs/__schema154"
+    },
+    "__schema154": {
+      "type": "string",
+      "enum": [
+        "csv",
+        "ssv",
+        "tsv",
+        "pipes",
+        "multi"
+      ]
+    },
+    "__schema155": {
+      "title": "default",
+      "$ref": "#/$defs/__schema156"
+    },
+    "__schema156": {},
+    "__schema157": {
+      "title": "maximum",
+      "$ref": "#/$defs/__schema158"
+    },
+    "__schema158": {
+      "type": "number"
+    },
+    "__schema159": {
+      "title": "exclusiveMaximum",
+      "$ref": "#/$defs/__schema160"
+    },
+    "__schema160": {
+      "type": "boolean"
+    },
+    "__schema161": {
+      "title": "minimum",
+      "$ref": "#/$defs/__schema162"
+    },
+    "__schema162": {
+      "type": "number"
+    },
+    "__schema163": {
+      "title": "exclusiveMinimum",
+      "$ref": "#/$defs/__schema164"
+    },
+    "__schema164": {
+      "type": "boolean"
+    },
+    "__schema165": {
+      "title": "maxLength",
+      "$ref": "#/$defs/__schema166"
+    },
+    "__schema166": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "__schema167": {
+      "title": "minLength",
+      "$ref": "#/$defs/__schema168"
+    },
+    "__schema168": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "__schema169": {
+      "title": "pattern",
+      "$ref": "#/$defs/__schema170"
+    },
+    "__schema170": {
+      "type": "string"
+    },
+    "__schema171": {
+      "title": "maxItems",
+      "$ref": "#/$defs/__schema172"
+    },
+    "__schema172": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "__schema173": {
+      "title": "minItems",
+      "$ref": "#/$defs/__schema174"
+    },
+    "__schema174": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "__schema175": {
+      "title": "uniqueItems",
+      "$ref": "#/$defs/__schema176"
+    },
+    "__schema176": {
+      "type": "boolean"
+    },
+    "__schema177": {
+      "title": "enum",
+      "$ref": "#/$defs/__schema178"
+    },
+    "__schema178": {
+      "type": "array",
+      "items": {}
+    },
+    "__schema179": {
+      "title": "multipleOf",
+      "$ref": "#/$defs/__schema180"
+    },
+    "__schema180": {
+      "type": "number"
+    },
+    "__schema181": {},
+    "__schema182": {
+      "type": "object",
+      "properties": {
+        "$ref": {
+          "$ref": "#/$defs/__schema30"
+        },
+        "summary": {
+          "$ref": "#/$defs/__schema183"
+        },
+        "description": {
+          "$ref": "#/$defs/__schema184"
+        }
+      },
+      "required": [
+        "$ref"
+      ],
+      "additionalProperties": false,
+      "title": "Reference Object",
+      "description": "A reference to another component in the specification.",
+      "examples": [
+        {
+          "$ref": "#/components/schemas/Pet"
+        },
+        {
+          "$ref": "./schemas/User.yaml",
+          "summary": "A user",
+          "description": "A user is a type of person."
+        },
+        {
+          "$ref": "definitions.yaml#/Pet",
+          "summary": "A pet",
+          "description": "A pet is a type of animal."
+        },
+        {
+          "$ref": "https://example.com/schemas/Pet.yaml",
+          "summary": "A pet",
+          "description": "A pet is a type of animal."
+        }
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
+    },
+    "__schema183": {
+      "type": "string",
+      "title": "summary",
+      "description": "A short summary which by default SHOULD override that of the referenced component."
+    },
+    "__schema184": {
+      "type": "string",
+      "title": "description",
+      "description": "A description which by default SHOULD override that of the referenced component."
+    },
+    "__schema185": {},
+    "__schema186": {
+      "type": "object",
+      "properties": {
+        "default": {
+          "$ref": "#/$defs/__schema187"
+        }
+      },
+      "additionalProperties": false,
+      "title": "responses",
+      "description": "REQUIRED. The responses for this operation.",
+      "patternProperties": {
+        "^x-": true
+      }
+    },
+    "__schema187": {
+      "title": "default",
+      "$ref": "#/$defs/__schema188"
+    },
+    "__schema188": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema189"
+        },
+        {
+          "$ref": "#/$defs/__schema182"
+        }
+      ],
+      "title": "Response"
+    },
+    "__schema189": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "$ref": "#/$defs/__schema190"
+        },
+        "schema": {
+          "$ref": "#/$defs/__schema191"
+        },
+        "headers": {
+          "$ref": "#/$defs/__schema192"
+        },
+        "examples": {
+          "$ref": "#/$defs/__schema229"
+        }
+      },
+      "required": [
+        "description"
+      ],
+      "additionalProperties": false,
+      "title": "Response",
+      "patternProperties": {
+        "^x-": true
+      }
+    },
+    "__schema190": {
+      "type": "string",
+      "description": "REQUIRED. A short description of the response.",
+      "title": "description"
+    },
+    "__schema191": {
+      "title": "schema",
+      "$ref": "#/$defs/__schema46"
+    },
+    "__schema192": {
+      "title": "headers",
+      "$ref": "#/$defs/__schema193"
+    },
+    "__schema193": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "$ref": "#/$defs/__schema194"
+          },
+          "type": {
+            "$ref": "#/$defs/__schema196"
+          },
+          "format": {
+            "$ref": "#/$defs/__schema197"
+          },
+          "items": {
+            "$ref": "#/$defs/__schema199"
+          },
+          "collectionFormat": {
+            "$ref": "#/$defs/__schema200"
+          },
+          "default": {
+            "$ref": "#/$defs/__schema202"
+          },
+          "maximum": {
+            "$ref": "#/$defs/__schema204"
+          },
+          "exclusiveMaximum": {
+            "$ref": "#/$defs/__schema206"
+          },
+          "minimum": {
+            "$ref": "#/$defs/__schema208"
+          },
+          "exclusiveMinimum": {
+            "$ref": "#/$defs/__schema210"
+          },
+          "maxLength": {
+            "$ref": "#/$defs/__schema212"
+          },
+          "minLength": {
+            "$ref": "#/$defs/__schema214"
+          },
+          "pattern": {
+            "$ref": "#/$defs/__schema216"
+          },
+          "maxItems": {
+            "$ref": "#/$defs/__schema218"
+          },
+          "minItems": {
+            "$ref": "#/$defs/__schema220"
+          },
+          "uniqueItems": {
+            "$ref": "#/$defs/__schema222"
+          },
+          "enum": {
+            "$ref": "#/$defs/__schema224"
+          },
+          "multipleOf": {
+            "$ref": "#/$defs/__schema226"
+          }
+        },
+        "required": [
+          "type"
+        ],
+        "additionalProperties": false,
+        "title": "Header",
+        "patternProperties": {
+          "^x-": true
+        }
+      },
+      "patternProperties": {
+        "^x-": true
+      }
+    },
+    "__schema194": {
+      "title": "description",
+      "$ref": "#/$defs/__schema195"
+    },
+    "__schema195": {
+      "type": "string"
+    },
+    "__schema196": {
+      "type": "string",
+      "enum": [
+        "string",
+        "number",
+        "integer",
+        "boolean",
+        "array"
+      ],
+      "title": "type"
+    },
+    "__schema197": {
+      "title": "format",
+      "$ref": "#/$defs/__schema198"
+    },
+    "__schema198": {
+      "type": "string"
+    },
+    "__schema199": {
+      "title": "items",
+      "$ref": "#/$defs/__schema50"
+    },
+    "__schema200": {
+      "title": "collectionFormat",
+      "$ref": "#/$defs/__schema201"
+    },
+    "__schema201": {
+      "type": "string",
+      "enum": [
+        "csv",
+        "ssv",
+        "tsv",
+        "pipes"
+      ]
+    },
+    "__schema202": {
+      "title": "default",
+      "$ref": "#/$defs/__schema203"
+    },
+    "__schema203": {},
+    "__schema204": {
+      "title": "maximum",
+      "$ref": "#/$defs/__schema205"
+    },
+    "__schema205": {
+      "type": "number"
+    },
+    "__schema206": {
+      "title": "exclusiveMaximum",
+      "$ref": "#/$defs/__schema207"
+    },
+    "__schema207": {
+      "type": "boolean"
+    },
+    "__schema208": {
+      "title": "minimum",
+      "$ref": "#/$defs/__schema209"
+    },
+    "__schema209": {
+      "type": "number"
+    },
+    "__schema210": {
+      "title": "exclusiveMinimum",
+      "$ref": "#/$defs/__schema211"
+    },
+    "__schema211": {
+      "type": "boolean"
+    },
+    "__schema212": {
+      "title": "maxLength",
+      "$ref": "#/$defs/__schema213"
+    },
+    "__schema213": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "__schema214": {
+      "title": "minLength",
+      "$ref": "#/$defs/__schema215"
+    },
+    "__schema215": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "__schema216": {
+      "title": "pattern",
+      "$ref": "#/$defs/__schema217"
+    },
+    "__schema217": {
+      "type": "string"
+    },
+    "__schema218": {
+      "title": "maxItems",
+      "$ref": "#/$defs/__schema219"
+    },
+    "__schema219": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "__schema220": {
+      "title": "minItems",
+      "$ref": "#/$defs/__schema221"
+    },
+    "__schema221": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "__schema222": {
+      "title": "uniqueItems",
+      "$ref": "#/$defs/__schema223"
+    },
+    "__schema223": {
+      "type": "boolean"
+    },
+    "__schema224": {
+      "title": "enum",
+      "$ref": "#/$defs/__schema225"
+    },
+    "__schema225": {
+      "type": "array",
+      "items": {}
+    },
+    "__schema226": {
+      "title": "multipleOf",
+      "$ref": "#/$defs/__schema227"
+    },
+    "__schema227": {
+      "type": "number"
+    },
+    "__schema228": {},
+    "__schema229": {
+      "title": "examples",
+      "$ref": "#/$defs/__schema230"
+    },
+    "__schema230": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": false,
+      "patternProperties": {
+        "^x-": true
+      }
+    },
+    "__schema231": {},
+    "__schema232": {},
+    "__schema233": {
+      "title": "schemes",
+      "$ref": "#/$defs/__schema234"
+    },
+    "__schema234": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "http",
+          "https",
+          "ws",
+          "wss"
+        ]
+      }
+    },
+    "__schema235": {
+      "title": "deprecated",
+      "$ref": "#/$defs/__schema236"
+    },
+    "__schema236": {
+      "type": "boolean"
+    },
+    "__schema237": {
+      "title": "security",
+      "$ref": "#/$defs/__schema238"
+    },
+    "__schema238": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "propertyNames": {
+          "$ref": "#/$defs/__schema239"
+        },
+        "additionalProperties": {
+          "$ref": "#/$defs/__schema240"
+        },
+        "title": "SecurityRequirement",
+        "patternProperties": {
+          "^x-": true
+        }
+      }
+    },
+    "__schema239": {
+      "type": "string"
+    },
+    "__schema240": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "__schema241": {}
+  },
+  "patternProperties": {
+    "^x-": true
+  }
+}

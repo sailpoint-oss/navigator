@@ -38,7 +38,10 @@
       ],
       "additionalProperties": false,
       "title": "OpenAPI",
-      "description": "Root object of an OpenAPI 3.0 document."
+      "description": "Root object of an OpenAPI 3.0 document.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     {
       "type": "object",
@@ -80,7 +83,10 @@
       ],
       "additionalProperties": false,
       "title": "OpenAPI",
-      "description": "Root object of an OpenAPI 3.1 document."
+      "description": "Root object of an OpenAPI 3.1 document.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     {
       "type": "object",
@@ -122,7 +128,10 @@
       ],
       "additionalProperties": false,
       "title": "OpenAPI",
-      "description": "Root object of an OpenAPI 3.2 document."
+      "description": "Root object of an OpenAPI 3.2 document.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     {
       "type": "object",
@@ -176,7 +185,10 @@
         "paths"
       ],
       "additionalProperties": false,
-      "title": "Swagger"
+      "title": "Swagger",
+      "patternProperties": {
+        "^x-": true
+      }
     }
   ],
   "$defs": {
@@ -227,7 +239,10 @@
           "version": "1.0.0",
           "description": "A sample API"
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema2": {
       "type": "string",
@@ -300,7 +315,10 @@
           "url": "https://example.com/support",
           "email": "support@example.com"
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema8": {
       "type": "string",
@@ -354,7 +372,10 @@
           "required": [
             "name"
           ],
-          "additionalProperties": false
+          "additionalProperties": false,
+          "patternProperties": {
+            "^x-": true
+          }
         },
         {
           "oneOf": [
@@ -394,7 +415,10 @@
           ]
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema14": {
       "type": "object",
@@ -411,7 +435,10 @@
           ]
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema15": {},
     "__schema16": {
@@ -448,7 +475,10 @@
           "url": "https://api.example.com/v1",
           "description": "Production server"
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema19": {
       "type": "string",
@@ -492,7 +522,10 @@
           }
         }
       ],
-      "description": "A map of server variables for URL template substitution."
+      "description": "A map of server variables for URL template substitution.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema22": {
       "type": "string"
@@ -524,7 +557,10 @@
             "http"
           ]
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema24": {
       "type": "array",
@@ -597,7 +633,10 @@
             }
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema31": {
       "type": "string"
@@ -647,7 +686,10 @@
       },
       "additionalProperties": false,
       "title": "PathItem",
-      "description": "Describes the operations available on a single path."
+      "description": "Describes the operations available on a single path.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema33": {
       "$ref": "#/$defs/__schema34"
@@ -786,7 +828,10 @@
             }
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema44": {
       "type": "array",
@@ -901,7 +946,10 @@
           "summary": "A pet",
           "description": "A pet is a type of animal."
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema52": {
       "type": "string",
@@ -955,6 +1003,9 @@
         },
         "content": {
           "$ref": "#/$defs/__schema185"
+        },
+        "patternProperties": {
+          "^x-": true
         }
       },
       "required": [
@@ -972,7 +1023,10 @@
             "type": "integer"
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema56": {
       "type": "string",
@@ -1122,6 +1176,9 @@
             "id": {
               "type": "integer"
             }
+          },
+          "patternProperties": {
+            "^x-": true
           }
         }
       ]
@@ -1201,7 +1258,10 @@
           "minLength": 10,
           "maxLength": 100
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema73": {
       "type": "string",
@@ -1280,7 +1340,10 @@
             "dog": "#/components/schemas/Dog"
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema81": {
       "type": "string",
@@ -1296,7 +1359,10 @@
         "$ref": "#/$defs/__schema84"
       },
       "title": "mapping",
-      "description": "An object to hold mappings between payload values and schema names or references."
+      "description": "An object to hold mappings between payload values and schema names or references.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema83": {
       "type": "string"
@@ -1336,7 +1402,10 @@
           "name": "animal",
           "wrapped": true
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema88": {
       "type": "string",
@@ -1396,7 +1465,10 @@
           "description": "Find more info here",
           "url": "https://docs.example.com"
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema98": {
       "type": "string",
@@ -1616,7 +1688,10 @@
           "minimum": 0,
           "exclusiveMinimum": true
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema115": {
       "type": "string",
@@ -1777,7 +1852,10 @@
           "minimum": 0,
           "exclusiveMinimum": true
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema129": {
       "type": "string",
@@ -1914,7 +1992,10 @@
         {
           "type": "boolean"
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema143": {
       "type": "string",
@@ -1988,7 +2069,10 @@
             "type": "string"
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema145": {
       "type": "string",
@@ -2083,6 +2167,9 @@
         },
         "maxProperties": {
           "$ref": "#/$defs/__schema164"
+        },
+        "patternProperties": {
+          "^x-": true
         }
       },
       "required": [
@@ -2098,9 +2185,15 @@
             "id": {
               "type": "integer"
             }
+          },
+          "patternProperties": {
+            "^x-": true
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema155": {
       "type": "string",
@@ -2114,7 +2207,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema71"
       },
-      "title": "properties"
+      "title": "properties",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema157": {
       "type": "string"
@@ -2228,11 +2324,17 @@
                 "id": {
                   "type": "integer"
                 }
+              },
+              "patternProperties": {
+                "^x-": true
               }
             }
           ]
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema167": {
       "title": "allOf",
@@ -2296,7 +2398,10 @@
         "$ref": "#/$defs/__schema178"
       },
       "title": "examples",
-      "description": "Multiple named examples. Mutually exclusive with 'example'."
+      "description": "Multiple named examples. Mutually exclusive with 'example'.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema177": {
       "type": "string"
@@ -2349,7 +2454,10 @@
             "name": "Example"
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema180": {
       "type": "string",
@@ -2381,7 +2489,10 @@
         "$ref": "#/$defs/__schema187"
       },
       "title": "content",
-      "description": "For complex parameters. Mutually exclusive with 'schema'."
+      "description": "For complex parameters. Mutually exclusive with 'schema'.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema186": {
       "type": "string"
@@ -2408,13 +2519,19 @@
       "examples": [
         {
           "schema": {
-            "type": "object"
+            "type": "object",
+            "patternProperties": {
+              "^x-": true
+            }
           },
           "example": {
             "id": 1
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema188": {
       "title": "schema",
@@ -2433,7 +2550,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema178"
       },
-      "title": "examples"
+      "title": "examples",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema192": {
       "type": "string"
@@ -2446,7 +2566,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema195"
       },
-      "title": "encoding"
+      "title": "encoding",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema194": {
       "type": "string"
@@ -2478,7 +2601,10 @@
           "contentType": "application/json",
           "style": "form"
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema196": {
       "type": "string",
@@ -2493,7 +2619,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema199"
       },
-      "title": "headers"
+      "title": "headers",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema198": {
       "type": "string"
@@ -2545,6 +2674,9 @@
         },
         "content": {
           "$ref": "#/$defs/__schema218"
+        },
+        "patternProperties": {
+          "^x-": true
         }
       },
       "additionalProperties": false,
@@ -2557,7 +2689,10 @@
             "type": "integer"
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema201": {
       "type": "string",
@@ -2625,7 +2760,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema178"
       },
-      "title": "examples"
+      "title": "examples",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema217": {
       "type": "string"
@@ -2636,7 +2774,10 @@
         "$ref": "#/$defs/__schema219"
       },
       "additionalProperties": false,
-      "title": "content"
+      "title": "content",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema219": {
       "type": "string"
@@ -2728,6 +2869,9 @@
         },
         "content": {
           "$ref": "#/$defs/__schema248"
+        },
+        "patternProperties": {
+          "^x-": true
         }
       },
       "required": [
@@ -2745,9 +2889,15 @@
           "required": true,
           "schema": {
             "type": "integer"
+          },
+          "patternProperties": {
+            "^x-": true
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema235": {
       "type": "string",
@@ -2842,7 +2992,10 @@
         "$ref": "#/$defs/__schema178"
       },
       "title": "examples",
-      "description": "Multiple named examples. Mutually exclusive with 'example'."
+      "description": "Multiple named examples. Mutually exclusive with 'example'.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema247": {
       "type": "string"
@@ -2856,7 +3009,10 @@
         "$ref": "#/$defs/__schema187"
       },
       "title": "content",
-      "description": "For complex parameters. Mutually exclusive with 'schema'."
+      "description": "For complex parameters. Mutually exclusive with 'schema'.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema249": {
       "type": "string"
@@ -2897,6 +3053,9 @@
         },
         "content": {
           "$ref": "#/$defs/__schema266"
+        },
+        "patternProperties": {
+          "^x-": true
         }
       },
       "required": [
@@ -2915,7 +3074,10 @@
             "format": "uuid"
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema252": {
       "type": "string",
@@ -3010,7 +3172,10 @@
         "$ref": "#/$defs/__schema178"
       },
       "title": "examples",
-      "description": "Multiple named examples. Mutually exclusive with 'example'."
+      "description": "Multiple named examples. Mutually exclusive with 'example'.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema265": {
       "type": "string"
@@ -3024,7 +3189,10 @@
         "$ref": "#/$defs/__schema187"
       },
       "title": "content",
-      "description": "For complex parameters. Mutually exclusive with 'schema'."
+      "description": "For complex parameters. Mutually exclusive with 'schema'.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema267": {
       "type": "string"
@@ -3065,6 +3233,9 @@
         },
         "content": {
           "$ref": "#/$defs/__schema284"
+        },
+        "patternProperties": {
+          "^x-": true
         }
       },
       "required": [
@@ -3082,7 +3253,10 @@
             "type": "string"
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema270": {
       "type": "string",
@@ -3177,7 +3351,10 @@
         "$ref": "#/$defs/__schema178"
       },
       "title": "examples",
-      "description": "Multiple named examples. Mutually exclusive with 'example'."
+      "description": "Multiple named examples. Mutually exclusive with 'example'.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema283": {
       "type": "string"
@@ -3191,7 +3368,10 @@
         "$ref": "#/$defs/__schema187"
       },
       "title": "content",
-      "description": "For complex parameters. Mutually exclusive with 'schema'."
+      "description": "For complex parameters. Mutually exclusive with 'schema'.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema285": {
       "type": "string"
@@ -3224,6 +3404,9 @@
         },
         "required": {
           "$ref": "#/$defs/__schema294"
+        },
+        "patternProperties": {
+          "^x-": true
         }
       },
       "required": [
@@ -3237,13 +3420,22 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "patternProperties": {
+                  "^x-": true
+                }
               }
             }
           },
-          "required": true
+          "required": true,
+          "patternProperties": {
+            "^x-": true
+          }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema290": {
       "title": "description",
@@ -3260,7 +3452,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema187"
       },
-      "title": "content"
+      "title": "content",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema293": {
       "type": "string"
@@ -3292,7 +3487,10 @@
             "description": "Not found"
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema298": {
       "anyOf": [
@@ -3346,12 +3544,18 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "patternProperties": {
+                  "^x-": true
+                }
               }
             }
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema301": {
       "type": "string",
@@ -3366,7 +3570,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema199"
       },
-      "title": "headers"
+      "title": "headers",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema303": {
       "type": "string"
@@ -3379,7 +3586,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema187"
       },
-      "title": "content"
+      "title": "content",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema305": {
       "type": "string"
@@ -3392,7 +3602,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema308"
       },
-      "title": "links"
+      "title": "links",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema307": {
       "type": "string"
@@ -3441,7 +3654,10 @@
             "userId": "$response.body#/id"
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema310": {
       "type": "string",
@@ -3460,7 +3676,10 @@
       },
       "additionalProperties": false,
       "title": "parameters",
-      "description": "A map representing parameters to pass to an operation as specified with operationId or identified via operationRef."
+      "description": "A map representing parameters to pass to an operation as specified with operationId or identified via operationRef.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema313": {
       "type": "string"
@@ -3489,7 +3708,10 @@
         "$ref": "#/$defs/__schema322"
       },
       "title": "callbacks",
-      "description": "Webhooks/callbacks triggered by this operation."
+      "description": "Webhooks/callbacks triggered by this operation.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema321": {
       "type": "string"
@@ -3528,7 +3750,10 @@
         "$ref": "#/$defs/__schema32"
       },
       "title": "Callback",
-      "description": "A map of possible out-of-band callbacks related to the parent operation."
+      "description": "A map of possible out-of-band callbacks related to the parent operation.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema324": {
       "type": "string"
@@ -3576,7 +3801,10 @@
             "write:pets"
           ]
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema330": {
       "type": "string"
@@ -3690,11 +3918,17 @@
         {
           "schemas": {
             "Pet": {
-              "type": "object"
+              "type": "object",
+              "patternProperties": {
+                "^x-": true
+              }
             }
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema349": {
       "type": "object",
@@ -3703,6 +3937,9 @@
       },
       "additionalProperties": {
         "$ref": "#/$defs/__schema71"
+      },
+      "patternProperties": {
+        "^x-": true
       }
     },
     "__schema350": {
@@ -3712,6 +3949,9 @@
       },
       "additionalProperties": {
         "$ref": "#/$defs/__schema299"
+      },
+      "patternProperties": {
+        "^x-": true
       }
     },
     "__schema351": {
@@ -3721,6 +3961,9 @@
       },
       "additionalProperties": {
         "$ref": "#/$defs/__schema50"
+      },
+      "patternProperties": {
+        "^x-": true
       }
     },
     "__schema352": {
@@ -3730,6 +3973,9 @@
       },
       "additionalProperties": {
         "$ref": "#/$defs/__schema178"
+      },
+      "patternProperties": {
+        "^x-": true
       }
     },
     "__schema353": {
@@ -3739,6 +3985,9 @@
       },
       "additionalProperties": {
         "$ref": "#/$defs/__schema288"
+      },
+      "patternProperties": {
+        "^x-": true
       }
     },
     "__schema354": {
@@ -3748,6 +3997,9 @@
       },
       "additionalProperties": {
         "$ref": "#/$defs/__schema199"
+      },
+      "patternProperties": {
+        "^x-": true
       }
     },
     "__schema355": {
@@ -3786,6 +4038,9 @@
             "scheme": "bearer"
           }
         ]
+      },
+      "patternProperties": {
+        "^x-": true
       }
     },
     "__schema356": {
@@ -3818,7 +4073,10 @@
           "name": "X-API-Key",
           "in": "header"
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema357": {
       "type": "string",
@@ -3893,7 +4151,10 @@
           "scheme": "bearer",
           "bearerFormat": "JWT"
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema364": {
       "type": "string",
@@ -3959,7 +4220,10 @@
       ],
       "additionalProperties": false,
       "title": "OAuth2SecurityScheme",
-      "description": "OAuth2 security scheme"
+      "description": "OAuth2 security scheme",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema371": {
       "type": "string",
@@ -3992,7 +4256,10 @@
             "scopes": {}
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema373": {
       "title": "implicit",
@@ -4028,7 +4295,10 @@
             "read:pets": "Read pets"
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema375": {
       "type": "string",
@@ -4057,7 +4327,10 @@
         "$ref": "#/$defs/__schema380"
       },
       "title": "scopes",
-      "description": "The available scopes for the OAuth2 security scheme."
+      "description": "The available scopes for the OAuth2 security scheme.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema379": {
       "type": "string"
@@ -4106,7 +4379,10 @@
       ],
       "additionalProperties": false,
       "title": "OpenIdConnectSecurityScheme",
-      "description": "OpenID Connect security scheme"
+      "description": "OpenID Connect security scheme",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema390": {
       "type": "string",
@@ -4134,6 +4410,9 @@
       },
       "additionalProperties": {
         "$ref": "#/$defs/__schema308"
+      },
+      "patternProperties": {
+        "^x-": true
       }
     },
     "__schema396": {
@@ -4143,6 +4422,9 @@
       },
       "additionalProperties": {
         "$ref": "#/$defs/__schema322"
+      },
+      "patternProperties": {
+        "^x-": true
       }
     },
     "__schema397": {},
@@ -4186,7 +4468,10 @@
             "name": "pets",
             "description": "Everything about your Pets"
           }
-        ]
+        ],
+        "patternProperties": {
+          "^x-": true
+        }
       }
     },
     "__schema402": {
@@ -4270,7 +4555,10 @@
           "version": "1.0.0",
           "description": "A sample API"
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema410": {
       "type": "string",
@@ -4343,7 +4631,10 @@
           "url": "https://example.com/support",
           "email": "support@example.com"
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema416": {
       "type": "string",
@@ -4405,7 +4696,10 @@
           "name": "MIT",
           "url": "https://opensource.org/licenses/MIT"
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema421": {
       "type": "string",
@@ -4481,7 +4775,10 @@
           "url": "https://api.example.com/v1",
           "description": "Production server"
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema430": {
       "type": "string",
@@ -4525,7 +4822,10 @@
           }
         }
       ],
-      "description": "A map of server variables for URL template substitution."
+      "description": "A map of server variables for URL template substitution.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema433": {
       "type": "string"
@@ -4557,7 +4857,10 @@
             "http"
           ]
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema435": {
       "type": "array",
@@ -4635,7 +4938,10 @@
             }
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema443": {
       "type": "string"
@@ -4685,7 +4991,10 @@
       },
       "additionalProperties": false,
       "title": "PathItem",
-      "description": "Describes the operations available on a single path."
+      "description": "Describes the operations available on a single path.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema445": {
       "$ref": "#/$defs/__schema34"
@@ -4761,7 +5070,10 @@
             }
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema452": {
       "type": "array",
@@ -4879,6 +5191,9 @@
         },
         "content": {
           "$ref": "#/$defs/__schema622"
+        },
+        "patternProperties": {
+          "^x-": true
         }
       },
       "required": [
@@ -4896,7 +5211,10 @@
             "type": "integer"
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema460": {
       "type": "string",
@@ -5035,6 +5353,9 @@
             "id": {
               "type": "integer"
             }
+          },
+          "patternProperties": {
+            "^x-": true
           }
         }
       ]
@@ -5098,7 +5419,10 @@
             "null"
           ]
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema476": {
       "type": "string",
@@ -5190,7 +5514,10 @@
             "dog": "#/components/schemas/Dog"
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema487": {
       "type": "string",
@@ -5206,7 +5533,10 @@
         "$ref": "#/$defs/__schema490"
       },
       "title": "mapping",
-      "description": "An object to hold mappings between payload values and schema names or references."
+      "description": "An object to hold mappings between payload values and schema names or references.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema489": {
       "type": "string"
@@ -5246,7 +5576,10 @@
           "name": "animal",
           "wrapped": true
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema494": {
       "type": "string",
@@ -5306,7 +5639,10 @@
           "description": "Find more info here",
           "url": "https://docs.example.com"
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema504": {
       "type": "string",
@@ -5449,7 +5785,10 @@
           "minLength": 10,
           "maxLength": 100
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema514": {
       "type": "string",
@@ -5609,7 +5948,10 @@
           "exclusiveMinimum": 0,
           "exclusiveMaximum": 100
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema526": {
       "type": "string",
@@ -5759,7 +6101,10 @@
           "type": "integer",
           "minimum": 0
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema539": {
       "type": "string",
@@ -5886,7 +6231,10 @@
         {
           "type": "boolean"
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema552": {
       "type": "string",
@@ -5948,7 +6296,10 @@
         {
           "type": "null"
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema554": {
       "type": "string",
@@ -6037,7 +6388,10 @@
             "type": "string"
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema556": {
       "type": "string",
@@ -6165,7 +6519,8 @@
           "$ref": "#/$defs/__schema577"
         },
         "patternProperties": {
-          "$ref": "#/$defs/__schema579"
+          "$ref": "#/$defs/__schema579",
+          "^x-": true
         },
         "propertyNames": {
           "$ref": "#/$defs/__schema581"
@@ -6202,9 +6557,15 @@
             "id": {
               "type": "integer"
             }
+          },
+          "patternProperties": {
+            "^x-": true
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema574": {
       "type": "string",
@@ -6218,7 +6579,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema474"
       },
-      "title": "properties"
+      "title": "properties",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema576": {
       "type": "string"
@@ -6245,7 +6609,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema474"
       },
-      "title": "patternProperties"
+      "title": "patternProperties",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema580": {
       "type": "string"
@@ -6265,7 +6632,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema474"
       },
-      "title": "dependentSchemas"
+      "title": "dependentSchemas",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema584": {
       "type": "string"
@@ -6278,7 +6648,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema587"
       },
-      "title": "dependentRequired"
+      "title": "dependentRequired",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema586": {
       "type": "string"
@@ -6412,7 +6785,10 @@
             }
           ]
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema598": {
       "title": "allOf",
@@ -6500,7 +6876,10 @@
         "$ref": "#/$defs/__schema615"
       },
       "title": "examples",
-      "description": "Multiple named examples. Mutually exclusive with 'example'."
+      "description": "Multiple named examples. Mutually exclusive with 'example'.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema614": {
       "type": "string"
@@ -6553,7 +6932,10 @@
             "name": "Example"
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema617": {
       "type": "string",
@@ -6585,7 +6967,10 @@
         "$ref": "#/$defs/__schema624"
       },
       "title": "content",
-      "description": "For complex parameters. Mutually exclusive with 'schema'."
+      "description": "For complex parameters. Mutually exclusive with 'schema'.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema623": {
       "type": "string"
@@ -6612,13 +6997,19 @@
       "examples": [
         {
           "schema": {
-            "type": "object"
+            "type": "object",
+            "patternProperties": {
+              "^x-": true
+            }
           },
           "example": {
             "id": 1
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema625": {
       "title": "schema",
@@ -6637,7 +7028,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema615"
       },
-      "title": "examples"
+      "title": "examples",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema629": {
       "type": "string"
@@ -6650,7 +7044,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema632"
       },
-      "title": "encoding"
+      "title": "encoding",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema631": {
       "type": "string"
@@ -6682,7 +7079,10 @@
           "contentType": "application/json",
           "style": "form"
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema633": {
       "type": "string",
@@ -6697,7 +7097,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema636"
       },
-      "title": "headers"
+      "title": "headers",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema635": {
       "type": "string"
@@ -6749,6 +7152,9 @@
         },
         "content": {
           "$ref": "#/$defs/__schema655"
+        },
+        "patternProperties": {
+          "^x-": true
         }
       },
       "additionalProperties": false,
@@ -6761,7 +7167,10 @@
             "type": "integer"
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema638": {
       "type": "string",
@@ -6829,7 +7238,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema615"
       },
-      "title": "examples"
+      "title": "examples",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema654": {
       "type": "string"
@@ -6840,7 +7252,10 @@
         "$ref": "#/$defs/__schema656"
       },
       "additionalProperties": false,
-      "title": "content"
+      "title": "content",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema656": {
       "type": "string"
@@ -6932,6 +7347,9 @@
         },
         "content": {
           "$ref": "#/$defs/__schema684"
+        },
+        "patternProperties": {
+          "^x-": true
         }
       },
       "required": [
@@ -6949,9 +7367,15 @@
           "required": true,
           "schema": {
             "type": "integer"
+          },
+          "patternProperties": {
+            "^x-": true
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema672": {
       "type": "string",
@@ -7031,7 +7455,10 @@
         "$ref": "#/$defs/__schema615"
       },
       "title": "examples",
-      "description": "Multiple named examples. Mutually exclusive with 'example'."
+      "description": "Multiple named examples. Mutually exclusive with 'example'.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema683": {
       "type": "string"
@@ -7045,7 +7472,10 @@
         "$ref": "#/$defs/__schema624"
       },
       "title": "content",
-      "description": "For complex parameters. Mutually exclusive with 'schema'."
+      "description": "For complex parameters. Mutually exclusive with 'schema'.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema685": {
       "type": "string"
@@ -7086,6 +7516,9 @@
         },
         "content": {
           "$ref": "#/$defs/__schema701"
+        },
+        "patternProperties": {
+          "^x-": true
         }
       },
       "required": [
@@ -7104,7 +7537,10 @@
             "format": "uuid"
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema688": {
       "type": "string",
@@ -7190,7 +7626,10 @@
         "$ref": "#/$defs/__schema615"
       },
       "title": "examples",
-      "description": "Multiple named examples. Mutually exclusive with 'example'."
+      "description": "Multiple named examples. Mutually exclusive with 'example'.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema700": {
       "type": "string"
@@ -7204,7 +7643,10 @@
         "$ref": "#/$defs/__schema624"
       },
       "title": "content",
-      "description": "For complex parameters. Mutually exclusive with 'schema'."
+      "description": "For complex parameters. Mutually exclusive with 'schema'.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema702": {
       "type": "string"
@@ -7245,6 +7687,9 @@
         },
         "content": {
           "$ref": "#/$defs/__schema718"
+        },
+        "patternProperties": {
+          "^x-": true
         }
       },
       "required": [
@@ -7262,7 +7707,10 @@
             "type": "string"
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema705": {
       "type": "string",
@@ -7348,7 +7796,10 @@
         "$ref": "#/$defs/__schema615"
       },
       "title": "examples",
-      "description": "Multiple named examples. Mutually exclusive with 'example'."
+      "description": "Multiple named examples. Mutually exclusive with 'example'.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema717": {
       "type": "string"
@@ -7362,7 +7813,10 @@
         "$ref": "#/$defs/__schema624"
       },
       "title": "content",
-      "description": "For complex parameters. Mutually exclusive with 'schema'."
+      "description": "For complex parameters. Mutually exclusive with 'schema'.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema719": {
       "type": "string"
@@ -7395,6 +7849,9 @@
         },
         "required": {
           "$ref": "#/$defs/__schema728"
+        },
+        "patternProperties": {
+          "^x-": true
         }
       },
       "required": [
@@ -7408,13 +7865,22 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "patternProperties": {
+                  "^x-": true
+                }
               }
             }
           },
-          "required": true
+          "required": true,
+          "patternProperties": {
+            "^x-": true
+          }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema724": {
       "title": "description",
@@ -7431,7 +7897,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema624"
       },
-      "title": "content"
+      "title": "content",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema727": {
       "type": "string"
@@ -7463,7 +7932,10 @@
             "description": "Not found"
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema732": {
       "anyOf": [
@@ -7517,12 +7989,18 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "patternProperties": {
+                  "^x-": true
+                }
               }
             }
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema735": {
       "type": "string",
@@ -7537,7 +8015,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema636"
       },
-      "title": "headers"
+      "title": "headers",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema737": {
       "type": "string"
@@ -7550,7 +8031,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema624"
       },
-      "title": "content"
+      "title": "content",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema739": {
       "type": "string"
@@ -7563,7 +8047,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema742"
       },
-      "title": "links"
+      "title": "links",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema741": {
       "type": "string"
@@ -7612,7 +8099,10 @@
             "userId": "$response.body#/id"
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema744": {
       "type": "string",
@@ -7631,7 +8121,10 @@
       },
       "additionalProperties": false,
       "title": "parameters",
-      "description": "A map representing parameters to pass to an operation as specified with operationId or identified via operationRef."
+      "description": "A map representing parameters to pass to an operation as specified with operationId or identified via operationRef.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema747": {
       "type": "string"
@@ -7658,7 +8151,10 @@
       },
       "additionalProperties": false,
       "title": "callbacks",
-      "description": "Webhooks/callbacks triggered by this operation."
+      "description": "Webhooks/callbacks triggered by this operation.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema755": {
       "type": "string"
@@ -7704,7 +8200,10 @@
             "write:pets"
           ]
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema761": {
       "type": "string"
@@ -7787,6 +8286,9 @@
       },
       "additionalProperties": {
         "$ref": "#/$defs/__schema444"
+      },
+      "patternProperties": {
+        "^x-": true
       }
     },
     "__schema780": {
@@ -7835,11 +8337,17 @@
         {
           "schemas": {
             "Pet": {
-              "type": "object"
+              "type": "object",
+              "patternProperties": {
+                "^x-": true
+              }
             }
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema782": {
       "type": "object",
@@ -7848,6 +8356,9 @@
       },
       "additionalProperties": {
         "$ref": "#/$defs/__schema474"
+      },
+      "patternProperties": {
+        "^x-": true
       }
     },
     "__schema783": {
@@ -7857,6 +8368,9 @@
       },
       "additionalProperties": {
         "$ref": "#/$defs/__schema733"
+      },
+      "patternProperties": {
+        "^x-": true
       }
     },
     "__schema784": {
@@ -7866,6 +8380,9 @@
       },
       "additionalProperties": {
         "$ref": "#/$defs/__schema458"
+      },
+      "patternProperties": {
+        "^x-": true
       }
     },
     "__schema785": {
@@ -7875,6 +8392,9 @@
       },
       "additionalProperties": {
         "$ref": "#/$defs/__schema615"
+      },
+      "patternProperties": {
+        "^x-": true
       }
     },
     "__schema786": {
@@ -7884,6 +8404,9 @@
       },
       "additionalProperties": {
         "$ref": "#/$defs/__schema722"
+      },
+      "patternProperties": {
+        "^x-": true
       }
     },
     "__schema787": {
@@ -7893,6 +8416,9 @@
       },
       "additionalProperties": {
         "$ref": "#/$defs/__schema636"
+      },
+      "patternProperties": {
+        "^x-": true
       }
     },
     "__schema788": {
@@ -7934,6 +8460,9 @@
             "scheme": "bearer"
           }
         ]
+      },
+      "patternProperties": {
+        "^x-": true
       }
     },
     "__schema789": {
@@ -7966,7 +8495,10 @@
           "name": "X-API-Key",
           "in": "header"
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema790": {
       "type": "string",
@@ -8026,7 +8558,10 @@
           "scheme": "bearer",
           "bearerFormat": "JWT"
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema796": {
       "type": "string",
@@ -8077,7 +8612,10 @@
           "type": "mutualTLS",
           "description": "Client certificate authentication"
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema802": {
       "type": "string",
@@ -8111,7 +8649,10 @@
       ],
       "additionalProperties": false,
       "title": "OAuth2SecurityScheme",
-      "description": "OAuth2 security scheme"
+      "description": "OAuth2 security scheme",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema807": {
       "type": "string",
@@ -8144,7 +8685,10 @@
             "scopes": {}
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema809": {
       "title": "implicit",
@@ -8180,7 +8724,10 @@
             "read:pets": "Read pets"
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema811": {
       "type": "string",
@@ -8209,7 +8756,10 @@
         "$ref": "#/$defs/__schema816"
       },
       "title": "scopes",
-      "description": "The available scopes for the OAuth2 security scheme."
+      "description": "The available scopes for the OAuth2 security scheme.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema815": {
       "type": "string"
@@ -8258,7 +8808,10 @@
       ],
       "additionalProperties": false,
       "title": "OpenIdConnectSecurityScheme",
-      "description": "OpenID Connect security scheme"
+      "description": "OpenID Connect security scheme",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema826": {
       "type": "string",
@@ -8286,6 +8839,9 @@
       },
       "additionalProperties": {
         "$ref": "#/$defs/__schema742"
+      },
+      "patternProperties": {
+        "^x-": true
       }
     },
     "__schema832": {
@@ -8317,6 +8873,9 @@
             }
           }
         ]
+      },
+      "patternProperties": {
+        "^x-": true
       }
     },
     "__schema833": {
@@ -8328,7 +8887,10 @@
         "$ref": "#/$defs/__schema444"
       },
       "title": "Callback",
-      "description": "A map of possible out-of-band callbacks related to the parent operation."
+      "description": "A map of possible out-of-band callbacks related to the parent operation.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema834": {
       "type": "string"
@@ -8340,6 +8902,9 @@
       },
       "additionalProperties": {
         "$ref": "#/$defs/__schema444"
+      },
+      "patternProperties": {
+        "^x-": true
       }
     },
     "__schema836": {},
@@ -8383,7 +8948,10 @@
             "name": "pets",
             "description": "Everything about your Pets"
           }
-        ]
+        ],
+        "patternProperties": {
+          "^x-": true
+        }
       }
     },
     "__schema841": {
@@ -8463,7 +9031,10 @@
           "version": "1.0.0",
           "description": "A sample API"
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema849": {
       "type": "string",
@@ -8536,7 +9107,10 @@
           "url": "https://example.com/support",
           "email": "support@example.com"
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema855": {
       "type": "string",
@@ -8590,7 +9164,10 @@
           "required": [
             "name"
           ],
-          "additionalProperties": false
+          "additionalProperties": false,
+          "patternProperties": {
+            "^x-": true
+          }
         },
         {
           "oneOf": [
@@ -8630,7 +9207,10 @@
           ]
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema861": {
       "type": "object",
@@ -8647,7 +9227,10 @@
           ]
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema862": {},
     "__schema863": {
@@ -8694,7 +9277,10 @@
           "description": "Production server",
           "name": "Production"
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema867": {
       "type": "string",
@@ -8738,7 +9324,10 @@
           }
         }
       ],
-      "description": "A map of server variables for URL template substitution."
+      "description": "A map of server variables for URL template substitution.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema870": {
       "type": "string"
@@ -8770,7 +9359,10 @@
             "http"
           ]
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema872": {
       "type": "array",
@@ -8859,7 +9451,10 @@
             }
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema881": {
       "type": "string"
@@ -8915,7 +9510,10 @@
       },
       "additionalProperties": false,
       "title": "PathItem",
-      "description": "Describes the operations available on a single path."
+      "description": "Describes the operations available on a single path.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema883": {
       "$ref": "#/$defs/__schema34"
@@ -8991,7 +9589,10 @@
             }
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema890": {
       "type": "array",
@@ -9109,6 +9710,9 @@
         },
         "content": {
           "$ref": "#/$defs/__schema1060"
+        },
+        "patternProperties": {
+          "^x-": true
         }
       },
       "required": [
@@ -9126,7 +9730,10 @@
             "type": "integer"
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema898": {
       "type": "string",
@@ -9262,6 +9869,9 @@
             "id": {
               "type": "integer"
             }
+          },
+          "patternProperties": {
+            "^x-": true
           }
         }
       ]
@@ -9350,7 +9960,10 @@
           "minLength": 10,
           "maxLength": 100
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema914": {
       "type": "string",
@@ -9445,7 +10058,10 @@
             "dog": "#/components/schemas/Dog"
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema925": {
       "type": "string",
@@ -9461,7 +10077,10 @@
         "$ref": "#/$defs/__schema928"
       },
       "title": "mapping",
-      "description": "An object to hold mappings between payload values and schema names or references."
+      "description": "An object to hold mappings between payload values and schema names or references.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema927": {
       "type": "string"
@@ -9506,7 +10125,10 @@
           "name": "animal",
           "wrapped": true
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema933": {
       "type": "string",
@@ -9566,7 +10188,10 @@
           "description": "Find more info here",
           "url": "https://docs.example.com"
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema943": {
       "type": "string",
@@ -9763,7 +10388,10 @@
           "exclusiveMinimum": 0,
           "exclusiveMaximum": 100
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema962": {
       "type": "string",
@@ -9913,7 +10541,10 @@
           "type": "integer",
           "minimum": 0
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema975": {
       "type": "string",
@@ -10040,7 +10671,10 @@
         {
           "type": "boolean"
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema988": {
       "type": "string",
@@ -10102,7 +10736,10 @@
         {
           "type": "null"
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema990": {
       "type": "string",
@@ -10191,7 +10828,10 @@
             "type": "string"
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema992": {
       "type": "string",
@@ -10319,7 +10959,8 @@
           "$ref": "#/$defs/__schema1013"
         },
         "patternProperties": {
-          "$ref": "#/$defs/__schema1015"
+          "$ref": "#/$defs/__schema1015",
+          "^x-": true
         },
         "propertyNames": {
           "$ref": "#/$defs/__schema1017"
@@ -10356,9 +10997,15 @@
             "id": {
               "type": "integer"
             }
+          },
+          "patternProperties": {
+            "^x-": true
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1010": {
       "type": "string",
@@ -10372,7 +11019,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema912"
       },
-      "title": "properties"
+      "title": "properties",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1012": {
       "type": "string"
@@ -10399,7 +11049,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema912"
       },
-      "title": "patternProperties"
+      "title": "patternProperties",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1016": {
       "type": "string"
@@ -10419,7 +11072,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema912"
       },
-      "title": "dependentSchemas"
+      "title": "dependentSchemas",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1020": {
       "type": "string"
@@ -10432,7 +11088,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema1023"
       },
-      "title": "dependentRequired"
+      "title": "dependentRequired",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1022": {
       "type": "string"
@@ -10566,7 +11225,10 @@
             }
           ]
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1034": {
       "title": "allOf",
@@ -10654,7 +11316,10 @@
         "$ref": "#/$defs/__schema1051"
       },
       "title": "examples",
-      "description": "Multiple named examples. Mutually exclusive with 'example'."
+      "description": "Multiple named examples. Mutually exclusive with 'example'.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1050": {
       "type": "string"
@@ -10713,7 +11378,10 @@
             "name": "Example"
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1053": {
       "type": "string",
@@ -10754,7 +11422,10 @@
         "$ref": "#/$defs/__schema1062"
       },
       "title": "content",
-      "description": "For complex parameters. Mutually exclusive with 'schema'."
+      "description": "For complex parameters. Mutually exclusive with 'schema'.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1061": {
       "type": "string"
@@ -10787,13 +11458,19 @@
       "examples": [
         {
           "schema": {
-            "type": "object"
+            "type": "object",
+            "patternProperties": {
+              "^x-": true
+            }
           },
           "example": {
             "id": 1
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1063": {
       "title": "schema",
@@ -10812,7 +11489,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema1051"
       },
-      "title": "examples"
+      "title": "examples",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1067": {
       "type": "string"
@@ -10825,7 +11505,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema1070"
       },
-      "title": "encoding"
+      "title": "encoding",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1069": {
       "type": "string"
@@ -10857,7 +11540,10 @@
           "contentType": "application/json",
           "style": "form"
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1071": {
       "type": "string",
@@ -10872,7 +11558,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema1074"
       },
-      "title": "headers"
+      "title": "headers",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1073": {
       "type": "string"
@@ -10924,6 +11613,9 @@
         },
         "content": {
           "$ref": "#/$defs/__schema1093"
+        },
+        "patternProperties": {
+          "^x-": true
         }
       },
       "additionalProperties": false,
@@ -10936,7 +11628,10 @@
             "type": "integer"
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1076": {
       "type": "string",
@@ -11004,7 +11699,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema1051"
       },
-      "title": "examples"
+      "title": "examples",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1092": {
       "type": "string"
@@ -11015,7 +11713,10 @@
         "$ref": "#/$defs/__schema1094"
       },
       "additionalProperties": false,
-      "title": "content"
+      "title": "content",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1094": {
       "type": "string"
@@ -11113,6 +11814,9 @@
             "id": {
               "type": "integer"
             }
+          },
+          "patternProperties": {
+            "^x-": true
           }
         }
       ],
@@ -11127,7 +11831,10 @@
         "$ref": "#/$defs/__schema1070"
       },
       "title": "itemEncoding",
-      "description": "Encoding for individual items in streaming responses."
+      "description": "Encoding for individual items in streaming responses.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1109": {
       "type": "string"
@@ -11169,6 +11876,9 @@
         },
         "content": {
           "$ref": "#/$defs/__schema1125"
+        },
+        "patternProperties": {
+          "^x-": true
         }
       },
       "required": [
@@ -11186,9 +11896,15 @@
           "required": true,
           "schema": {
             "type": "integer"
+          },
+          "patternProperties": {
+            "^x-": true
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1113": {
       "type": "string",
@@ -11268,7 +11984,10 @@
         "$ref": "#/$defs/__schema1051"
       },
       "title": "examples",
-      "description": "Multiple named examples. Mutually exclusive with 'example'."
+      "description": "Multiple named examples. Mutually exclusive with 'example'.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1124": {
       "type": "string"
@@ -11282,7 +12001,10 @@
         "$ref": "#/$defs/__schema1062"
       },
       "title": "content",
-      "description": "For complex parameters. Mutually exclusive with 'schema'."
+      "description": "For complex parameters. Mutually exclusive with 'schema'.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1126": {
       "type": "string"
@@ -11323,6 +12045,9 @@
         },
         "content": {
           "$ref": "#/$defs/__schema1142"
+        },
+        "patternProperties": {
+          "^x-": true
         }
       },
       "required": [
@@ -11341,7 +12066,10 @@
             "format": "uuid"
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1129": {
       "type": "string",
@@ -11427,7 +12155,10 @@
         "$ref": "#/$defs/__schema1051"
       },
       "title": "examples",
-      "description": "Multiple named examples. Mutually exclusive with 'example'."
+      "description": "Multiple named examples. Mutually exclusive with 'example'.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1141": {
       "type": "string"
@@ -11441,7 +12172,10 @@
         "$ref": "#/$defs/__schema1062"
       },
       "title": "content",
-      "description": "For complex parameters. Mutually exclusive with 'schema'."
+      "description": "For complex parameters. Mutually exclusive with 'schema'.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1143": {
       "type": "string"
@@ -11482,6 +12216,9 @@
         },
         "content": {
           "$ref": "#/$defs/__schema1159"
+        },
+        "patternProperties": {
+          "^x-": true
         }
       },
       "required": [
@@ -11499,7 +12236,10 @@
             "type": "string"
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1146": {
       "type": "string",
@@ -11585,7 +12325,10 @@
         "$ref": "#/$defs/__schema1051"
       },
       "title": "examples",
-      "description": "Multiple named examples. Mutually exclusive with 'example'."
+      "description": "Multiple named examples. Mutually exclusive with 'example'.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1158": {
       "type": "string"
@@ -11599,7 +12342,10 @@
         "$ref": "#/$defs/__schema1062"
       },
       "title": "content",
-      "description": "For complex parameters. Mutually exclusive with 'schema'."
+      "description": "For complex parameters. Mutually exclusive with 'schema'.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1160": {
       "type": "string"
@@ -11632,6 +12378,9 @@
         },
         "required": {
           "$ref": "#/$defs/__schema1169"
+        },
+        "patternProperties": {
+          "^x-": true
         }
       },
       "required": [
@@ -11645,13 +12394,22 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "patternProperties": {
+                  "^x-": true
+                }
               }
             }
           },
-          "required": true
+          "required": true,
+          "patternProperties": {
+            "^x-": true
+          }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1165": {
       "title": "description",
@@ -11668,7 +12426,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema1062"
       },
-      "title": "content"
+      "title": "content",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1168": {
       "type": "string"
@@ -11700,7 +12461,10 @@
             "description": "Not found"
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1173": {
       "anyOf": [
@@ -11754,12 +12518,18 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "patternProperties": {
+                  "^x-": true
+                }
               }
             }
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1176": {
       "type": "string",
@@ -11774,7 +12544,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema1074"
       },
-      "title": "headers"
+      "title": "headers",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1178": {
       "type": "string"
@@ -11787,7 +12560,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema1062"
       },
-      "title": "content"
+      "title": "content",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1180": {
       "type": "string"
@@ -11800,7 +12576,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema1183"
       },
-      "title": "links"
+      "title": "links",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1182": {
       "type": "string"
@@ -11849,7 +12628,10 @@
             "userId": "$response.body#/id"
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1185": {
       "type": "string",
@@ -11868,7 +12650,10 @@
       },
       "additionalProperties": false,
       "title": "parameters",
-      "description": "A map representing parameters to pass to an operation as specified with operationId or identified via operationRef."
+      "description": "A map representing parameters to pass to an operation as specified with operationId or identified via operationRef.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1188": {
       "type": "string"
@@ -11895,7 +12680,10 @@
       },
       "additionalProperties": false,
       "title": "callbacks",
-      "description": "Webhooks/callbacks triggered by this operation."
+      "description": "Webhooks/callbacks triggered by this operation.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1196": {
       "type": "string"
@@ -11941,7 +12729,10 @@
             "write:pets"
           ]
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1202": {
       "type": "string"
@@ -12008,7 +12799,10 @@
         "$ref": "#/$defs/__schema889"
       },
       "title": "additionalOperations",
-      "description": "Custom HTTP methods beyond the standard ones."
+      "description": "Custom HTTP methods beyond the standard ones.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1217": {
       "type": "string"
@@ -12043,6 +12837,9 @@
       },
       "additionalProperties": {
         "$ref": "#/$defs/__schema882"
+      },
+      "patternProperties": {
+        "^x-": true
       }
     },
     "__schema1224": {
@@ -12091,11 +12888,17 @@
         {
           "schemas": {
             "Pet": {
-              "type": "object"
+              "type": "object",
+              "patternProperties": {
+                "^x-": true
+              }
             }
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1226": {
       "type": "object",
@@ -12104,6 +12907,9 @@
       },
       "additionalProperties": {
         "$ref": "#/$defs/__schema912"
+      },
+      "patternProperties": {
+        "^x-": true
       }
     },
     "__schema1227": {
@@ -12113,6 +12919,9 @@
       },
       "additionalProperties": {
         "$ref": "#/$defs/__schema1174"
+      },
+      "patternProperties": {
+        "^x-": true
       }
     },
     "__schema1228": {
@@ -12122,6 +12931,9 @@
       },
       "additionalProperties": {
         "$ref": "#/$defs/__schema896"
+      },
+      "patternProperties": {
+        "^x-": true
       }
     },
     "__schema1229": {
@@ -12131,6 +12943,9 @@
       },
       "additionalProperties": {
         "$ref": "#/$defs/__schema1051"
+      },
+      "patternProperties": {
+        "^x-": true
       }
     },
     "__schema1230": {
@@ -12140,6 +12955,9 @@
       },
       "additionalProperties": {
         "$ref": "#/$defs/__schema1163"
+      },
+      "patternProperties": {
+        "^x-": true
       }
     },
     "__schema1231": {
@@ -12149,6 +12967,9 @@
       },
       "additionalProperties": {
         "$ref": "#/$defs/__schema1074"
+      },
+      "patternProperties": {
+        "^x-": true
       }
     },
     "__schema1232": {
@@ -12190,6 +13011,9 @@
             "scheme": "bearer"
           }
         ]
+      },
+      "patternProperties": {
+        "^x-": true
       }
     },
     "__schema1233": {
@@ -12222,7 +13046,10 @@
           "name": "X-API-Key",
           "in": "header"
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1234": {
       "type": "string",
@@ -12282,7 +13109,10 @@
           "scheme": "bearer",
           "bearerFormat": "JWT"
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1240": {
       "type": "string",
@@ -12333,7 +13163,10 @@
           "type": "mutualTLS",
           "description": "Client certificate authentication"
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1246": {
       "type": "string",
@@ -12367,7 +13200,10 @@
       ],
       "additionalProperties": false,
       "title": "OAuth2SecurityScheme",
-      "description": "OAuth2 security scheme"
+      "description": "OAuth2 security scheme",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1251": {
       "type": "string",
@@ -12403,7 +13239,10 @@
             "scopes": {}
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1253": {
       "title": "implicit",
@@ -12439,7 +13278,10 @@
             "read:pets": "Read pets"
           }
         }
-      ]
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1255": {
       "type": "string",
@@ -12468,7 +13310,10 @@
         "$ref": "#/$defs/__schema1260"
       },
       "title": "scopes",
-      "description": "The available scopes for the OAuth2 security scheme."
+      "description": "The available scopes for the OAuth2 security scheme.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1259": {
       "type": "string"
@@ -12522,7 +13367,10 @@
       ],
       "additionalProperties": false,
       "title": "OpenIdConnectSecurityScheme",
-      "description": "OpenID Connect security scheme"
+      "description": "OpenID Connect security scheme",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1271": {
       "type": "string",
@@ -12550,6 +13398,9 @@
       },
       "additionalProperties": {
         "$ref": "#/$defs/__schema1183"
+      },
+      "patternProperties": {
+        "^x-": true
       }
     },
     "__schema1277": {
@@ -12581,6 +13432,9 @@
             }
           }
         ]
+      },
+      "patternProperties": {
+        "^x-": true
       }
     },
     "__schema1278": {
@@ -12592,7 +13446,10 @@
         "$ref": "#/$defs/__schema882"
       },
       "title": "Callback",
-      "description": "A map of possible out-of-band callbacks related to the parent operation."
+      "description": "A map of possible out-of-band callbacks related to the parent operation.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1279": {
       "type": "string"
@@ -12604,6 +13461,9 @@
       },
       "additionalProperties": {
         "$ref": "#/$defs/__schema882"
+      },
+      "patternProperties": {
+        "^x-": true
       }
     },
     "__schema1281": {},
@@ -12657,7 +13517,10 @@
             "description": "Everything about your Pets",
             "kind": "nav"
           }
-        ]
+        ],
+        "patternProperties": {
+          "^x-": true
+        }
       }
     },
     "__schema1286": {
@@ -12779,7 +13642,10 @@
       ],
       "additionalProperties": false,
       "title": "info",
-      "description": "REQUIRED. Provides metadata about the API."
+      "description": "REQUIRED. Provides metadata about the API.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1300": {
       "type": "string",
@@ -12826,7 +13692,10 @@
         }
       },
       "additionalProperties": false,
-      "title": "Contact"
+      "title": "Contact",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1307": {
       "description": "The identifying name of the contact person/organization.",
@@ -12880,7 +13749,10 @@
         "name"
       ],
       "additionalProperties": false,
-      "title": "License"
+      "title": "License",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1316": {
       "type": "string",
@@ -12980,7 +13852,10 @@
         "$ref": "#/$defs/__schema1335"
       },
       "title": "paths",
-      "description": "REQUIRED. The available paths and operations."
+      "description": "REQUIRED. The available paths and operations.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1334": {
       "type": "string"
@@ -13022,7 +13897,10 @@
             "$ref"
           ],
           "additionalProperties": false,
-          "title": "PathItem"
+          "title": "PathItem",
+          "patternProperties": {
+            "^x-": true
+          }
         },
         {}
       ]
@@ -13075,7 +13953,10 @@
         "responses"
       ],
       "additionalProperties": false,
-      "title": "Operation"
+      "title": "Operation",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1338": {
       "title": "tags",
@@ -13119,7 +14000,10 @@
         "url"
       ],
       "additionalProperties": false,
-      "title": "ExternalDocumentation"
+      "title": "ExternalDocumentation",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1346": {
       "description": "A short description of the target documentation.",
@@ -13213,6 +14097,9 @@
         },
         "schema": {
           "$ref": "#/$defs/__schema1366"
+        },
+        "patternProperties": {
+          "^x-": true
         }
       },
       "required": [
@@ -13221,7 +14108,10 @@
         "schema"
       ],
       "additionalProperties": false,
-      "title": "BodyParameter"
+      "title": "BodyParameter",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1360": {
       "type": "string",
@@ -13338,12 +14228,18 @@
         },
         "multipleOf": {
           "$ref": "#/$defs/__schema1470"
+        },
+        "patternProperties": {
+          "^x-": true
         }
       },
       "additionalProperties": false,
       "title": "schema",
       "description": "REQUIRED. The schema defining the type.",
-      "$ref": "#/$defs/__schema1380"
+      "$ref": "#/$defs/__schema1380",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1367": {
       "title": "$ref",
@@ -13406,6 +14302,9 @@
       },
       "additionalProperties": {
         "$ref": "#/$defs/__schema1380"
+      },
+      "patternProperties": {
+        "^x-": true
       }
     },
     "__schema1380": {
@@ -13500,10 +14399,16 @@
         },
         "multipleOf": {
           "$ref": "#/$defs/__schema1470"
+        },
+        "patternProperties": {
+          "^x-": true
         }
       },
       "additionalProperties": false,
-      "title": "Schema"
+      "title": "Schema",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1381": {
       "title": "additionalProperties",
@@ -13582,7 +14487,10 @@
         }
       },
       "additionalProperties": false,
-      "title": "Items"
+      "title": "Items",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1385": {
       "$ref": "#/$defs/__schema34"
@@ -13778,7 +14686,10 @@
         }
       },
       "additionalProperties": false,
-      "title": "XML"
+      "title": "XML",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1430": {
       "title": "name",
@@ -14006,6 +14917,9 @@
         },
         "multipleOf": {
           "$ref": "#/$defs/__schema1513"
+        },
+        "patternProperties": {
+          "^x-": true
         }
       },
       "required": [
@@ -14014,7 +14928,10 @@
         "type"
       ],
       "additionalProperties": false,
-      "title": "NonBodyParameter"
+      "title": "NonBodyParameter",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1475": {
       "type": "string",
@@ -14200,7 +15117,10 @@
       },
       "additionalProperties": false,
       "title": "responses",
-      "description": "REQUIRED. The responses for this operation."
+      "description": "REQUIRED. The responses for this operation.",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1517": {
       "title": "default",
@@ -14237,7 +15157,10 @@
         "description"
       ],
       "additionalProperties": false,
-      "title": "Response"
+      "title": "Response",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1520": {
       "type": "string",
@@ -14319,7 +15242,13 @@
           "type"
         ],
         "additionalProperties": false,
-        "title": "Header"
+        "title": "Header",
+        "patternProperties": {
+          "^x-": true
+        }
+      },
+      "patternProperties": {
+        "^x-": true
       }
     },
     "__schema1524": {
@@ -14472,7 +15401,10 @@
       "propertyNames": {
         "type": "string"
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1561": {},
     "__schema1562": {},
@@ -14517,7 +15449,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema1571"
       },
-      "title": "SecurityRequirement"
+      "title": "SecurityRequirement",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1570": {
       "type": "string"
@@ -14583,7 +15518,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema1380"
       },
-      "title": "Definitions"
+      "title": "Definitions",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1584": {
       "type": "string"
@@ -14600,7 +15538,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema1588"
       },
-      "title": "ParametersDefinitions"
+      "title": "ParametersDefinitions",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1587": {
       "type": "string"
@@ -14627,7 +15568,10 @@
       "additionalProperties": {
         "$ref": "#/$defs/__schema1592"
       },
-      "title": "ResponsesDefinitions"
+      "title": "ResponsesDefinitions",
+      "patternProperties": {
+        "^x-": true
+      }
     },
     "__schema1591": {
       "type": "string"
@@ -14675,7 +15619,10 @@
           "name"
         ],
         "additionalProperties": false,
-        "title": "Tag"
+        "title": "Tag",
+        "patternProperties": {
+          "^x-": true
+        }
       }
     },
     "__schema1597": {

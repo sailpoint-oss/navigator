@@ -1,0 +1,502 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://navigator.local/meta/openapi-3.0-security-scheme.json",
+  "title": "SecurityScheme",
+  "anyOf": [
+    {
+      "$ref": "#/$defs/__schema0"
+    },
+    {
+      "$ref": "#/$defs/__schema8"
+    },
+    {
+      "$ref": "#/$defs/__schema14"
+    },
+    {
+      "$ref": "#/$defs/__schema20"
+    },
+    {
+      "$ref": "#/$defs/__schema39"
+    }
+  ],
+  "description": "Defines a security scheme that can be used by the operations.",
+  "examples": [
+    {
+      "type": "apiKey",
+      "name": "X-API-Key",
+      "in": "header"
+    },
+    {
+      "type": "http",
+      "scheme": "bearer"
+    }
+  ],
+  "$defs": {
+    "__schema0": {
+      "type": "object",
+      "properties": {
+        "$ref": {
+          "$ref": "#/$defs/__schema1"
+        },
+        "summary": {
+          "$ref": "#/$defs/__schema5"
+        },
+        "description": {
+          "$ref": "#/$defs/__schema6"
+        }
+      },
+      "required": [
+        "$ref"
+      ],
+      "additionalProperties": false,
+      "title": "Reference Object",
+      "description": "A reference to another component in the specification.",
+      "examples": [
+        {
+          "$ref": "#/components/schemas/Pet"
+        },
+        {
+          "$ref": "./schemas/User.yaml",
+          "summary": "A user",
+          "description": "A user is a type of person."
+        },
+        {
+          "$ref": "definitions.yaml#/Pet",
+          "summary": "A pet",
+          "description": "A pet is a type of animal."
+        },
+        {
+          "$ref": "https://example.com/schemas/Pet.yaml",
+          "summary": "A pet",
+          "description": "A pet is a type of animal."
+        }
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
+    },
+    "__schema1": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema2"
+        },
+        {
+          "$ref": "#/$defs/__schema3"
+        },
+        {
+          "$ref": "#/$defs/__schema4"
+        }
+      ],
+      "title": "Reference",
+      "description": "A reference to another component in the specification.",
+      "examples": [
+        "#/components/schemas/Pet",
+        "https://example.com/schemas/Pet.yaml",
+        "./schemas/Pet.yaml"
+      ]
+    },
+    "__schema2": {
+      "type": "string",
+      "pattern": "^#.*",
+      "title": "Internal JSON Pointer Reference",
+      "description": "Internal JSON Pointer reference",
+      "examples": [
+        "#/components/schemas/User",
+        "#/components/schemas/Error",
+        "#/components/responses/NotFound",
+        "#/components/parameters/PageParam",
+        "#/components/requestBodies/UserInput"
+      ]
+    },
+    "__schema3": {
+      "type": "string",
+      "pattern": "^https?:\\/\\/",
+      "title": "URL Reference",
+      "description": "URL reference",
+      "examples": [
+        "https://example.com/schemas/Pet.yaml",
+        "https://example.com/schemas/User.json",
+        "https://example.com/responses/Not-Found-Error.yaml",
+        "https://example.com/parameters.yaml#/PageParam",
+        "https://example.com/requestBodies.yaml#/requestBodies/UserInput"
+      ]
+    },
+    "__schema4": {
+      "type": "string",
+      "pattern": "^[^#\\s]+(\\.ya?ml|\\.json)(#\\/.*)?$",
+      "title": "Relative File Reference",
+      "description": "Relative file reference",
+      "examples": [
+        "./schemas/Pet.yaml",
+        "../common/types.yaml",
+        "schemas/Pet.yaml",
+        "./v2/components/parameters.yaml#/components/parameters/LimitParam",
+        "../common/types.yaml#/properties/id",
+        "schemas/Pet.yaml#/properties/name"
+      ]
+    },
+    "__schema5": {
+      "type": "string",
+      "title": "summary",
+      "description": "A short summary which by default SHOULD override that of the referenced component."
+    },
+    "__schema6": {
+      "type": "string",
+      "title": "description",
+      "description": "A description which by default SHOULD override that of the referenced component."
+    },
+    "__schema7": {},
+    "__schema8": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/__schema9"
+        },
+        "name": {
+          "$ref": "#/$defs/__schema10"
+        },
+        "in": {
+          "$ref": "#/$defs/__schema11"
+        },
+        "description": {
+          "$ref": "#/$defs/__schema12"
+        }
+      },
+      "required": [
+        "type",
+        "name",
+        "in"
+      ],
+      "additionalProperties": false,
+      "title": "ApiKeySecurityScheme",
+      "description": "API Key security scheme.",
+      "examples": [
+        {
+          "type": "apiKey",
+          "name": "X-API-Key",
+          "in": "header"
+        }
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
+    },
+    "__schema9": {
+      "type": "string",
+      "const": "apiKey",
+      "title": "type",
+      "examples": [
+        "apiKey"
+      ]
+    },
+    "__schema10": {
+      "type": "string",
+      "title": "name",
+      "examples": [
+        "X-API-Key",
+        "api_key",
+        "Authorization",
+        "X-Auth-Token"
+      ],
+      "description": "The name of the header, query, or cookie parameter."
+    },
+    "__schema11": {
+      "type": "string",
+      "enum": [
+        "query",
+        "header",
+        "cookie"
+      ],
+      "title": "in",
+      "examples": [
+        "header",
+        "query",
+        "cookie"
+      ],
+      "description": "Location of the API key: 'header' (most common), 'query', or 'cookie'."
+    },
+    "__schema12": {
+      "type": "string",
+      "title": "description",
+      "description": "A description of the security scheme."
+    },
+    "__schema13": {},
+    "__schema14": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/__schema15"
+        },
+        "scheme": {
+          "$ref": "#/$defs/__schema16"
+        },
+        "bearerFormat": {
+          "$ref": "#/$defs/__schema17"
+        },
+        "description": {
+          "$ref": "#/$defs/__schema18"
+        }
+      },
+      "required": [
+        "type",
+        "scheme"
+      ],
+      "additionalProperties": false,
+      "title": "HttpSecurityScheme",
+      "description": "HTTP authentication security scheme (Basic, Bearer, etc.).",
+      "examples": [
+        {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
+    },
+    "__schema15": {
+      "type": "string",
+      "const": "http",
+      "title": "type",
+      "examples": [
+        "http"
+      ]
+    },
+    "__schema16": {
+      "type": "string",
+      "title": "scheme",
+      "examples": [
+        "bearer",
+        "basic",
+        "digest",
+        "hoba",
+        "mutual",
+        "negotiate",
+        "oauth",
+        "scram-sha-1",
+        "scram-sha-256",
+        "vapid"
+      ],
+      "description": "HTTP auth scheme (IANA registered). Common: 'bearer', 'basic'."
+    },
+    "__schema17": {
+      "type": "string",
+      "title": "bearerFormat",
+      "examples": [
+        "JWT",
+        "opaque",
+        "Bearer"
+      ],
+      "description": "Hint for bearer token format. Only applicable when scheme='bearer'."
+    },
+    "__schema18": {
+      "type": "string",
+      "title": "description",
+      "description": "A description of the security scheme."
+    },
+    "__schema19": {},
+    "__schema20": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/__schema21"
+        },
+        "flows": {
+          "$ref": "#/$defs/__schema22"
+        },
+        "description": {
+          "$ref": "#/$defs/__schema36"
+        }
+      },
+      "required": [
+        "type",
+        "flows"
+      ],
+      "additionalProperties": false,
+      "title": "OAuth2SecurityScheme",
+      "description": "OAuth2 security scheme",
+      "patternProperties": {
+        "^x-": true
+      }
+    },
+    "__schema21": {
+      "type": "string",
+      "const": "oauth2",
+      "title": "type"
+    },
+    "__schema22": {
+      "type": "object",
+      "properties": {
+        "implicit": {
+          "$ref": "#/$defs/__schema23"
+        },
+        "password": {
+          "$ref": "#/$defs/__schema32"
+        },
+        "clientCredentials": {
+          "$ref": "#/$defs/__schema33"
+        },
+        "authorizationCode": {
+          "$ref": "#/$defs/__schema34"
+        }
+      },
+      "additionalProperties": false,
+      "title": "flows",
+      "description": "Allows configuration of the supported OAuth Flows.",
+      "examples": [
+        {
+          "implicit": {
+            "authorizationUrl": "https://auth.example.com/authorize",
+            "scopes": {}
+          }
+        }
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
+    },
+    "__schema23": {
+      "title": "implicit",
+      "$ref": "#/$defs/__schema24"
+    },
+    "__schema24": {
+      "type": "object",
+      "properties": {
+        "authorizationUrl": {
+          "$ref": "#/$defs/__schema25"
+        },
+        "tokenUrl": {
+          "$ref": "#/$defs/__schema26"
+        },
+        "refreshUrl": {
+          "$ref": "#/$defs/__schema27"
+        },
+        "scopes": {
+          "$ref": "#/$defs/__schema28"
+        }
+      },
+      "required": [
+        "scopes"
+      ],
+      "additionalProperties": false,
+      "title": "OAuthFlow",
+      "description": "Configuration details for a supported OAuth Flow.",
+      "examples": [
+        {
+          "authorizationUrl": "https://auth.example.com/authorize",
+          "tokenUrl": "https://auth.example.com/token",
+          "scopes": {
+            "read:pets": "Read pets"
+          }
+        }
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
+    },
+    "__schema25": {
+      "type": "string",
+      "format": "uri",
+      "title": "authorizationUrl",
+      "description": "The authorization URL to be used for this flow."
+    },
+    "__schema26": {
+      "type": "string",
+      "format": "uri",
+      "title": "tokenUrl",
+      "description": "The token URL to be used for this flow."
+    },
+    "__schema27": {
+      "type": "string",
+      "format": "uri",
+      "title": "refreshUrl",
+      "description": "The URL to be used for obtaining refresh tokens."
+    },
+    "__schema28": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema29"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema30"
+      },
+      "title": "scopes",
+      "description": "The available scopes for the OAuth2 security scheme.",
+      "patternProperties": {
+        "^x-": true
+      }
+    },
+    "__schema29": {
+      "type": "string"
+    },
+    "__schema30": {
+      "type": "string"
+    },
+    "__schema31": {},
+    "__schema32": {
+      "title": "password",
+      "$ref": "#/$defs/__schema24"
+    },
+    "__schema33": {
+      "title": "clientCredentials",
+      "$ref": "#/$defs/__schema24"
+    },
+    "__schema34": {
+      "title": "authorizationCode",
+      "$ref": "#/$defs/__schema24"
+    },
+    "__schema35": {},
+    "__schema36": {
+      "title": "description",
+      "$ref": "#/$defs/__schema37"
+    },
+    "__schema37": {
+      "type": "string"
+    },
+    "__schema38": {},
+    "__schema39": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/__schema40"
+        },
+        "openIdConnectUrl": {
+          "$ref": "#/$defs/__schema41"
+        },
+        "description": {
+          "$ref": "#/$defs/__schema42"
+        }
+      },
+      "required": [
+        "type",
+        "openIdConnectUrl"
+      ],
+      "additionalProperties": false,
+      "title": "OpenIdConnectSecurityScheme",
+      "description": "OpenID Connect security scheme",
+      "patternProperties": {
+        "^x-": true
+      }
+    },
+    "__schema40": {
+      "type": "string",
+      "const": "openIdConnect",
+      "title": "type"
+    },
+    "__schema41": {
+      "type": "string",
+      "format": "uri",
+      "title": "openIdConnectUrl",
+      "description": "OpenID Connect URL to discover OAuth2 configuration values."
+    },
+    "__schema42": {
+      "title": "description",
+      "$ref": "#/$defs/__schema43"
+    },
+    "__schema43": {
+      "type": "string"
+    },
+    "__schema44": {}
+  }
+}

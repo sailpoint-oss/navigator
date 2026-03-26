@@ -93,7 +93,9 @@ func (pr *PipelineRunner) runStage(ctx context.Context, g *WorkspaceGraph, uri s
 	return nil
 }
 
-// DefaultStages returns the standard five-stage pipeline.
+// DefaultStages returns Navigator's shared three-stage substrate.
+// Downstream lint/validate/analyze stages are owned by higher-level
+// orchestrators such as Telescope and Barrelman.
 func DefaultStages() []Stage {
 	return []Stage{
 		&rawStage{},

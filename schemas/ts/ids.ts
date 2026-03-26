@@ -2,6 +2,14 @@
 export const META_ROOT_ID = "https://navigator.local/meta/openapi-root.json";
 export const META_FRAGMENT_ID = "https://navigator.local/meta/openapi-fragment.json";
 
+export function metaRootVersionID(version: string): string {
+  return `https://navigator.local/meta/openapi-${version}-root.json`;
+}
+
+export function metaFragmentVersionID(version: string, fragment: string): string {
+  return `https://navigator.local/meta/openapi-${version}-${fragment}.json`;
+}
+
 /** Align with jsonschema/v6 Draft2020 in Go */
 export const META_JSON_SCHEMA_URI =
   "https://json-schema.org/draft/2020-12/schema";

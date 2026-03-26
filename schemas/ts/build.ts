@@ -10,8 +10,18 @@ import {
   META_FRAGMENT_ID,
   META_JSON_SCHEMA_URI,
   META_ROOT_ID,
+  metaFragmentVersionID,
+  metaRootVersionID,
 } from "./ids";
-import { OpenAPI2Schema, SchemaObject2Schema } from "./openapi/openapi-2.0-module";
+import {
+  Header2Schema,
+  OpenAPI2Schema,
+  Operation2Schema,
+  Parameter2Schema,
+  PathItem2Schema,
+  Response2Schema,
+  SchemaObject2Schema,
+} from "./openapi/openapi-2.0-module";
 import {
   Components30Schema,
   Header30Schema,
@@ -92,6 +102,18 @@ function tightenAdditionalProperties(schema: Record<string, unknown>): Record<st
           out[k] = walk(v);
         }
       }
+      if (looksLikeObjectSchema(out)) {
+        const patternProperties =
+          out.patternProperties !== null &&
+          typeof out.patternProperties === "object" &&
+          !Array.isArray(out.patternProperties)
+            ? { ...(out.patternProperties as Record<string, unknown>) }
+            : {};
+        if (patternProperties["^x-"] === undefined) {
+          patternProperties["^x-"] = true;
+        }
+        out.patternProperties = patternProperties;
+      }
       return out;
     }
     return obj;
@@ -103,6 +125,15 @@ function tightenAdditionalProperties(schema: Record<string, unknown>): Record<st
       typeof v === "object" &&
       !Array.isArray(v) &&
       Object.keys(v as Record<string, unknown>).length === 0
+    );
+  }
+
+  function looksLikeObjectSchema(v: Record<string, unknown>): boolean {
+    return (
+      v.type === "object" ||
+      v.properties !== undefined ||
+      v.required !== undefined ||
+      v.additionalProperties !== undefined
     );
   }
 
@@ -135,6 +166,18 @@ function wrapMeta(
 function writeSchema(filename: string, body: Record<string, unknown>) {
   const path = join(metaDir, filename);
   writeFileSync(path, `${JSON.stringify(body, null, 2)}\n`, "utf-8");
+}
+
+function writeNamedSchema(
+  filename: string,
+  schema: z.ZodType,
+  meta: {
+    $id: string;
+    title: string;
+    description?: string;
+  },
+) {
+  writeSchema(filename, wrapMeta(toDraft2020(schema), meta));
 }
 
 function toDraft2020(zodSchema: z.ZodType): Record<string, unknown> {
@@ -189,25 +232,97 @@ export const navigatorFragmentMetaSchema = z.union([
   SchemaObject2Schema,
 ]);
 
-const rootJson = toDraft2020(navigatorRootMetaSchema);
-writeSchema(
-  "openapi-root.schema.json",
-  wrapMeta(rootJson, {
-    $id: META_ROOT_ID,
-    title: "Navigator OpenAPI root document (meta-validation)",
-  }),
-);
+writeNamedSchema("openapi-root.schema.json", navigatorRootMetaSchema, {
+  $id: META_ROOT_ID,
+  title: "Navigator OpenAPI root document (meta-validation)",
+});
 
-const fragJson = toDraft2020(navigatorFragmentMetaSchema);
-writeSchema(
-  "openapi-fragment.schema.json",
-  wrapMeta(fragJson, {
-    $id: META_FRAGMENT_ID,
-    title: "Navigator OpenAPI fragment document (meta-validation)",
-    description:
-      "Non-root files: path items, operations, schema objects, components snippets, etc. (Telescope Zod sources).",
-  }),
-);
+writeNamedSchema("openapi-fragment.schema.json", navigatorFragmentMetaSchema, {
+  $id: META_FRAGMENT_ID,
+  title: "Navigator OpenAPI fragment document (meta-validation)",
+  description:
+    "Non-root files: path items, operations, schema objects, components snippets, etc. (Telescope Zod sources).",
+});
+
+const versionedRootSchemas = [
+  {
+    version: "2.0",
+    filename: "openapi-2.0-root.schema.json",
+    schema: OpenAPI2Schema,
+    title: "Navigator OpenAPI 2.0 root document (meta-validation)",
+  },
+  {
+    version: "3.0",
+    filename: "openapi-3.0-root.schema.json",
+    schema: OpenAPI30Schema,
+    title: "Navigator OpenAPI 3.0 root document (meta-validation)",
+  },
+  {
+    version: "3.1",
+    filename: "openapi-3.1-root.schema.json",
+    schema: OpenAPI31Schema,
+    title: "Navigator OpenAPI 3.1 root document (meta-validation)",
+  },
+  {
+    version: "3.2",
+    filename: "openapi-3.2-root.schema.json",
+    schema: OpenAPI32Schema,
+    title: "Navigator OpenAPI 3.2 root document (meta-validation)",
+  },
+] as const;
+
+for (const item of versionedRootSchemas) {
+  writeNamedSchema(item.filename, item.schema, {
+    $id: metaRootVersionID(item.version),
+    title: item.title,
+  });
+}
+
+const versionedFragmentSchemas = [
+  { version: "2.0", kind: "schema", schema: SchemaObject2Schema },
+  { version: "2.0", kind: "path-item", schema: PathItem2Schema },
+  { version: "2.0", kind: "operation", schema: Operation2Schema },
+  { version: "2.0", kind: "parameter", schema: Parameter2Schema },
+  { version: "2.0", kind: "response", schema: Response2Schema },
+  { version: "2.0", kind: "header", schema: Header2Schema },
+  { version: "3.0", kind: "schema", schema: SchemaObject30Schema },
+  { version: "3.0", kind: "path-item", schema: PathItem30Schema },
+  { version: "3.0", kind: "operation", schema: Operation30Schema },
+  { version: "3.0", kind: "parameter", schema: Parameter30Schema },
+  { version: "3.0", kind: "request-body", schema: RequestBody30Schema },
+  { version: "3.0", kind: "response", schema: Response30Schema },
+  { version: "3.0", kind: "header", schema: Header30Schema },
+  { version: "3.0", kind: "security-scheme", schema: SecurityScheme30Schema },
+  { version: "3.0", kind: "components", schema: Components30Schema },
+  { version: "3.0", kind: "server", schema: Server30Schema },
+  { version: "3.1", kind: "schema", schema: SchemaObject31Schema },
+  { version: "3.1", kind: "path-item", schema: PathItem31Schema },
+  { version: "3.1", kind: "operation", schema: Operation31Schema },
+  { version: "3.1", kind: "parameter", schema: Parameter31Schema },
+  { version: "3.1", kind: "request-body", schema: RequestBody31Schema },
+  { version: "3.1", kind: "response", schema: Response31Schema },
+  { version: "3.1", kind: "header", schema: Header31Schema },
+  { version: "3.1", kind: "security-scheme", schema: SecurityScheme31Schema },
+  { version: "3.1", kind: "components", schema: Components31Schema },
+  { version: "3.1", kind: "server", schema: Server31Schema },
+  { version: "3.2", kind: "schema", schema: SchemaObject32Schema },
+  { version: "3.2", kind: "path-item", schema: PathItem32Schema },
+  { version: "3.2", kind: "operation", schema: Operation32Schema },
+  { version: "3.2", kind: "parameter", schema: Parameter32Schema },
+  { version: "3.2", kind: "request-body", schema: RequestBody32Schema },
+  { version: "3.2", kind: "response", schema: Response32Schema },
+  { version: "3.2", kind: "header", schema: Header32Schema },
+  { version: "3.2", kind: "security-scheme", schema: SecurityScheme32Schema },
+  { version: "3.2", kind: "components", schema: Components32Schema },
+  { version: "3.2", kind: "server", schema: Server32Schema },
+] as const;
+
+for (const item of versionedFragmentSchemas) {
+  writeNamedSchema(`openapi-${item.version}-${item.kind}.schema.json`, item.schema, {
+    $id: metaFragmentVersionID(item.version, item.kind),
+    title: `Navigator OpenAPI ${item.version} ${item.kind} fragment (meta-validation)`,
+  });
+}
 
 console.log("Wrote schemas/meta/openapi-root.schema.json");
 console.log("Wrote schemas/meta/openapi-fragment.schema.json");

@@ -39,10 +39,13 @@ func ParseURI(uri string, content []byte) *Index {
 	idx.Format = DetectFormat(uri, content)
 
 	sp := &standaloneParser{root: &root, uri: uri}
-	idx.semanticRoot = shallowSemanticRoot(sp.docNode())
+	idx.semanticRoot = semanticRootFromYAML(sp.docNode())
 	idx.Document = sp.parseDocument()
 	if idx.Document != nil {
 		idx.Version = idx.Document.ParsedVersion
+		if idx.Document.DocType == DocTypeFragment {
+			idx.fragmentValue = semanticNodeOpenAPIValue(idx.semanticRoot)
+		}
 	}
 
 	idx.indexPaths()
@@ -256,17 +259,17 @@ func (sp *standaloneParser) parseOperation(node *yaml.Node, method string) *Oper
 		return nil
 	}
 	op := &Operation{
-		OperationID:  yamlStr(node, "operationId"),
-		Summary:      yamlStr(node, "summary"),
-		Description:  yamlDescription(node),
-		Deprecated:   yamlStr(node, "deprecated") == "true",
-		Loc:          yamlLoc(node),
-		MethodLoc:    yamlKeyLoc(node, method),
+		OperationID:    yamlStr(node, "operationId"),
+		Summary:        yamlStr(node, "summary"),
+		Description:    yamlDescription(node),
+		Deprecated:     yamlStr(node, "deprecated") == "true",
+		Loc:            yamlLoc(node),
+		MethodLoc:      yamlKeyLoc(node, method),
 		OperationIDLoc: yamlValLoc(node, "operationId"),
-		TagsLoc:      yamlKeyLoc(node, "tags"),
-		ResponsesLoc: yamlKeyLoc(node, "responses"),
-		ParametersLoc: yamlKeyLoc(node, "parameters"),
-		Extensions:   yamlExtensions(node),
+		TagsLoc:        yamlKeyLoc(node, "tags"),
+		ResponsesLoc:   yamlKeyLoc(node, "responses"),
+		ParametersLoc:  yamlKeyLoc(node, "parameters"),
+		Extensions:     yamlExtensions(node),
 	}
 
 	if tagsNode := yamlMapGet(node, "tags"); tagsNode != nil && tagsNode.Kind == yaml.SequenceNode {
@@ -919,42 +922,99 @@ func (sp *standaloneParser) docNode() *yaml.Node {
 	return sp.root
 }
 
-// shallowSemanticRoot builds a one-level-deep SemanticNode from a yaml.Node
-// root so that validateStructural can perform IR-type checks identically for
-// standalone and tree-sitter parses.
-func shallowSemanticRoot(node *yaml.Node) *SemanticNode {
+// semanticRootFromYAML builds a full SemanticNode tree from a yaml.Node so
+// standalone parsing can participate in pointer-based resolution just like the
+// tree-sitter path.
+func semanticRootFromYAML(node *yaml.Node) *SemanticNode {
 	if node == nil {
 		return nil
 	}
-	sn := &SemanticNode{Range: yamlLoc(node).Range}
 	switch node.Kind {
+	case yaml.DocumentNode:
+		if len(node.Content) == 0 {
+			return nil
+		}
+		return semanticRootFromYAML(node.Content[0])
 	case yaml.MappingNode:
-		sn.Kind = NodeMapping
-		sn.Children = make(map[string]*SemanticNode, len(node.Content)/2)
+		sn := &SemanticNode{
+			Kind:     NodeMapping,
+			Range:    yamlLoc(node).Range,
+			Children: make(map[string]*SemanticNode, len(node.Content)/2),
+			Tag:      node.Tag,
+			Anchor:   node.Anchor,
+		}
 		for i := 0; i+1 < len(node.Content); i += 2 {
 			key, val := node.Content[i], node.Content[i+1]
-			child := &SemanticNode{
-				Key:   key.Value,
-				Range: yamlLoc(val).Range,
+			child := semanticRootFromYAML(val)
+			if child == nil {
+				child = &SemanticNode{
+					Kind:   NodeNull,
+					Range:  yamlLoc(val).Range,
+					Tag:    val.Tag,
+					Anchor: val.Anchor,
+				}
 			}
-			switch val.Kind {
-			case yaml.MappingNode:
-				child.Kind = NodeMapping
-			case yaml.SequenceNode:
-				child.Kind = NodeSequence
-			default:
-				child.Kind = NodeScalar
-				child.Value = val.Value
-			}
+			child.Key = key.Value
 			sn.Children[key.Value] = child
 		}
+		return sn
 	case yaml.SequenceNode:
-		sn.Kind = NodeSequence
+		sn := &SemanticNode{
+			Kind:   NodeSequence,
+			Range:  yamlLoc(node).Range,
+			Items:  make([]*SemanticNode, 0, len(node.Content)),
+			Tag:    node.Tag,
+			Anchor: node.Anchor,
+		}
+		for _, item := range node.Content {
+			child := semanticRootFromYAML(item)
+			if child == nil {
+				child = &SemanticNode{
+					Kind:   NodeNull,
+					Range:  yamlLoc(item).Range,
+					Tag:    item.Tag,
+					Anchor: item.Anchor,
+				}
+			}
+			sn.Items = append(sn.Items, child)
+		}
+		return sn
+	case yaml.ScalarNode:
+		kind := NodeScalar
+		var value any = node.Value
+		if node.Tag == "!!null" {
+			kind = NodeNull
+			value = nil
+		}
+		return &SemanticNode{
+			Kind:   kind,
+			Value:  value,
+			Range:  yamlLoc(node).Range,
+			Tag:    node.Tag,
+			Anchor: node.Anchor,
+		}
+	case yaml.AliasNode:
+		alias := ""
+		if node.Alias != nil {
+			alias = node.Alias.Value
+		}
+		return &SemanticNode{
+			Kind:   NodeScalar,
+			Value:  alias,
+			Range:  yamlLoc(node).Range,
+			Tag:    node.Tag,
+			Anchor: node.Anchor,
+			Alias:  alias,
+		}
 	default:
-		sn.Kind = NodeScalar
-		sn.Value = node.Value
+		return &SemanticNode{
+			Kind:   NodeScalar,
+			Value:  node.Value,
+			Range:  yamlLoc(node).Range,
+			Tag:    node.Tag,
+			Anchor: node.Anchor,
+		}
 	}
-	return sn
 }
 
 // --- yaml.Node helpers ---
@@ -1155,4 +1215,3 @@ func utf16Len(s string) int {
 	}
 	return n
 }
-

@@ -81,6 +81,32 @@ func TestMetaSchema_CompiledSchemasLoad(t *testing.T) {
 	}
 }
 
+func TestMetaSchema_CompiledVersionedSchemasLoad(t *testing.T) {
+	roots, frags, err := compiledVersionedMetaSchemas()
+	if err != nil {
+		t.Fatalf("compiledVersionedMetaSchemas: %v", err)
+	}
+	for _, ver := range []Version{Version20, Version30, Version31, Version32} {
+		if roots[ver] == nil {
+			t.Fatalf("missing versioned root schema for %s", ver)
+		}
+	}
+	if frags[Version20][FragmentSchema] == nil {
+		t.Fatal("missing Swagger 2.0 schema fragment meta-schema")
+	}
+	for _, ver := range []Version{Version30, Version31, Version32} {
+		if frags[ver][FragmentSchema] == nil {
+			t.Fatalf("missing schema fragment meta-schema for %s", ver)
+		}
+		if frags[ver][FragmentOperation] == nil {
+			t.Fatalf("missing operation fragment meta-schema for %s", ver)
+		}
+		if frags[ver][FragmentComponents] == nil {
+			t.Fatalf("missing components fragment meta-schema for %s", ver)
+		}
+	}
+}
+
 func TestMetaSchema_TypeMismatchMessage(t *testing.T) {
 	yaml := `openapi: 3
 info:

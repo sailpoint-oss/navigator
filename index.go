@@ -11,7 +11,7 @@ import (
 // and the lookup maps will be empty. Callers should check IsOpenAPI before
 // assuming Document fields are populated.
 type Index struct {
-	Document         *Document
+	Document *Document
 	// Issues holds syntax, structural, and schema-shape diagnostics produced
 	// during parsing. Always populated when an Index is returned from any parse
 	// function; use Revalidate to re-run with custom ValidationOptions.
@@ -28,10 +28,11 @@ type Index struct {
 	Version          Version
 	Format           FileFormat
 
-	uri          string
-	content      []byte
-	tree         *tree_sitter.Tree
-	semanticRoot *SemanticNode
+	uri           string
+	content       []byte
+	tree          *tree_sitter.Tree
+	semanticRoot  *SemanticNode
+	fragmentValue interface{}
 }
 
 // URI returns the document URI associated with this index.
@@ -58,12 +59,37 @@ func (idx *Index) Tree() *tree_sitter.Tree {
 	return idx.tree
 }
 
-// SemanticRoot returns the SemanticNode IR root (nil for standalone-parsed indexes).
+// SemanticRoot returns the format-independent SemanticNode IR root.
 func (idx *Index) SemanticRoot() *SemanticNode {
 	if idx == nil {
 		return nil
 	}
 	return idx.semanticRoot
+}
+
+// PrimaryValue returns the canonical top-level value for this index:
+// the root Document for full OpenAPI documents, the typed fragment value for
+// recognized fragment files, or the semantic root as a fallback for untyped
+// fragment maps.
+func (idx *Index) PrimaryValue() interface{} {
+	if idx == nil {
+		return nil
+	}
+	if idx.Document == nil {
+		if idx.semanticRoot != nil {
+			return idx.semanticRoot
+		}
+		return nil
+	}
+	if idx.Document.DocType == DocTypeFragment {
+		if idx.fragmentValue != nil {
+			return idx.fragmentValue
+		}
+		if idx.semanticRoot != nil {
+			return idx.semanticRoot
+		}
+	}
+	return idx.Document
 }
 
 // IsOpenAPI returns true if the index represents a valid root OpenAPI document.

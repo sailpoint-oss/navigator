@@ -3,7 +3,18 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/sailpoint-oss/navigator.svg)](https://pkg.go.dev/github.com/sailpoint-oss/navigator)
 [![CI](https://github.com/sailpoint-oss/navigator/actions/workflows/ci.yml/badge.svg)](https://github.com/sailpoint-oss/navigator/actions/workflows/ci.yml)
 
-Uniform OpenAPI file handling for the entire workspace toolchain. Navigator parses, indexes, and resolves `$ref`s across single-file and massively multi-file OpenAPI specifications (Swagger 2.0, OpenAPI 3.0--3.2).
+Uniform OpenAPI file handling for the workspace toolchain. Navigator owns parsing, typed IR construction, pointers/ranges, multi-file `$ref` resolution, and parse-time validation for Swagger 2.0 and OpenAPI 3.0--3.2 documents.
+
+## Toolchain Role
+
+Navigator is the canonical parse/index/ref layer in this workspace:
+
+- `tree-sitter-openapi` owns grammar and CST quality.
+- `navigator` owns parse/index/ref/validation contracts.
+- `barrelman` owns semantic/style/security rules and diagnostic packaging.
+- `telescope` owns editor and SDK experiences built on top of Navigator + Barrelman.
+
+See [`TOOLCHAIN_BOUNDARIES.md`](TOOLCHAIN_BOUNDARIES.md) for the cross-repo ownership model.
 
 ## Installation
 
@@ -44,7 +55,7 @@ if err != nil {
 fmt.Printf("Resolved to %s (pointer: %s)\n", result.TargetURI, result.Pointer)
 ```
 
-### Full Workspace Graph (LSP Pattern)
+### Full Workspace Graph (Shared Substrate)
 
 ```go
 import (
@@ -56,9 +67,11 @@ ws := navigator.NewWorkspace()
 g := navgraph.New(ws.Cache, ws.Graph)
 g.AddSource(navigator.NewMemorySource(uri, content))
 
-runner := navgraph.NewPipelineRunner(navgraph.DefaultStages()...)
+runner := navgraph.NewPipelineRunner(navgraph.DefaultStages()...) // raw -> parse -> bind
 runner.RunAll(ctx, g, uri)
 ```
+
+`navigator/graph` intentionally stops at the shared parse/bind substrate. Lint-rule execution and higher-level validate/analyze workflows are downstream concerns.
 
 ## Design Principles
 
@@ -73,7 +86,7 @@ runner.RunAll(ctx, g, uri)
 | Package | Import Path                             | Description                                                                                                            |
 | ------- | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
 | Core    | `github.com/sailpoint-oss/navigator`       | All types, parsing, indexing, single-file and cross-file resolution, workspace infrastructure, and the project facade. |
-| Graph   | `github.com/sailpoint-oss/navigator/graph` | LSP-grade workspace graph management with pipeline processing and snapshot support.                                    |
+| Graph   | `github.com/sailpoint-oss/navigator/graph` | Shared workspace graph substrate with built-in `raw`, `parse`, and `bind` stages used by downstream orchestrators.   |
 
 ### Core Package Highlights
 
@@ -112,14 +125,18 @@ Both parsers produce logically equivalent `*Index` output. The same operations, 
 
 ## Releasing
 
-Navigator uses Go module versioning. To publish a new version:
+Navigator uses Go module versioning, but the repository's current release workflow is automated:
 
-```bash
-git tag v0.1.0
-git push origin v0.1.0
-```
+- `.github/workflows/release.yml` runs on pushes to `main`.
+- It bumps the next patch tag automatically and creates the GitHub Release.
+- For compatibility-sensitive changes, run the `Downstream Smoke` workflow first and verify the anchors listed in `TOOLCHAIN_FIXTURE_MATRIX.md`.
 
-The [Go module proxy](https://proxy.golang.org/) automatically indexes tagged versions. A GitHub Release with auto-generated notes is created by CI on every `v*` tag push.
+Release coordination guidance lives in:
+
+- `TOOLCHAIN_BOUNDARIES.md` for ownership, bump order, and smoke checks
+- `TOOLCHAIN_FIXTURE_MATRIX.md` for the cross-repo parity matrix
+
+The [Go module proxy](https://proxy.golang.org/) automatically indexes published tags after the release workflow pushes them.
 
 ## License
 

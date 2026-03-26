@@ -49,6 +49,9 @@ func ParseTree(tree *tree_sitter.Tree, content []byte, uri string, format FileFo
 	idx.Document = tp.parseDocument(semanticRoot)
 	if idx.Document != nil {
 		idx.Version = idx.Document.ParsedVersion
+		if idx.Document.DocType == DocTypeFragment {
+			idx.fragmentValue = semanticNodeOpenAPIValue(semanticRoot)
+		}
 	}
 
 	idx.indexPaths()

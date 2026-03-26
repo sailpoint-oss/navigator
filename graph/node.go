@@ -6,7 +6,9 @@ import (
 	navigator "github.com/sailpoint-oss/navigator"
 )
 
-// StageName identifies a processing stage in the pipeline.
+// StageName identifies a processing stage in the shared workspace vocabulary.
+// Navigator ships built-in implementations for raw/parse/bind; downstream
+// orchestrators may also use the lint/validate/analyze names.
 type StageName string
 
 const (

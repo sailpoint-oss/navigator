@@ -1,0 +1,179 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://navigator.local/meta/openapi-3.2-server.json",
+  "title": "Server",
+  "type": "object",
+  "properties": {
+    "url": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "description": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "variables": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "name": {
+      "$ref": "#/$defs/__schema10"
+    }
+  },
+  "required": [
+    "url"
+  ],
+  "additionalProperties": false,
+  "description": "An object representing a Server. OpenAPI 3.2 adds 'name' for identification.",
+  "examples": [
+    {
+      "url": "https://api.example.com/v1",
+      "description": "Production server",
+      "name": "Production"
+    }
+  ],
+  "$defs": {
+    "__schema0": {
+      "type": "string",
+      "title": "url",
+      "examples": [
+        "https://api.example.com/v1",
+        "https://{environment}.api.example.com",
+        "{scheme}://{host}:{port}/api",
+        "/api/v1"
+      ],
+      "description": "A URL to the target host. Supports server variables in {braces}. May be relative."
+    },
+    "__schema1": {
+      "type": "string",
+      "title": "description",
+      "examples": [
+        "Production server",
+        "Staging server",
+        "Development server"
+      ],
+      "description": "An optional description of the server."
+    },
+    "__schema2": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema3"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema4"
+      },
+      "title": "variables",
+      "examples": [
+        {
+          "environment": {
+            "default": "prod",
+            "enum": [
+              "prod",
+              "staging",
+              "dev"
+            ]
+          }
+        }
+      ],
+      "description": "A map of server variables for URL template substitution.",
+      "patternProperties": {
+        "^x-": true
+      }
+    },
+    "__schema3": {
+      "type": "string"
+    },
+    "__schema4": {
+      "type": "object",
+      "properties": {
+        "enum": {
+          "$ref": "#/$defs/__schema5"
+        },
+        "default": {
+          "$ref": "#/$defs/__schema7"
+        },
+        "description": {
+          "$ref": "#/$defs/__schema8"
+        }
+      },
+      "required": [
+        "default"
+      ],
+      "additionalProperties": false,
+      "title": "ServerVariable",
+      "description": "A server variable for URL template substitution. Use {variableName} in the server URL.",
+      "examples": [
+        {
+          "default": "https",
+          "enum": [
+            "https",
+            "http"
+          ]
+        }
+      ],
+      "patternProperties": {
+        "^x-": true
+      }
+    },
+    "__schema5": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema6"
+      },
+      "title": "enum",
+      "examples": [
+        [
+          "https",
+          "http"
+        ],
+        [
+          "prod",
+          "staging",
+          "dev"
+        ],
+        [
+          "8080",
+          "443"
+        ]
+      ],
+      "description": "An enumeration of valid string values for this variable."
+    },
+    "__schema6": {
+      "type": "string"
+    },
+    "__schema7": {
+      "type": "string",
+      "title": "default",
+      "examples": [
+        "https",
+        "api.example.com",
+        "443",
+        "v1"
+      ],
+      "description": "The default value for substitution if not supplied."
+    },
+    "__schema8": {
+      "type": "string",
+      "title": "description",
+      "examples": [
+        "The API protocol",
+        "Server environment",
+        "Port number"
+      ],
+      "description": "An optional description for the server variable."
+    },
+    "__schema9": {},
+    "__schema10": {
+      "type": "string",
+      "title": "name",
+      "examples": [
+        "Production",
+        "Staging",
+        "Development",
+        "Local"
+      ],
+      "description": "A unique name to identify the server."
+    },
+    "__schema11": {}
+  },
+  "patternProperties": {
+    "^x-": true
+  }
+}

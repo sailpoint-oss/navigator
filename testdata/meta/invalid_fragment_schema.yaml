@@ -1,0 +1,4 @@
+type: object
+properties:
+  id:
+    type: not-a-real-type

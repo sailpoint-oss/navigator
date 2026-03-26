@@ -25,14 +25,19 @@ func (idx *Index) ResolveRef(ref string) (interface{}, error) {
 	}
 	ref = strings.TrimPrefix(ref, "#")
 	if ref == "" || ref == "/" {
-		return idx.Document, nil
+		return idx.PrimaryValue(), nil
 	}
 	ref = strings.TrimPrefix(ref, "/")
 	parts := strings.Split(ref, "/")
 	for i, p := range parts {
 		parts[i] = unescapeJSONPointer(p)
 	}
-	return idx.resolveRefParts(parts)
+	if idx.Document != nil && idx.Document.DocType == DocTypeRoot {
+		if val, err := idx.resolveRefParts(parts); err == nil {
+			return val, nil
+		}
+	}
+	return idx.resolveSemanticRefParts(parts)
 }
 
 func (idx *Index) resolveRefParts(parts []string) (interface{}, error) {
@@ -63,6 +68,9 @@ func (idx *Index) resolveRefParts(parts []string) (interface{}, error) {
 func (idx *Index) resolveComponent(parts []string) (interface{}, error) {
 	if len(parts) < 2 || idx.Document.Components == nil {
 		return nil, fmt.Errorf("resolve: components ref needs at least kind/name")
+	}
+	if len(parts) > 2 {
+		return nil, fmt.Errorf("resolve: deep component path requires semantic resolution")
 	}
 	kind, name := parts[0], parts[1]
 	switch kind {
@@ -126,6 +134,9 @@ func (idx *Index) resolvePath(parts []string) (interface{}, error) {
 		return item, nil
 	}
 	method := strings.ToLower(parts[1])
+	if len(parts) > 2 {
+		return nil, fmt.Errorf("resolve: deep path pointer requires semantic resolution")
+	}
 	for _, mo := range item.Operations() {
 		if mo.Method == method {
 			return mo.Operation, nil
@@ -141,6 +152,9 @@ func (idx *Index) resolvePath(parts []string) (interface{}, error) {
 func (idx *Index) resolveByIndex(parts []string, length int, getter func(int) interface{}) (interface{}, error) {
 	if len(parts) < 1 {
 		return nil, fmt.Errorf("resolve: need an array index")
+	}
+	if len(parts) > 1 {
+		return nil, fmt.Errorf("resolve: deep array pointer requires semantic resolution")
 	}
 	i := 0
 	for _, ch := range parts[0] {

@@ -1,0 +1,88 @@
+name: Downstream Smoke
+
+on:
+  workflow_dispatch:
+    inputs:
+      barrelman-ref:
+        description: Barrelman ref to test against
+        required: false
+        default: main
+      telescope-ref:
+        description: Telescope ref to test against
+        required: false
+        default: main
+      cartographer-ref:
+        description: Cartographer ref to test against
+        required: false
+        default: main
+      barometer-ref:
+        description: Barometer ref to test against
+        required: false
+        default: main
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout navigator
+        uses: actions/checkout@v4
+
+      - name: Checkout barrelman
+        uses: actions/checkout@v4
+        with:
+          repository: sailpoint-oss/barrelman
+          ref: ${{ inputs.barrelman-ref }}
+          path: barrelman
+
+      - name: Checkout telescope
+        uses: actions/checkout@v4
+        with:
+          repository: sailpoint-oss/telescope
+          ref: ${{ inputs.telescope-ref }}
+          path: telescope
+
+      - name: Checkout cartographer
+        uses: actions/checkout@v4
+        with:
+          repository: sailpoint-oss/cartographer
+          ref: ${{ inputs.cartographer-ref }}
+          path: cartographer
+
+      - name: Checkout barometer
+        uses: actions/checkout@v4
+        with:
+          repository: sailpoint-oss/barometer
+          ref: ${{ inputs.barometer-ref }}
+          path: barometer
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.25.5"
+
+      - name: Create workspace overrides
+        run: |
+          go work init . ./barrelman ./telescope/server ./cartographer/cartographer ./barometer
+          go work sync
+
+      - name: Navigator smoke
+        run: go test ./...
+
+      - name: Barrelman smoke
+        working-directory: barrelman
+        run: go test ./...
+
+      - name: Telescope server smoke
+        working-directory: telescope/server
+        run: go test ./...
+
+      - name: Cartographer smoke
+        working-directory: cartographer/cartographer
+        run: go test ./cmd ./spec ./unified ./telescope
+
+      - name: Barometer smoke
+        working-directory: barometer
+        run: go test ./internal/openapi ./...

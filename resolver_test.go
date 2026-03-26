@@ -56,6 +56,50 @@ properties:
 	if result.TargetIndex == nil {
 		t.Error("expected target index")
 	}
+	schema, ok := result.Value.(*Schema)
+	if !ok {
+		t.Fatalf("expected whole-file schema, got %T", result.Value)
+	}
+	if schema.Type != "object" {
+		t.Errorf("schema type = %q, want %q", schema.Type, "object")
+	}
+}
+
+func TestCrossFileResolver_ExternalFragmentRef(t *testing.T) {
+	dir := writeMultiFile(t, map[string]string{
+		"api.yaml": `openapi: "3.0.3"
+info:
+  title: Test
+  version: "1.0"
+paths: {}
+components:
+  parameters:
+    Limit:
+      $ref: "./components/parameters.yaml#/Limit"`,
+		"components/parameters.yaml": `Limit:
+  name: limit
+  in: query
+  required: false
+  schema:
+    type: integer`,
+	})
+
+	proj, err := OpenProject(dir + "/api.yaml")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	result, err := proj.Resolve(proj.RootURI(), "./components/parameters.yaml#/Limit")
+	if err != nil {
+		t.Fatal(err)
+	}
+	param, ok := result.Value.(*Parameter)
+	if !ok {
+		t.Fatalf("expected *Parameter, got %T", result.Value)
+	}
+	if param.Name != "limit" {
+		t.Errorf("parameter name = %q, want %q", param.Name, "limit")
+	}
 }
 
 func TestCrossFileResolver_CycleDetection(t *testing.T) {

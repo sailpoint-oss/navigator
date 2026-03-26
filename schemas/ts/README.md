@@ -2,7 +2,13 @@
 
 Embedded OpenAPI meta-schemas under `schemas/meta/*.json` are **generated** by [Bun](https://bun.sh/) from **Zod 4** sources.
 
-The large tree under [`openapi/`](openapi/) is vendored from [Telescope](https://github.com/sailpoint-oss/telescope) (`server/schemas/src`). [`build.ts`](build.ts) composes Telescope’s root modules into the navigator **root** meta-schema (OpenAPI 2.0 + 3.0 + 3.1 + 3.2 union) and Telescope **fragment** exports into the **fragment** meta-schema. To refresh the vendored copy after upstream changes:
+The large tree under [`openapi/`](openapi/) is vendored from [Telescope](https://github.com/sailpoint-oss/telescope) (`server/schemas/src`). [`build.ts`](build.ts) emits:
+
+- union meta-schemas for Navigator root and fragment validation
+- version-specific root schemas (`openapi-2.0-root`, `openapi-3.0-root`, `openapi-3.1-root`, `openapi-3.2-root`)
+- version + fragment-specific schemas used for fragment validation and downstream compatibility tests
+
+To refresh the vendored copy after upstream changes:
 
 ```bash
 rsync -a --delete ../telescope/server/schemas/src/ ./schemas/ts/openapi/

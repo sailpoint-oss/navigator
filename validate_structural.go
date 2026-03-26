@@ -27,6 +27,7 @@ func validateStructural(idx *Index, sink *issueSink) {
 	}
 
 	if doc.DocType == DocTypeFragment {
+		validateFragmentStructural(idx, sink)
 		return
 	}
 
@@ -217,16 +218,64 @@ func validateStructural(idx *Index, sink *issueSink) {
 					rng = op.Loc.Range
 				}
 				sink.add(Issue{
-					Code:    "structural.missing-responses",
-					Message: fmt.Sprintf("operation %s %s must declare non-empty `responses`", strings.ToUpper(mo.Method), pth),
-					Pointer: "/paths/" + EscapeJSONPointer(pth) + "/" + mo.Method + "/responses",
-					Range:   rng,
+					Code:     "structural.missing-responses",
+					Message:  fmt.Sprintf("operation %s %s must declare non-empty `responses`", strings.ToUpper(mo.Method), pth),
+					Pointer:  "/paths/" + EscapeJSONPointer(pth) + "/" + mo.Method + "/responses",
+					Range:    rng,
 					Severity: SeverityError,
 					Category: CategoryStructural,
 				})
 			}
 		}
 	}
+}
+
+func validateFragmentStructural(idx *Index, sink *issueSink) {
+	if idx == nil || sink == nil || idx.Document == nil {
+		return
+	}
+	version := sink.effectiveVersion()
+	if version == VersionUnknown {
+		return
+	}
+	if version != Version30 {
+		return
+	}
+
+	root := idx.SemanticRoot()
+	if root == nil || root.Kind != NodeMapping {
+		return
+	}
+	if fragmentTypeForIndex(idx) != FragmentOperation {
+		return
+	}
+	if root.Get("responses") != nil {
+		return
+	}
+
+	sink.add(Issue{
+		Code:     "structural.missing-responses",
+		Message:  "OpenAPI 3.0 operation fragments require a `responses` object",
+		Pointer:  "/responses",
+		Range:    idx.Document.Loc.Range,
+		Severity: SeverityError,
+		Category: CategoryStructural,
+	})
+}
+
+func fragmentTypeForIndex(idx *Index) FragmentType {
+	if idx == nil {
+		return FragmentUnknown
+	}
+	root := idx.SemanticRoot()
+	if root == nil || root.Kind != NodeMapping {
+		return FragmentUnknown
+	}
+	keys := make([]string, 0, len(root.Children))
+	for key := range root.Children {
+		keys = append(keys, key)
+	}
+	return DetectFragmentType(keys)
 }
 
 func isOpenAPI3(v Version) bool {

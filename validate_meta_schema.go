@@ -37,6 +37,18 @@ func validateMetaSchema(idx *Index, sink *issueSink) {
 		})
 		return
 	}
+	rootByVersion, fragByVersion, cerr := compiledVersionedMetaSchemas()
+	if cerr != nil {
+		sink.add(Issue{
+			Code:     "meta.compiler",
+			Message:  fmt.Sprintf("OpenAPI meta-schemas failed to load or compile: %v", cerr),
+			Pointer:  "",
+			Range:    doc.Loc.Range,
+			Severity: SeverityError,
+			Category: CategoryMeta,
+		})
+		return
+	}
 
 	inst, err := decodeDocumentInstanceForMeta(idx)
 	if err != nil {
@@ -54,9 +66,23 @@ func validateMetaSchema(idx *Index, sink *issueSink) {
 	fragment := doc.DocType == DocTypeFragment
 	var sch *jsonschema.Schema
 	if fragment {
-		sch = fragSch
+		fragType := fragmentTypeForIndex(idx)
+		if fragType == FragmentUnknown {
+			return
+		}
+		if byType := fragByVersion[sink.effectiveVersion()]; byType != nil {
+			sch = byType[fragType]
+		}
+		if sch == nil {
+			sch = fragSch
+		}
 	} else {
-		sch = rootSch
+		if version := sink.effectiveVersion(); version != VersionUnknown {
+			sch = rootByVersion[version]
+		}
+		if sch == nil {
+			sch = rootSch
+		}
 	}
 
 	err = sch.Validate(inst)

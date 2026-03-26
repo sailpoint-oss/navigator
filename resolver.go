@@ -74,7 +74,7 @@ func (r *CrossFileResolver) resolveWithVisited(fromURI, ref string, visited map[
 		return &ResolveResult{
 			TargetURI:   targetURI,
 			TargetIndex: targetIdx,
-			Value:       targetIdx.Document,
+			Value:       targetIdx.PrimaryValue(),
 			Pointer:     "#",
 		}, nil
 	}
