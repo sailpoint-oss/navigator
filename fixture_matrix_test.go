@@ -91,3 +91,20 @@ func TestToolchainFixtureMatrix_InvalidFragmentSchemaFixture(t *testing.T) {
 		t.Fatalf("expected at least one fragment meta-schema error, got: %s", formatIssues(idx.Issues))
 	}
 }
+
+func TestToolchainFixtureMatrix_ArazzoParity(t *testing.T) {
+	content := loadFixture(t, "arazzo/simple.yaml")
+	standalone := ParseURI("file:///arazzo/simple.yaml", content)
+	treesitter := ParseContent(content, "file:///arazzo/simple.yaml")
+	if standalone == nil || treesitter == nil {
+		t.Fatalf("both parsers must succeed: standalone=%v treesitter=%v", standalone != nil, treesitter != nil)
+	}
+	if !standalone.IsArazzo() || !treesitter.IsArazzo() {
+		t.Fatalf("expected both parsers to classify the fixture as Arazzo: standalone=%s treesitter=%s", standalone.Kind, treesitter.Kind)
+	}
+	if !reflect.DeepEqual(snapshotForArazzo(standalone), snapshotForArazzo(treesitter)) {
+		t.Fatalf("Arazzo parity mismatch\nstandalone=%+v\ntreesitter=%+v", snapshotForArazzo(standalone), snapshotForArazzo(treesitter))
+	}
+	assertNoErrorSeverity(t, standalone.Issues)
+	assertNoErrorSeverity(t, treesitter.Issues)
+}

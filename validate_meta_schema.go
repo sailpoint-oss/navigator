@@ -17,6 +17,10 @@ func validateMetaSchema(idx *Index, sink *issueSink) {
 		// (e.g. NewIndexFromDocument) have no serialized document.
 		return
 	}
+	if idx.IsArazzo() {
+		validateArazzoMetaSchema(idx, sink)
+		return
+	}
 	doc := idx.Document
 	if doc == nil || doc.DocType == DocTypeUnknown {
 		return
@@ -117,6 +121,82 @@ func validateMetaSchema(idx *Index, sink *issueSink) {
 			continue
 		}
 		sink.add(issueFromMetaOutputUnit(u, fragment, idx))
+	}
+	if truncated && sink.canAdd() {
+		sink.add(Issue{
+			Code:     "meta.truncated",
+			Message:  "Further meta-schema issues were omitted (issue limit reached).",
+			Pointer:  "",
+			Range:    doc.Loc.Range,
+			Severity: SeverityError,
+			Category: CategoryMeta,
+		})
+	}
+}
+
+func validateArazzoMetaSchema(idx *Index, sink *issueSink) {
+	if idx == nil || idx.Arazzo == nil || sink == nil {
+		return
+	}
+	doc := idx.Arazzo
+	sch, cerr := compiledArazzoMetaSchema()
+	if cerr != nil {
+		sink.add(Issue{
+			Code:     "meta.compiler",
+			Message:  fmt.Sprintf("Arazzo meta-schema failed to load or compile: %v", cerr),
+			Pointer:  "",
+			Range:    doc.Loc.Range,
+			Severity: SeverityError,
+			Category: CategoryMeta,
+		})
+		return
+	}
+
+	inst, err := decodeDocumentInstanceForMeta(idx)
+	if err != nil {
+		sink.add(Issue{
+			Code:     "meta.decode",
+			Message:  fmt.Sprintf("Document could not be decoded for meta-schema validation: %v", err),
+			Pointer:  "",
+			Range:    doc.Loc.Range,
+			Severity: SeverityError,
+			Category: CategoryMeta,
+		})
+		return
+	}
+
+	err = sch.Validate(inst)
+	if err == nil {
+		return
+	}
+
+	verr, ok := err.(*jsonschema.ValidationError)
+	if !ok {
+		sink.add(Issue{
+			Code:     "meta.catchall",
+			Message:  fmt.Sprintf("Meta-schema validation failed: %v", err),
+			Pointer:  "",
+			Range:    doc.Loc.Range,
+			Severity: SeverityError,
+			Category: CategoryMeta,
+		})
+		return
+	}
+
+	out := verr.BasicOutput()
+	var units []*jsonschema.OutputUnit
+	collectMetaOutputUnits(out, &units)
+
+	truncated := false
+	for _, u := range units {
+		if !sink.canAdd() {
+			truncated = true
+			break
+		}
+		if u == nil || u.Error == nil {
+			continue
+		}
+		sink.add(issueFromMetaOutputUnit(u, false, idx))
 	}
 	if truncated && sink.canAdd() {
 		sink.add(Issue{

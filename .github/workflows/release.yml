@@ -15,6 +15,16 @@ jobs:
         with:
           fetch-depth: 0
 
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Meta schemas (no drift)
+        run: |
+          bun install --frozen-lockfile
+          bun run schemas:build
+          git diff --exit-code schemas/meta/
+
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod

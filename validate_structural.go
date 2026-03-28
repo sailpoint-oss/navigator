@@ -12,6 +12,11 @@ func validateStructural(idx *Index, sink *issueSink) {
 	doc := idx.Document
 	root := idx.SemanticRoot()
 
+	if idx.IsArazzo() {
+		validateArazzoStructural(idx, sink)
+		return
+	}
+
 	if doc == nil {
 		if root != nil {
 			sink.add(Issue{

@@ -4,14 +4,16 @@ import (
 	tree_sitter "github.com/tree-sitter/go-tree-sitter"
 )
 
-// Index provides fast lookups into a parsed OpenAPI document.
+// Index provides fast lookups into a parsed API description document.
 //
 // Document may be nil when the source is not a YAML/JSON mapping (e.g. a bare
 // sequence or scalar). In that case Issues will contain a structural diagnostic
 // and the lookup maps will be empty. Callers should check IsOpenAPI before
 // assuming Document fields are populated.
 type Index struct {
+	Kind     DocumentKind
 	Document *Document
+	Arazzo   *ArazzoDocument
 	// Issues holds syntax, structural, and schema-shape diagnostics produced
 	// during parsing. Always populated when an Index is returned from any parse
 	// function; use Revalidate to re-run with custom ValidationOptions.
@@ -75,6 +77,9 @@ func (idx *Index) PrimaryValue() interface{} {
 	if idx == nil {
 		return nil
 	}
+	if idx.Arazzo != nil {
+		return idx.Arazzo
+	}
 	if idx.Document == nil {
 		if idx.semanticRoot != nil {
 			return idx.semanticRoot
@@ -95,6 +100,11 @@ func (idx *Index) PrimaryValue() interface{} {
 // IsOpenAPI returns true if the index represents a valid root OpenAPI document.
 func (idx *Index) IsOpenAPI() bool {
 	return idx != nil && idx.Document != nil && idx.Document.DocType == DocTypeRoot
+}
+
+// IsArazzo returns true if the index represents an Arazzo root document.
+func (idx *Index) IsArazzo() bool {
+	return idx != nil && idx.Kind == DocumentKindArazzo && idx.Arazzo != nil
 }
 
 // HasPath returns true if the given path template exists.
@@ -179,6 +189,7 @@ func mapKeys[V any](m map[string]V) []string {
 // Issues is always populated via default validation.
 func NewIndexFromDocument(doc *Document) *Index {
 	idx := newEmptyIndex()
+	idx.Kind = DocumentKindOpenAPI
 	idx.Document = doc
 	if doc != nil {
 		idx.Version = doc.ParsedVersion

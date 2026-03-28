@@ -11,10 +11,6 @@ on:
         description: Telescope ref to test against
         required: false
         default: main
-      cartographer-ref:
-        description: Cartographer ref to test against
-        required: false
-        default: main
       barometer-ref:
         description: Barometer ref to test against
         required: false
@@ -44,13 +40,6 @@ jobs:
           ref: ${{ inputs.telescope-ref }}
           path: telescope
 
-      - name: Checkout cartographer
-        uses: actions/checkout@v4
-        with:
-          repository: sailpoint-oss/cartographer
-          ref: ${{ inputs.cartographer-ref }}
-          path: cartographer
-
       - name: Checkout barometer
         uses: actions/checkout@v4
         with:
@@ -65,7 +54,7 @@ jobs:
 
       - name: Create workspace overrides
         run: |
-          go work init . ./barrelman ./telescope/server ./cartographer/cartographer ./barometer
+          go work init . ./barrelman ./telescope/server ./barometer
           go work sync
 
       - name: Navigator smoke
@@ -78,10 +67,6 @@ jobs:
       - name: Telescope server smoke
         working-directory: telescope/server
         run: go test ./...
-
-      - name: Cartographer smoke
-        working-directory: cartographer/cartographer
-        run: go test ./cmd ./spec ./unified ./telescope
 
       - name: Barometer smoke
         working-directory: barometer

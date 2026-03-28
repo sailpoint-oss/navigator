@@ -22,11 +22,12 @@ const (
 // Issue is a single diagnostic produced during parsing / validation.
 // Codes are stable, lowercase, dot-separated identifiers (e.g. "structural.missing-responses").
 type Issue struct {
-	Code        string
-	Message     string
-	Pointer     string // JSON Pointer (RFC 6901), "" if unknown
-	Range       Range
-	Severity    Severity
-	Category    IssueCategory
-	SpecVersion Version // document version when known
+	Code         string
+	Message      string
+	Pointer      string // JSON Pointer (RFC 6901), "" if unknown
+	Range        Range
+	Severity     Severity
+	Category     IssueCategory
+	DocumentKind DocumentKind
+	SpecVersion  Version // document version when known
 }

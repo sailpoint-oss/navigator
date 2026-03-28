@@ -50,7 +50,7 @@ func TestE2E_BarometerPattern(t *testing.T) {
 	}
 }
 
-func TestE2E_CartographerPattern(t *testing.T) {
+func TestE2E_MultifileProjectPattern(t *testing.T) {
 	dir := writeMultiFile(t, map[string]string{
 		"api.yaml": `openapi: "3.0.3"
 info:
@@ -102,7 +102,7 @@ properties:
 		t.Fatal(err)
 	}
 
-	// LoadAll (cartographer needs all files for bundling)
+	// LoadAll so the full project graph is materialized before iteration.
 	if err := proj.LoadAll(); err != nil {
 		t.Fatal(err)
 	}

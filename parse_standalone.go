@@ -40,11 +40,16 @@ func ParseURI(uri string, content []byte) *Index {
 
 	sp := &standaloneParser{root: &root, uri: uri}
 	idx.semanticRoot = semanticRootFromYAML(sp.docNode())
-	idx.Document = sp.parseDocument()
-	if idx.Document != nil {
-		idx.Version = idx.Document.ParsedVersion
-		if idx.Document.DocType == DocTypeFragment {
-			idx.fragmentValue = semanticNodeOpenAPIValue(idx.semanticRoot)
+	idx.Kind = DetectDocumentKind(yamlMapKeys(sp.docNode()))
+	if idx.Kind == DocumentKindArazzo {
+		idx.Arazzo = parseArazzoDocumentFromSemantic(idx.semanticRoot)
+	} else {
+		idx.Document = sp.parseDocument()
+		if idx.Document != nil {
+			idx.Version = idx.Document.ParsedVersion
+			if idx.Document.DocType == DocTypeFragment {
+				idx.fragmentValue = semanticNodeOpenAPIValue(idx.semanticRoot)
+			}
 		}
 	}
 

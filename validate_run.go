@@ -16,9 +16,17 @@ import "context"
 //	structural.root-not-mapping           document root is not a YAML/JSON object
 //	structural.ir-wrong-type              top-level key has unexpected YAML kind
 //	structural.unsupported-version        openapi/swagger version not recognized
+//	structural.unsupported-arazzo-version arazzo version not recognized
 //	structural.missing-info               info object absent (OAS 3.x / Swagger 2.0)
 //	structural.missing-info-title         info.title required but missing
 //	structural.missing-info-version       info.version required but missing
+//	structural.missing-source-descriptions arazzo sourceDescriptions absent
+//	structural.missing-workflows          arazzo workflows absent
+//	structural.missing-workflow-id        arazzo workflowId required but missing
+//	structural.missing-step-id            arazzo stepId required but missing
+//	structural.duplicate-workflow-id      arazzo workflowId must be unique
+//	structural.duplicate-step-id          arazzo stepId must be unique per workflow
+//	structural.step-target-count          arazzo step must target exactly one next action
 //	structural.missing-responses          operation has no responses object
 //
 // Schema-shape (validate_schema_shape.go):
@@ -65,50 +73,58 @@ import "context"
 // knownIssueCodes is the canonical set of Issue.Code values. Tests assert that
 // no validation pass emits a code outside this set.
 var knownIssueCodes = map[string]struct{}{
-	"syntax.parse-error":                   {},
-	"syntax.duplicate-key":                 {},
-	"structural.root-not-mapping":          {},
-	"structural.ir-wrong-type":             {},
-	"structural.unsupported-version":       {},
-	"structural.missing-info":              {},
-	"structural.missing-info-title":        {},
-	"structural.missing-info-version":      {},
-	"structural.missing-responses":         {},
-	"schema.parameter-missing-name":        {},
-	"schema.parameter-missing-in":          {},
-	"schema.unknown-type":                  {},
-	"schema.security-scheme-missing-type":  {},
-	"schema.security-scheme-unknown-type":  {},
-	"schema.security-scheme-apikey-fields": {},
-	"schema.security-scheme-http-fields":   {},
-	"schema.security-scheme-oauth2-fields": {},
-	"schema.security-scheme-openid-fields": {},
-	"meta.compiler":                        {},
-	"meta.decode":                          {},
-	"meta.required":                        {},
-	"meta.type":                            {},
-	"meta.enum":                            {},
-	"meta.one-of":                          {},
-	"meta.any-of":                          {},
-	"meta.all-of":                          {},
-	"meta.additional-property":             {},
-	"meta.format":                          {},
-	"meta.const":                           {},
-	"meta.not":                             {},
-	"meta.property-names":                  {},
-	"meta.property-count":                  {},
-	"meta.items":                           {},
-	"meta.unique-items":                    {},
-	"meta.contains":                        {},
-	"meta.string":                          {},
-	"meta.number":                          {},
-	"meta.dependency":                      {},
-	"meta.instance-type":                   {},
-	"meta.false-schema":                    {},
-	"meta.ref":                             {},
-	"meta.group":                           {},
-	"meta.catchall":                        {},
-	"meta.truncated":                       {},
+	"syntax.parse-error":                     {},
+	"syntax.duplicate-key":                   {},
+	"structural.root-not-mapping":            {},
+	"structural.ir-wrong-type":               {},
+	"structural.unsupported-version":         {},
+	"structural.unsupported-arazzo-version":  {},
+	"structural.missing-info":                {},
+	"structural.missing-info-title":          {},
+	"structural.missing-info-version":        {},
+	"structural.missing-source-descriptions": {},
+	"structural.missing-workflows":           {},
+	"structural.missing-workflow-id":         {},
+	"structural.missing-step-id":             {},
+	"structural.duplicate-workflow-id":       {},
+	"structural.duplicate-step-id":           {},
+	"structural.step-target-count":           {},
+	"structural.missing-responses":           {},
+	"schema.parameter-missing-name":          {},
+	"schema.parameter-missing-in":            {},
+	"schema.unknown-type":                    {},
+	"schema.security-scheme-missing-type":    {},
+	"schema.security-scheme-unknown-type":    {},
+	"schema.security-scheme-apikey-fields":   {},
+	"schema.security-scheme-http-fields":     {},
+	"schema.security-scheme-oauth2-fields":   {},
+	"schema.security-scheme-openid-fields":   {},
+	"meta.compiler":                          {},
+	"meta.decode":                            {},
+	"meta.required":                          {},
+	"meta.type":                              {},
+	"meta.enum":                              {},
+	"meta.one-of":                            {},
+	"meta.any-of":                            {},
+	"meta.all-of":                            {},
+	"meta.additional-property":               {},
+	"meta.format":                            {},
+	"meta.const":                             {},
+	"meta.not":                               {},
+	"meta.property-names":                    {},
+	"meta.property-count":                    {},
+	"meta.items":                             {},
+	"meta.unique-items":                      {},
+	"meta.contains":                          {},
+	"meta.string":                            {},
+	"meta.number":                            {},
+	"meta.dependency":                        {},
+	"meta.instance-type":                     {},
+	"meta.false-schema":                      {},
+	"meta.ref":                               {},
+	"meta.group":                             {},
+	"meta.catchall":                          {},
+	"meta.truncated":                         {},
 }
 
 // ValidationOptions configures validation passes run after indexing.
@@ -215,6 +231,9 @@ func (s *issueSink) canAdd() bool {
 func (s *issueSink) add(iss Issue) {
 	if !s.canAdd() {
 		return
+	}
+	if iss.DocumentKind == DocumentKindUnknown && s.idx != nil {
+		iss.DocumentKind = s.idx.Kind
 	}
 	if iss.SpecVersion == VersionUnknown {
 		iss.SpecVersion = s.effectiveVersion()

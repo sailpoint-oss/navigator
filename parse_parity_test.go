@@ -7,6 +7,7 @@ import (
 )
 
 type parseParitySnapshot struct {
+	Kind         DocumentKind
 	Version      Version
 	DocType      DocType
 	OperationIDs []string
@@ -23,6 +24,7 @@ func TestParseParity_AcrossFixtures(t *testing.T) {
 	}{
 		{name: "minimal yaml", path: "single/minimal.yaml", uri: "file:///minimal.yaml"},
 		{name: "minimal json", path: "single/minimal.json", uri: "file:///minimal.json"},
+		{name: "arazzo yaml", path: "arazzo/simple.yaml", uri: "file:///arazzo.yaml"},
 		{name: "kitchen sink", path: "golden/kitchen-sink/specs/api.yaml", uri: "file:///kitchen-sink.yaml"},
 		{name: "schema fragment", path: "fragments/schema.yaml", uri: "file:///schema.yaml"},
 	}
@@ -86,6 +88,7 @@ func TestParseContent_RangeFidelityForOperationsAndRefs(t *testing.T) {
 
 func snapshotForParity(idx *Index) parseParitySnapshot {
 	s := parseParitySnapshot{
+		Kind:    idx.Kind,
 		Version: idx.Version,
 	}
 	if idx != nil && idx.Document != nil {

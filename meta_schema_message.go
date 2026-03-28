@@ -11,9 +11,11 @@ import (
 
 func issueFromMetaOutputUnit(u *jsonschema.OutputUnit, fragment bool, idx *Index) Issue {
 	ptr := u.InstanceLocation
-	code, msg := metaFormatErrorKind(u.Error.Kind, ptr, fragment)
+	code, msg := metaFormatErrorKind(u.Error.Kind, ptr, fragment, idx)
 	rng := FileStartRange
-	if idx != nil && idx.Document != nil {
+	if idx != nil && idx.IsArazzo() && idx.Arazzo != nil {
+		rng = idx.Arazzo.Loc.Range
+	} else if idx != nil && idx.Document != nil {
 		rng = idx.Document.Loc.Range
 	}
 	return Issue{
@@ -26,9 +28,11 @@ func issueFromMetaOutputUnit(u *jsonschema.OutputUnit, fragment bool, idx *Index
 	}
 }
 
-func metaFormatErrorKind(ek jsonschema.ErrorKind, instPtr string, fragment bool) (code string, msg string) {
+func metaFormatErrorKind(ek jsonschema.ErrorKind, instPtr string, fragment bool, idx *Index) (code string, msg string) {
 	docHint := "OpenAPI document"
-	if fragment {
+	if idx != nil && idx.IsArazzo() {
+		docHint = "Arazzo document"
+	} else if fragment {
 		docHint = "OpenAPI fragment file"
 	}
 	at := instPtr
@@ -85,7 +89,7 @@ func metaFormatErrorKind(ek jsonschema.ErrorKind, instPtr string, fragment bool)
 	case *kind.Group, *kind.Schema:
 		return "meta.group", fmt.Sprintf("Value at %s failed meta-schema validation for this %s.", at, docHint)
 	default:
-		return "meta.catchall", fmt.Sprintf("Value at %s does not satisfy the OpenAPI meta-schema for this %s. (keyword: %s)", at, docHint, metaKeywordHint(ek))
+		return "meta.catchall", fmt.Sprintf("Value at %s does not satisfy the published meta-schema for this %s. (keyword: %s)", at, docHint, metaKeywordHint(ek))
 	}
 }
 

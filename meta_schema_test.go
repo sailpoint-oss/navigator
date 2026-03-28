@@ -81,6 +81,13 @@ func TestMetaSchema_CompiledSchemasLoad(t *testing.T) {
 	}
 }
 
+func TestMetaSchema_CompiledArazzoSchemaLoad(t *testing.T) {
+	_, err := compiledArazzoMetaSchema()
+	if err != nil {
+		t.Fatalf("compiledArazzoMetaSchema: %v", err)
+	}
+}
+
 func TestMetaSchema_CompiledVersionedSchemasLoad(t *testing.T) {
 	roots, frags, err := compiledVersionedMetaSchemas()
 	if err != nil {
@@ -173,6 +180,40 @@ func TestMetaSchema_FixturesFromDisk(t *testing.T) {
 	}
 }
 
+func TestMetaSchema_ArazzoFixturesFromDisk(t *testing.T) {
+	tests := []struct {
+		file      string
+		wantMeta  string
+		wantClean bool
+	}{
+		{"testdata/arazzo/simple.yaml", "", true},
+		{"testdata/arazzo/invalid_missing_workflows.yaml", "meta.required", false},
+	}
+	for _, tc := range tests {
+		t.Run(tc.file, func(t *testing.T) {
+			data, err := os.ReadFile(tc.file)
+			if err != nil {
+				t.Fatal(err)
+			}
+			idx := ParseContent(data, "file:///fixture.yaml")
+			if idx == nil {
+				t.Fatal("nil index")
+			}
+			if tc.wantClean {
+				for _, iss := range idx.Issues {
+					if iss.Category == CategoryMeta && iss.Severity == SeverityError {
+						t.Errorf("unexpected meta %s: %s", iss.Code, iss.Message)
+					}
+				}
+				return
+			}
+			if !issueCodesContain(idx.Issues, tc.wantMeta) {
+				t.Fatalf("want code %q, got %s", tc.wantMeta, formatIssues(idx.Issues))
+			}
+		})
+	}
+}
+
 func TestMetaSchema_AllMetaCodesInRegistry(t *testing.T) {
 	// Documents chosen to exercise meta validation paths.
 	docs := []string{
@@ -183,6 +224,13 @@ info:
   title: T
   version: "1"
 paths: {}`,
+		`arazzo: "1.0.1"
+info:
+  title: T
+  version: "1"
+sourceDescriptions:
+  - name: api
+    url: ./petstore.yaml`,
 	}
 	for _, raw := range docs {
 		idx := ParseContent([]byte(raw), "file:///x.yaml")

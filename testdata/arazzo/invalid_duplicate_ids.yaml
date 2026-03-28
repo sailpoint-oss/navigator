@@ -1,0 +1,19 @@
+arazzo: 1.0.1
+info:
+  title: Duplicate identifiers
+  version: 1.0.0
+sourceDescriptions:
+  - name: api
+    url: ../openapi/petstore-minimal.yaml
+    type: openapi
+workflows:
+  - workflowId: repeated
+    steps:
+      - stepId: same
+        operationId: listPets
+      - stepId: same
+        operationId: getPet
+        operationPath: '#/paths/~1pets/get'
+  - workflowId: repeated
+    steps:
+      - description: missing id and target

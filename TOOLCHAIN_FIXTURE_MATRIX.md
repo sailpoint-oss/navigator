@@ -1,7 +1,7 @@
 # Toolchain Fixture Matrix
 
 This document defines the shared fixture, golden, and parity matrix for the
-OpenAPI toolchain.
+OpenAPI and Arazzo toolchain.
 
 The matrix is intentionally **logical**, not a single copied directory. These
 repositories are versioned independently, so each repo keeps standalone fixtures
@@ -17,7 +17,7 @@ assertion intent.
    - Navigator keeps parse/index/validation fixtures.
    - Barrelman keeps lint-focused file fixtures.
    - Telescope keeps SDK/LSP fixtures and mirrored sidecar copies.
-   - Cartographer keeps extraction and spec-loader fixtures.
+   - Cartographer and Meridian keep extraction/codebase pipeline fixtures when relevant.
    - Barometer keeps runtime validation fixtures.
 3. If a fixture is relevant to a repo's capability, that repo should have a
    local test for it or an explicitly documented gap.
@@ -31,6 +31,7 @@ assertion intent.
 - `lint`: Barrelman and Telescope diagnostic parity
 - `editor`: ranges, pointers, code actions, rename, references
 - `extract`: extraction and downstream loader smoke coverage
+- `workflow`: Arazzo workflow loading, validation, and execution
 - `runtime`: live request/response contract execution
 
 ## Fixture IDs
@@ -68,6 +69,21 @@ assertion intent.
 - telescope: `server/testutil/specs/openapi-3.2.yaml`
 - barometer: `testdata/openapi/petstore-3.2.yaml`
 
+### `root-arazzo10-minimal`
+
+- Tags: `cst`, `parse`, `validate`, `workflow`, `runtime`
+- tree-sitter-openapi: `tree-sitter-openapi/test/corpus/yaml_arazzo_basic.txt`, `tree-sitter-openapi-json/test/corpus/json_arazzo_basic.txt`
+- navigator: `testdata/arazzo/simple.yaml`, `testdata/arazzo/simple.json`, `arazzo_test.go`
+- telescope: `server/core/classify/classifier_test.go`, `server/openapi/standalone_test.go`
+- barometer: `testdata/arazzo/simple.yaml`, `internal/arazzo/doc_test.go`
+
+### `root-arazzo10-invalid-missing-workflows`
+
+- Tags: `validate`, `workflow`
+- navigator: `testdata/arazzo/invalid_missing_workflows.yaml`, `arazzo_test.go`, `meta_schema_test.go`
+- telescope: Navigator-backed Arazzo diagnostics flow through the shared `validate`/`lint` pipeline; add and maintain an invalid fixture-backed test alongside `server/openapi/standalone_test.go` as parity coverage expands
+- barometer: `internal/arazzo/doc_test.go` structural validation cases
+
 ### `root-invalid-missing-info`
 
 - Tags: `validate`, `lint`
@@ -91,14 +107,12 @@ assertion intent.
 - navigator: `testdata/multifile/v1/`
 - barrelman: `testdata/toolchain/multifile/`
 - telescope: `server/testutil/specs/test-multi-file.yaml`, `test-files/openapi/test-multi-file-refs/`
-- cartographer: `cartographer/spec/testdata/multifile/`
 
 ### `workspace-cycle`
 
 - Tags: `workspace`, `extract`
 - navigator: `testdata/cycles/`
 - telescope: `test-files/openapi/test-ref-cycle-main.yaml`, `test-files/openapi/test-ref-cycle-b.yaml`
-- cartographer: `cartographer/spec/testdata/circular/`
 
 ### `workspace-diamond`
 
@@ -119,30 +133,34 @@ assertion intent.
 - navigator: `testdata/golden/kitchen-sink/specs/api.yaml`, `parse_parity_test.go`
 - telescope: `server/lsp/handler_test.go`, `server/lsp/toolchain_parity_test.go`
 
-### `extract-loader-smoke`
-
-- Tags: `extract`
-- cartographer: `cartographer/spec/testdata/singlefile/`, `multifile/`, `crossformat/`, `circular/`
-
 ### `runtime-loader-smoke`
 
 - Tags: `runtime`
 - barometer: `testdata/openapi/petstore-minimal.yaml`, `testdata/openapi/petstore-with-header.yaml`
 
+### `runtime-arazzo-workflow-smoke`
+
+- Tags: `workflow`, `runtime`
+- navigator: `testdata/arazzo/simple.yaml` for shared loading/validation parity
+- barometer: `testdata/arazzo/simple.yaml`, `internal/arazzo/engine_test.go`, `internal/arazzo/engine_e2e_test.go`
+
 ## Current Test Anchors
 
 - Navigator:
   `parse_parity_test.go`, `fixture_matrix_test.go`, `project_test.go`,
-  `resolver_test.go`, `meta_schema_test.go`
+  `resolver_test.go`, `meta_schema_test.go`, `arazzo_test.go`
 - Barrelman:
   `fixture_matrix_test.go`, `lintfiles_workspace_test.go`
 - Telescope:
   `server/testutil/specs/mirror_sync_test.go`, `server/testutil/golden/pipeline_test.go`,
   `server/lsp/toolchain_parity_test.go`, `server/lsp/handler_test.go`
 - Cartographer:
-  `cartographer/spec/toolchain_fixture_test.go`
+  extraction-focused smoke and fixture tests should map here when codebase fixtures are shared downstream
 - Barometer:
-  `internal/openapi/toolchain_fixture_test.go`, `internal/openapi/e2e_test.go`
+  `internal/openapi/toolchain_fixture_test.go`, `internal/openapi/e2e_test.go`,
+  `internal/arazzo/doc_test.go`, `internal/arazzo/engine_test.go`
+- Meridian:
+  codebase analyze/pipeline smoke tests should map here when extraction and runtime fixtures are composed end-to-end
 
 ## Adding A New Fixture
 
@@ -152,5 +170,7 @@ assertion intent.
 3. Add or update the Navigator fixture for parse/index/validation ownership.
 4. Add or update Barrelman and Telescope parity tests if the fixture should
    yield stable diagnostics.
-5. Add or update Cartographer or Barometer smoke coverage when the fixture is
-   relevant to extraction or runtime validation.
+5. Add or update Cartographer and Meridian coverage when the fixture is relevant
+   to extraction or codebase orchestration.
+6. Add or update Barometer coverage when the fixture is relevant to runtime or
+   Arazzo workflow execution.

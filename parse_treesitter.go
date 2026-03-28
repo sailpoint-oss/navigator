@@ -46,11 +46,16 @@ func ParseTree(tree *tree_sitter.Tree, content []byte, uri string, format FileFo
 
 	semanticRoot := tp.buildSemanticTree(root)
 	idx.semanticRoot = semanticRoot
-	idx.Document = tp.parseDocument(semanticRoot)
-	if idx.Document != nil {
-		idx.Version = idx.Document.ParsedVersion
-		if idx.Document.DocType == DocTypeFragment {
-			idx.fragmentValue = semanticNodeOpenAPIValue(semanticRoot)
+	idx.Kind = DetectDocumentKind(semanticKeys(semanticRoot))
+	if idx.Kind == DocumentKindArazzo {
+		idx.Arazzo = parseArazzoDocumentFromSemantic(semanticRoot)
+	} else {
+		idx.Document = tp.parseDocument(semanticRoot)
+		if idx.Document != nil {
+			idx.Version = idx.Document.ParsedVersion
+			if idx.Document.DocType == DocTypeFragment {
+				idx.fragmentValue = semanticNodeOpenAPIValue(semanticRoot)
+			}
 		}
 	}
 
