@@ -322,6 +322,7 @@ func (tp *treeParser) parseDocument(sn *SemanticNode) *Document {
 	if edNode := sn.Get("externalDocs"); edNode != nil {
 		doc.ExternalDocs = tp.parseExternalDocsSN(edNode)
 	}
+	doc.Extensions = snExtensions(sn)
 
 	return doc
 }
@@ -335,7 +336,10 @@ func (tp *treeParser) parseInfoSN(sn *SemanticNode) *Info {
 		Description:    snDescription(sn),
 		TermsOfService: snStr(sn, "termsOfService"),
 		Version:        snStr(sn, "version"),
+		Extensions:     snExtensions(sn),
 		Loc:            locFromSN(sn),
+		TitleLoc:       locFromSN(sn.Get("title")),
+		VersionLoc:     locFromSN(sn.Get("version")),
 	}
 	if contactSN := sn.Get("contact"); contactSN != nil && contactSN.Kind == NodeMapping {
 		info.Contact = &Contact{
@@ -368,7 +372,9 @@ func (tp *treeParser) parseServersSN(sn *SemanticNode) []Server {
 		s := Server{
 			URL:         snStr(item, "url"),
 			Description: snDescription(item),
+			Extensions:  snExtensions(item),
 			Loc:         locFromSN(item),
+			URLLoc:      locFromSN(item.Get("url")),
 		}
 		servers = append(servers, s)
 	}
@@ -383,6 +389,7 @@ func (tp *treeParser) parsePathItemSN(sn *SemanticNode) *PathItem {
 		Summary:     snStr(sn, "summary"),
 		Description: snDescription(sn),
 		Ref:         snStr(sn, "$ref"),
+		Extensions:  snExtensions(sn),
 		Loc:         locFromSN(sn),
 	}
 
@@ -422,11 +429,17 @@ func (tp *treeParser) parseOperationSN(sn *SemanticNode, method string) *Operati
 		return nil
 	}
 	op := &Operation{
-		OperationID: snStr(sn, "operationId"),
-		Summary:     snStr(sn, "summary"),
-		Description: snDescription(sn),
-		Deprecated:  snStr(sn, "deprecated") == "true",
-		Loc:         locFromSN(sn),
+		OperationID:    snStr(sn, "operationId"),
+		Summary:        snStr(sn, "summary"),
+		Description:    snDescription(sn),
+		Deprecated:     snStr(sn, "deprecated") == "true",
+		Extensions:     snExtensions(sn),
+		Loc:            locFromSN(sn),
+		MethodLoc:      locFromSN(sn),
+		OperationIDLoc: locFromSN(sn.Get("operationId")),
+		TagsLoc:        locFromSN(sn.Get("tags")),
+		ResponsesLoc:   locFromSN(sn.Get("responses")),
+		ParametersLoc:  locFromSN(sn.Get("parameters")),
 	}
 
 	if tagsSN := sn.Get("tags"); tagsSN != nil && tagsSN.Kind == NodeSequence {
@@ -479,16 +492,25 @@ func (tp *treeParser) parseParameterSN(sn *SemanticNode) *Parameter {
 		return nil
 	}
 	p := &Parameter{
-		Name:        snStr(sn, "name"),
-		In:          snStr(sn, "in"),
-		Description: snDescription(sn),
-		Required:    snStr(sn, "required") == "true",
-		Deprecated:  snStr(sn, "deprecated") == "true",
-		Ref:         snStr(sn, "$ref"),
-		Loc:         locFromSN(sn),
+		Name:            snStr(sn, "name"),
+		In:              snStr(sn, "in"),
+		Description:     snDescription(sn),
+		Required:        snStr(sn, "required") == "true",
+		Deprecated:      snStr(sn, "deprecated") == "true",
+		AllowEmptyValue: snStr(sn, "allowEmptyValue") == "true",
+		Ref:             snStr(sn, "$ref"),
+		Extensions:      snExtensions(sn),
+		Loc:             locFromSN(sn),
+		NameLoc:         locFromSN(sn.Get("name")),
 	}
 	if schemaSN := sn.Get("schema"); schemaSN != nil {
 		p.Schema = tp.parseSchemaSN(schemaSN)
+	}
+	if exSN := sn.Get("example"); exSN != nil {
+		p.Example = snToNode(exSN)
+	}
+	if exsSN := sn.Get("examples"); exsSN != nil {
+		p.Examples = tp.parseExamplesSN(exsSN)
 	}
 	return p
 }
@@ -501,6 +523,7 @@ func (tp *treeParser) parseRequestBodySN(sn *SemanticNode) *RequestBody {
 		Description: snDescription(sn),
 		Required:    snStr(sn, "required") == "true",
 		Ref:         snStr(sn, "$ref"),
+		NameLoc:     locFromSN(sn),
 		Loc:         locFromSN(sn),
 	}
 	rb.Content = tp.parseContentMediaTypesSN(sn.Get("content"))
@@ -516,7 +539,14 @@ func (tp *treeParser) parseResponseSN(sn *SemanticNode) *Response {
 		Ref:         snStr(sn, "$ref"),
 		Loc:         locFromSN(sn),
 	}
+	if headersSN := sn.Get("headers"); headersSN != nil && headersSN.Kind == NodeMapping {
+		r.HeadersLoc = locFromSN(headersSN)
+		r.Headers = tp.parseHeadersSN(headersSN)
+	}
 	r.Content = tp.parseContentMediaTypesSN(sn.Get("content"))
+	if linksSN := sn.Get("links"); linksSN != nil && linksSN.Kind == NodeMapping {
+		r.Links = tp.parseLinksSN(linksSN)
+	}
 	return r
 }
 
@@ -565,6 +595,65 @@ func (tp *treeParser) parseExamplesSN(sn *SemanticNode) map[string]*Example {
 	return examples
 }
 
+func (tp *treeParser) parseHeadersSN(sn *SemanticNode) map[string]*Header {
+	if sn == nil || sn.Kind != NodeMapping {
+		return nil
+	}
+	headers := make(map[string]*Header)
+	for name, hSN := range sn.Children {
+		if h := tp.parseHeaderSN(hSN); h != nil {
+			h.NameLoc = locFromSN(hSN)
+			headers[name] = h
+		}
+	}
+	return headers
+}
+
+func (tp *treeParser) parseHeaderSN(sn *SemanticNode) *Header {
+	if sn == nil || sn.Kind != NodeMapping {
+		return nil
+	}
+	h := &Header{
+		Description: snDescription(sn),
+		Required:    snStr(sn, "required") == "true",
+		Deprecated:  snStr(sn, "deprecated") == "true",
+		Ref:         snStr(sn, "$ref"),
+		Loc:         locFromSN(sn),
+	}
+	if schemaSN := sn.Get("schema"); schemaSN != nil {
+		h.Schema = tp.parseSchemaSN(schemaSN)
+	}
+	return h
+}
+
+func (tp *treeParser) parseLinksSN(sn *SemanticNode) map[string]*Link {
+	if sn == nil || sn.Kind != NodeMapping {
+		return nil
+	}
+	links := make(map[string]*Link)
+	for name, lSN := range sn.Children {
+		if l := tp.parseLinkSN(lSN); l != nil {
+			l.NameLoc = locFromSN(lSN)
+			links[name] = l
+		}
+	}
+	return links
+}
+
+func (tp *treeParser) parseLinkSN(sn *SemanticNode) *Link {
+	if sn == nil || sn.Kind != NodeMapping {
+		return nil
+	}
+	return &Link{
+		OperationRef:   snStr(sn, "operationRef"),
+		OperationID:    snStr(sn, "operationId"),
+		Description:    snDescription(sn),
+		Ref:            snStr(sn, "$ref"),
+		Loc:            locFromSN(sn),
+		OperationIDLoc: locFromSN(sn.Get("operationId")),
+	}
+}
+
 func (tp *treeParser) parseSchemaSN(sn *SemanticNode) *Schema {
 	if sn == nil || sn.Kind != NodeMapping {
 		return nil
@@ -579,8 +668,13 @@ func (tp *treeParser) parseSchemaSN(sn *SemanticNode) *Schema {
 		ReadOnly:    snStr(sn, "readOnly") == "true",
 		WriteOnly:   snStr(sn, "writeOnly") == "true",
 		Deprecated:  snStr(sn, "deprecated") == "true",
+		Default:     snToNode(sn.Get("default")),
+		Minimum:     snFloatValue(sn.Get("minimum")),
+		Maximum:     snFloatValue(sn.Get("maximum")),
 		Ref:         snStr(sn, "$ref"),
+		Extensions:  snExtensions(sn),
 		Loc:         locFromSN(sn),
+		TypeLoc:     locFromSN(sn.Get("type")),
 	}
 
 	if itemsSN := sn.Get("items"); itemsSN != nil {
@@ -595,6 +689,7 @@ func (tp *treeParser) parseSchemaSN(sn *SemanticNode) *Schema {
 		for name, pSN := range propsSN.Children {
 			ps := tp.parseSchemaSN(pSN)
 			if ps != nil {
+				ps.NameLoc = locFromSN(pSN)
 				s.Properties[name] = ps
 			}
 		}
@@ -605,6 +700,7 @@ func (tp *treeParser) parseSchemaSN(sn *SemanticNode) *Schema {
 	s.OneOf = tp.parseSchemaListSN(sn.Get("oneOf"))
 
 	if reqSN := sn.Get("required"); reqSN != nil && reqSN.Kind == NodeSequence {
+		s.HasRequired = true
 		for _, item := range reqSN.Items {
 			s.Required = append(s.Required, item.StringValue())
 		}
@@ -655,7 +751,22 @@ func (tp *treeParser) parseComponentsSN(sn *SemanticNode) *Components {
 		c.Parameters = make(map[string]*Parameter)
 		for name, pSN := range n.Children {
 			if p := tp.parseParameterSN(pSN); p != nil {
+				p.NameLoc = locFromSN(pSN)
 				c.Parameters[name] = p
+			}
+		}
+	}
+
+	if n := sn.Get("examples"); n != nil && n.Kind == NodeMapping {
+		c.Examples = tp.parseExamplesSN(n)
+	}
+
+	if n := sn.Get("requestBodies"); n != nil && n.Kind == NodeMapping {
+		c.RequestBodies = make(map[string]*RequestBody)
+		for name, rbSN := range n.Children {
+			if rb := tp.parseRequestBodySN(rbSN); rb != nil {
+				rb.NameLoc = locFromSN(rbSN)
+				c.RequestBodies[name] = rb
 			}
 		}
 	}
@@ -664,29 +775,94 @@ func (tp *treeParser) parseComponentsSN(sn *SemanticNode) *Components {
 		c.Responses = make(map[string]*Response)
 		for name, rSN := range n.Children {
 			if r := tp.parseResponseSN(rSN); r != nil {
+				r.NameLoc = locFromSN(rSN)
 				c.Responses[name] = r
 			}
 		}
 	}
 
+	if n := sn.Get("headers"); n != nil && n.Kind == NodeMapping {
+		c.Headers = tp.parseHeadersSN(n)
+	}
+
 	if n := sn.Get("securitySchemes"); n != nil && n.Kind == NodeMapping {
 		c.SecuritySchemes = make(map[string]*SecurityScheme)
 		for name, ssSN := range n.Children {
-			if ssSN.Kind == NodeMapping {
-				ss := &SecurityScheme{
-					Type:   snStr(ssSN, "type"),
-					Name:   snStr(ssSN, "name"),
-					In:     snStr(ssSN, "in"),
-					Scheme: snStr(ssSN, "scheme"),
-					Ref:    snStr(ssSN, "$ref"),
-					Loc:    locFromSN(ssSN),
-				}
+			if ss := tp.parseSecuritySchemeSN(ssSN); ss != nil {
+				ss.NameLoc = locFromSN(ssSN)
 				c.SecuritySchemes[name] = ss
 			}
 		}
 	}
 
+	if n := sn.Get("links"); n != nil && n.Kind == NodeMapping {
+		c.Links = tp.parseLinksSN(n)
+	}
+
+	if n := sn.Get("pathItems"); n != nil && n.Kind == NodeMapping {
+		c.PathItems = make(map[string]*PathItem)
+		for name, piSN := range n.Children {
+			if pi := tp.parsePathItemSN(piSN); pi != nil {
+				c.PathItems[name] = pi
+			}
+		}
+	}
+
 	return c
+}
+
+func (tp *treeParser) parseSecuritySchemeSN(sn *SemanticNode) *SecurityScheme {
+	if sn == nil || sn.Kind != NodeMapping {
+		return nil
+	}
+	ss := &SecurityScheme{
+		Type:             snStr(sn, "type"),
+		Description:      snDescription(sn),
+		Name:             snStr(sn, "name"),
+		In:               snStr(sn, "in"),
+		Scheme:           snStr(sn, "scheme"),
+		BearerFormat:     snStr(sn, "bearerFormat"),
+		OpenIDConnectURL: snStr(sn, "openIdConnectUrl"),
+		Ref:              snStr(sn, "$ref"),
+		Loc:              locFromSN(sn),
+	}
+	if flowsSN := sn.Get("flows"); flowsSN != nil && flowsSN.Kind == NodeMapping {
+		ss.Flows = tp.parseOAuthFlowsSN(flowsSN)
+	}
+	return ss
+}
+
+func (tp *treeParser) parseOAuthFlowsSN(sn *SemanticNode) *OAuthFlows {
+	if sn == nil || sn.Kind != NodeMapping {
+		return nil
+	}
+	flows := &OAuthFlows{Loc: locFromSN(sn)}
+	flows.Implicit = tp.parseOAuthFlowSN(sn.Get("implicit"))
+	flows.Password = tp.parseOAuthFlowSN(sn.Get("password"))
+	flows.ClientCredentials = tp.parseOAuthFlowSN(sn.Get("clientCredentials"))
+	flows.AuthorizationCode = tp.parseOAuthFlowSN(sn.Get("authorizationCode"))
+	return flows
+}
+
+func (tp *treeParser) parseOAuthFlowSN(sn *SemanticNode) *OAuthFlow {
+	if sn == nil || sn.Kind != NodeMapping {
+		return nil
+	}
+	flow := &OAuthFlow{
+		AuthorizationURL:    snStr(sn, "authorizationUrl"),
+		TokenURL:            snStr(sn, "tokenUrl"),
+		RefreshURL:          snStr(sn, "refreshUrl"),
+		Loc:                 locFromSN(sn),
+		AuthorizationURLLoc: locFromSN(sn.Get("authorizationUrl")),
+		TokenURLLoc:         locFromSN(sn.Get("tokenUrl")),
+	}
+	if scopesSN := sn.Get("scopes"); scopesSN != nil && scopesSN.Kind == NodeMapping {
+		flow.Scopes = make(map[string]string)
+		for name, scopeSN := range scopesSN.Children {
+			flow.Scopes[name] = scopeSN.StringValue()
+		}
+	}
+	return flow
 }
 
 func (tp *treeParser) parseSecuritySN(sn *SemanticNode) []SecurityRequirement {
@@ -704,6 +880,7 @@ func (tp *treeParser) parseSecuritySN(sn *SemanticNode) []SecurityRequirement {
 			if child.Kind == NodeSequence {
 				for _, s := range child.Items {
 					entry.Scopes = append(entry.Scopes, s.StringValue())
+					entry.ScopeLocs = append(entry.ScopeLocs, locFromSN(s))
 				}
 			}
 			req.Entries = append(req.Entries, entry)

@@ -509,6 +509,7 @@ func (sp *standaloneParser) parseSchemaDepth(node *yaml.Node, depth int) *Schema
 
 	s.Enum = yamlStringSlice(node, "enum")
 	s.Required = yamlStringSlice(node, "required")
+	s.HasRequired = yamlMapGet(node, "required") != nil
 
 	if defNode := yamlMapGet(node, "default"); defNode != nil {
 		s.Default = yamlNode(defNode)
@@ -819,6 +820,7 @@ func (sp *standaloneParser) parseSecurity(node *yaml.Node) []SecurityRequirement
 			if item.Content[i+1].Kind == yaml.SequenceNode {
 				for _, s := range item.Content[i+1].Content {
 					entry.Scopes = append(entry.Scopes, s.Value)
+					entry.ScopeLocs = append(entry.ScopeLocs, yamlLoc(s))
 				}
 			}
 			req.Entries = append(req.Entries, entry)

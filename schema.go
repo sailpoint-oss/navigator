@@ -9,6 +9,7 @@ type Schema struct {
 	Default                    *Node
 	Enum                       []string
 	Required                   []string
+	HasRequired                bool // true when required is present, even if empty
 	Properties                 map[string]*Schema
 	AdditionalProperties       *Schema
 	AdditionalPropertiesFalse  bool // true when additionalProperties is explicitly false

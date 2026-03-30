@@ -132,18 +132,18 @@ type TagUsage struct {
 
 // Operation describes a single API operation on a path.
 type Operation struct {
-	OperationID  string
-	Summary      string
-	Description  DescriptionValue
-	Tags         []TagUsage
-	Parameters   []*Parameter
-	RequestBody  *RequestBody
-	Responses    map[string]*Response
-	Security     []SecurityRequirement
-	Deprecated   bool
-	Servers      []Server
-	ExternalDocs *ExternalDocs
-	Extensions   map[string]*Node
+	OperationID    string
+	Summary        string
+	Description    DescriptionValue
+	Tags           []TagUsage
+	Parameters     []*Parameter
+	RequestBody    *RequestBody
+	Responses      map[string]*Response
+	Security       []SecurityRequirement
+	Deprecated     bool
+	Servers        []Server
+	ExternalDocs   *ExternalDocs
+	Extensions     map[string]*Node
 	Loc            Loc
 	MethodLoc      Loc
 	OperationIDLoc Loc
@@ -269,9 +269,10 @@ type ExternalDocs struct {
 // SecurityRequirementEntry represents a single scheme entry within a security
 // requirement object.
 type SecurityRequirementEntry struct {
-	Name    string
-	Scopes  []string
-	NameLoc Loc
+	Name      string
+	Scopes    []string
+	ScopeLocs []Loc
+	NameLoc   Loc
 }
 
 // SecurityRequirement is a security requirement object (one element in the
