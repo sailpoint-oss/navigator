@@ -380,15 +380,30 @@ func walkValidationErrors(ve *jsonschema.ValidationError, acc *[]leafValidationE
 		return
 	}
 
-	// Check if this error kind is a structural wrapper that should be skipped
-	// in favor of its children.
-	isWrapper := false
+	// Structural wrappers: skip and recurse into children.
 	switch ve.ErrorKind.(type) {
 	case *kind.Reference, *kind.Group, *kind.Schema:
-		isWrapper = true
+		if len(ve.Causes) > 0 {
+			for _, cause := range ve.Causes {
+				walkValidationErrors(cause, acc)
+			}
+			return
+		}
 	}
 
-	if isWrapper && len(ve.Causes) > 0 {
+	// Composition keywords (oneOf, anyOf): pick the BEST matching alternative
+	// (fewest errors) and only report its errors. This avoids contradictory
+	// messages from alternatives that don't match the document.
+	switch ve.ErrorKind.(type) {
+	case *kind.OneOf, *kind.AnyOf:
+		if len(ve.Causes) > 0 {
+			walkBestAlternative(ve.Causes, acc)
+			return
+		}
+	}
+
+	// allOf: all branches must pass, so recurse into all children.
+	if _, ok := ve.ErrorKind.(*kind.AllOf); ok && len(ve.Causes) > 0 {
 		for _, cause := range ve.Causes {
 			walkValidationErrors(cause, acc)
 		}
@@ -406,12 +421,33 @@ func walkValidationErrors(ve *jsonschema.ValidationError, acc *[]leafValidationE
 		return
 	}
 
-	// Non-wrapper with children (composition: oneOf, anyOf, allOf).
-	// Emit this error AND recurse for details.
-	*acc = append(*acc, le)
+	// Other non-leaf nodes: recurse into children.
 	for _, cause := range ve.Causes {
 		walkValidationErrors(cause, acc)
 	}
+}
+
+// walkBestAlternative picks the oneOf/anyOf alternative with the fewest leaf
+// errors (closest match) and only reports its errors. This prevents
+// contradictory messages like "'$ref' is not valid" alongside "requires '$ref'".
+func walkBestAlternative(causes []*jsonschema.ValidationError, acc *[]leafValidationError) {
+	if len(causes) == 0 {
+		return
+	}
+
+	var bestErrors []leafValidationError
+	bestCount := -1
+
+	for _, cause := range causes {
+		var trial []leafValidationError
+		walkValidationErrors(cause, &trial)
+		if bestCount < 0 || len(trial) < bestCount {
+			bestErrors = trial
+			bestCount = len(trial)
+		}
+	}
+
+	*acc = append(*acc, bestErrors...)
 }
 
 // ---------------------------------------------------------------------------
