@@ -44,7 +44,7 @@ func validateStructural(idx *Index, sink *issueSink) {
 		if n := root.Get("openapi"); n != nil && n.Kind != NodeScalar {
 			sink.add(Issue{
 				Code:     "structural.ir-wrong-type",
-				Message:  `"openapi" must be a string`,
+				Message:  "'openapi' version field must be a string",
 				Pointer:  "/openapi",
 				Range:    n.Range,
 				Severity: SeverityError,
@@ -54,7 +54,7 @@ func validateStructural(idx *Index, sink *issueSink) {
 		if n := root.Get("swagger"); n != nil && n.Kind != NodeScalar {
 			sink.add(Issue{
 				Code:     "structural.ir-wrong-type",
-				Message:  `"swagger" must be a string`,
+				Message:  "'swagger' version field must be a string",
 				Pointer:  "/swagger",
 				Range:    n.Range,
 				Severity: SeverityError,
@@ -64,7 +64,7 @@ func validateStructural(idx *Index, sink *issueSink) {
 		if n := root.Get("info"); n != nil && n.Kind != NodeMapping {
 			sink.add(Issue{
 				Code:     "structural.ir-wrong-type",
-				Message:  `"info" must be an object`,
+				Message:  "Info Object must be a YAML/JSON object",
 				Pointer:  "/info",
 				Range:    n.Range,
 				Severity: SeverityError,
@@ -74,7 +74,7 @@ func validateStructural(idx *Index, sink *issueSink) {
 		if n := root.Get("paths"); n != nil && n.Kind != NodeMapping {
 			sink.add(Issue{
 				Code:     "structural.ir-wrong-type",
-				Message:  `"paths" must be an object`,
+				Message:  "Paths Object must be a YAML/JSON object",
 				Pointer:  "/paths",
 				Range:    n.Range,
 				Severity: SeverityError,
@@ -84,7 +84,7 @@ func validateStructural(idx *Index, sink *issueSink) {
 		if n := root.Get("components"); n != nil && n.Kind != NodeMapping {
 			sink.add(Issue{
 				Code:     "structural.ir-wrong-type",
-				Message:  `"components" must be an object`,
+				Message:  "Components Object must be a YAML/JSON object",
 				Pointer:  "/components",
 				Range:    n.Range,
 				Severity: SeverityError,
@@ -94,7 +94,7 @@ func validateStructural(idx *Index, sink *issueSink) {
 		if n := root.Get("servers"); n != nil && n.Kind != NodeSequence {
 			sink.add(Issue{
 				Code:     "structural.ir-wrong-type",
-				Message:  `"servers" must be an array`,
+				Message:  "'servers' must be an array of Server Objects",
 				Pointer:  "/servers",
 				Range:    n.Range,
 				Severity: SeverityError,
@@ -104,7 +104,7 @@ func validateStructural(idx *Index, sink *issueSink) {
 		if n := root.Get("tags"); n != nil && n.Kind != NodeSequence {
 			sink.add(Issue{
 				Code:     "structural.ir-wrong-type",
-				Message:  `"tags" must be an array`,
+				Message:  "'tags' must be an array of Tag Objects",
 				Pointer:  "/tags",
 				Range:    n.Range,
 				Severity: SeverityError,
@@ -114,7 +114,7 @@ func validateStructural(idx *Index, sink *issueSink) {
 		if n := root.Get("security"); n != nil && n.Kind != NodeSequence {
 			sink.add(Issue{
 				Code:     "structural.ir-wrong-type",
-				Message:  `"security" must be an array`,
+				Message:  "'security' must be an array of Security Requirement Objects",
 				Pointer:  "/security",
 				Range:    n.Range,
 				Severity: SeverityError,
@@ -138,7 +138,7 @@ func validateStructural(idx *Index, sink *issueSink) {
 		if doc.Info == nil {
 			sink.add(Issue{
 				Code:     "structural.missing-info",
-				Message:  "OpenAPI 3.x documents require an `info` object",
+				Message:  "OpenAPI 3.x document requires an Info Object with 'title' and 'version'",
 				Pointer:  "/info",
 				Range:    doc.Loc.Range,
 				Severity: SeverityError,
@@ -148,7 +148,7 @@ func validateStructural(idx *Index, sink *issueSink) {
 			if doc.Info.Title == "" {
 				sink.add(Issue{
 					Code:     "structural.missing-info-title",
-					Message:  "`info.title` is required",
+					Message:  "Info Object requires 'title'",
 					Pointer:  "/info/title",
 					Range:    firstNonEmptyLoc(doc.Info.TitleLoc, doc.Info.Loc).Range,
 					Severity: SeverityError,
@@ -158,7 +158,7 @@ func validateStructural(idx *Index, sink *issueSink) {
 			if doc.Info.Version == "" {
 				sink.add(Issue{
 					Code:     "structural.missing-info-version",
-					Message:  "`info.version` is required",
+					Message:  "Info Object requires 'version'",
 					Pointer:  "/info/version",
 					Range:    firstNonEmptyLoc(doc.Info.VersionLoc, doc.Info.Loc).Range,
 					Severity: SeverityError,
@@ -172,7 +172,7 @@ func validateStructural(idx *Index, sink *issueSink) {
 		if doc.Info == nil {
 			sink.add(Issue{
 				Code:     "structural.missing-info",
-				Message:  "Swagger 2.0 documents require an `info` object",
+				Message:  "Swagger 2.0 document requires an Info Object with 'title' and 'version'",
 				Pointer:  "/info",
 				Range:    doc.Loc.Range,
 				Severity: SeverityError,
@@ -182,7 +182,7 @@ func validateStructural(idx *Index, sink *issueSink) {
 			if doc.Info.Title == "" {
 				sink.add(Issue{
 					Code:     "structural.missing-info-title",
-					Message:  "`info.title` is required",
+					Message:  "Info Object requires 'title'",
 					Pointer:  "/info/title",
 					Range:    firstNonEmptyLoc(doc.Info.TitleLoc, doc.Info.Loc).Range,
 					Severity: SeverityError,
@@ -192,7 +192,7 @@ func validateStructural(idx *Index, sink *issueSink) {
 			if doc.Info.Version == "" {
 				sink.add(Issue{
 					Code:     "structural.missing-info-version",
-					Message:  "`info.version` is required",
+					Message:  "Info Object requires 'version'",
 					Pointer:  "/info/version",
 					Range:    firstNonEmptyLoc(doc.Info.VersionLoc, doc.Info.Loc).Range,
 					Severity: SeverityError,
@@ -224,7 +224,7 @@ func validateStructural(idx *Index, sink *issueSink) {
 				}
 				sink.add(Issue{
 					Code:     "structural.missing-responses",
-					Message:  fmt.Sprintf("operation %s %s must declare non-empty `responses`", strings.ToUpper(mo.Method), pth),
+					Message:  fmt.Sprintf("Operation '%s %s' must declare non-empty 'responses'", strings.ToUpper(mo.Method), pth),
 					Pointer:  "/paths/" + EscapeJSONPointer(pth) + "/" + mo.Method + "/responses",
 					Range:    rng,
 					Severity: SeverityError,

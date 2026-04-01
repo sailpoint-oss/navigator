@@ -69,7 +69,7 @@ func validateParameterShape(p *Parameter, ptr string, sink *issueSink) {
 		}
 		sink.add(Issue{
 			Code:     "schema.parameter-missing-name",
-			Message:  "parameter must include `name` when not a $ref",
+			Message:  "Parameter Object must include 'name' when not a $ref",
 			Pointer:  ptr + "/name",
 			Range:    rng,
 			Severity: SeverityError,
@@ -79,7 +79,7 @@ func validateParameterShape(p *Parameter, ptr string, sink *issueSink) {
 	if p.In == "" {
 		sink.add(Issue{
 			Code:     "schema.parameter-missing-in",
-			Message:  "parameter must include `in` when not a $ref",
+			Message:  "Parameter Object must include 'in' (query, path, header, or cookie) when not a $ref",
 			Pointer:  ptr + "/in",
 			Range:    p.Loc.Range,
 			Severity: SeverityError,
@@ -140,7 +140,7 @@ func validateSecuritySchemeShape(ss *SecurityScheme, ptr string, sink *issueSink
 	if ss.Type == "" {
 		sink.add(Issue{
 			Code:     "schema.security-scheme-missing-type",
-			Message:  "security scheme must declare `type`",
+			Message:  "Security Scheme must declare 'type'",
 			Pointer:  ptr + "/type",
 			Range:    ss.Loc.Range,
 			Severity: SeverityError,
@@ -153,7 +153,7 @@ func validateSecuritySchemeShape(ss *SecurityScheme, ptr string, sink *issueSink
 		if ss.Name == "" {
 			sink.add(Issue{
 				Code:     "schema.security-scheme-apikey-fields",
-				Message:  "apiKey security scheme requires `name`",
+				Message:  "API Key Security Scheme requires 'name'",
 				Pointer:  ptr + "/name",
 				Range:    ss.Loc.Range,
 				Severity: SeverityError,
@@ -163,7 +163,7 @@ func validateSecuritySchemeShape(ss *SecurityScheme, ptr string, sink *issueSink
 		if ss.In == "" {
 			sink.add(Issue{
 				Code:     "schema.security-scheme-apikey-fields",
-				Message:  "apiKey security scheme requires `in`",
+				Message:  "API Key Security Scheme requires 'in'",
 				Pointer:  ptr + "/in",
 				Range:    ss.Loc.Range,
 				Severity: SeverityError,
@@ -174,7 +174,7 @@ func validateSecuritySchemeShape(ss *SecurityScheme, ptr string, sink *issueSink
 		if ss.Scheme == "" {
 			sink.add(Issue{
 				Code:     "schema.security-scheme-http-fields",
-				Message:  "http security scheme requires `scheme`",
+				Message:  "HTTP Security Scheme requires 'scheme'",
 				Pointer:  ptr + "/scheme",
 				Range:    ss.Loc.Range,
 				Severity: SeverityError,
@@ -188,7 +188,7 @@ func validateSecuritySchemeShape(ss *SecurityScheme, ptr string, sink *issueSink
 		if ss.Flows == nil {
 			sink.add(Issue{
 				Code:     "schema.security-scheme-oauth2-fields",
-				Message:  "oauth2 security scheme requires `flows`",
+				Message:  "OAuth2 Security Scheme requires 'flows'",
 				Pointer:  ptr + "/flows",
 				Range:    ss.Loc.Range,
 				Severity: SeverityError,
@@ -202,7 +202,7 @@ func validateSecuritySchemeShape(ss *SecurityScheme, ptr string, sink *issueSink
 		if ss.OpenIDConnectURL == "" {
 			sink.add(Issue{
 				Code:     "schema.security-scheme-openid-fields",
-				Message:  "openIdConnect security scheme requires `openIdConnectUrl`",
+				Message:  "OpenID Connect Security Scheme requires 'openIdConnectUrl'",
 				Pointer:  ptr + "/openIdConnectUrl",
 				Range:    ss.Loc.Range,
 				Severity: SeverityError,
