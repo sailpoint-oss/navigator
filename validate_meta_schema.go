@@ -107,20 +107,19 @@ func validateMetaSchema(idx *Index, sink *issueSink) {
 		return
 	}
 
-	out := verr.BasicOutput()
-	var units []*jsonschema.OutputUnit
-	collectMetaOutputUnits(out, &units)
+	// Walk the ValidationError tree directly to extract leaf-level errors.
+	// The BasicOutput() approach loses detail because OpenAPI JSON Schemas
+	// use $ref extensively, producing kind.Reference wrappers that obscure
+	// the actual constraint violations.
+	leafErrors := collectLeafValidationErrors(verr)
 
 	truncated := false
-	for _, u := range units {
+	for _, le := range leafErrors {
 		if !sink.canAdd() {
 			truncated = true
 			break
 		}
-		if u == nil || u.Error == nil {
-			continue
-		}
-		sink.add(issueFromMetaOutputUnit(u, fragment, idx))
+		sink.add(issueFromLeafError(le, fragment, idx))
 	}
 	if truncated && sink.canAdd() {
 		sink.add(Issue{
@@ -183,20 +182,15 @@ func validateArazzoMetaSchema(idx *Index, sink *issueSink) {
 		return
 	}
 
-	out := verr.BasicOutput()
-	var units []*jsonschema.OutputUnit
-	collectMetaOutputUnits(out, &units)
+	leafErrors := collectLeafValidationErrors(verr)
 
 	truncated := false
-	for _, u := range units {
+	for _, le := range leafErrors {
 		if !sink.canAdd() {
 			truncated = true
 			break
 		}
-		if u == nil || u.Error == nil {
-			continue
-		}
-		sink.add(issueFromMetaOutputUnit(u, false, idx))
+		sink.add(issueFromLeafError(le, false, idx))
 	}
 	if truncated && sink.canAdd() {
 		sink.add(Issue{
