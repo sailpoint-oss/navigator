@@ -12,12 +12,11 @@ import (
 func issueFromMetaOutputUnit(u *jsonschema.OutputUnit, fragment bool, idx *Index) Issue {
 	ptr := u.InstanceLocation
 	code, msg := metaFormatErrorKind(u.Error.Kind, ptr, fragment, idx)
-	rng := FileStartRange
-	if idx != nil && idx.IsArazzo() && idx.Arazzo != nil {
-		rng = idx.Arazzo.Loc.Range
-	} else if idx != nil && idx.Document != nil {
-		rng = idx.Document.Loc.Range
-	}
+
+	// Resolve pointer to precise source range
+	segments := splitPointerSegments(ptr)
+	rng := resolvePointerRange(segments, idx)
+
 	return Issue{
 		Code:     code,
 		Message:  msg,
@@ -37,12 +36,11 @@ func issueFromLeafError(le leafValidationError, fragment bool, idx *Index) Issue
 		ctx = refineContextWithSchemaHint(ctx, le.SchemaHint)
 	}
 	code, msg := metaFormatErrorKindWithContext(le.ErrorKind, ctx)
-	rng := FileStartRange
-	if idx != nil && idx.IsArazzo() && idx.Arazzo != nil {
-		rng = idx.Arazzo.Loc.Range
-	} else if idx != nil && idx.Document != nil {
-		rng = idx.Document.Loc.Range
-	}
+
+	// Resolve the JSON Pointer to a precise source range via the semantic tree.
+	// This gives exact highlighting on the failing node instead of the whole document.
+	rng := resolvePointerRange(le.Segments, idx)
+
 	return Issue{
 		Code:     code,
 		Message:  msg,
@@ -51,6 +49,41 @@ func issueFromLeafError(le leafValidationError, fragment bool, idx *Index) Issue
 		Severity: SeverityError,
 		Category: CategoryMeta,
 	}
+}
+
+// resolvePointerRange walks the semantic tree to find the precise source range
+// for a JSON Pointer path. Falls back to document-level range if the node
+// can't be found.
+func resolvePointerRange(segments []string, idx *Index) Range {
+	if idx == nil {
+		return FileStartRange
+	}
+
+	// Try to resolve via the semantic tree for precise positioning
+	if root := idx.SemanticRoot(); root != nil && len(segments) > 0 {
+		node, err := semanticNodeAt(root, segments)
+		if err == nil && node != nil && !IsEmpty(node.Range) {
+			return node.Range
+		}
+		// If exact pointer fails, try the parent pointer (e.g., for
+		// additional property errors, the parent object is more useful
+		// than the document root).
+		if len(segments) > 1 {
+			parent, err := semanticNodeAt(root, segments[:len(segments)-1])
+			if err == nil && parent != nil && !IsEmpty(parent.Range) {
+				return parent.Range
+			}
+		}
+	}
+
+	// Fallback to document-level range
+	if idx.IsArazzo() && idx.Arazzo != nil {
+		return idx.Arazzo.Loc.Range
+	}
+	if idx.Document != nil {
+		return idx.Document.Loc.Range
+	}
+	return FileStartRange
 }
 
 // inferOpenAPIContextFromSegments takes raw InstanceLocation segments (unescaped)
