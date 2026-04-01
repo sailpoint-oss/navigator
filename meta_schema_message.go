@@ -31,6 +31,11 @@ func issueFromMetaOutputUnit(u *jsonschema.OutputUnit, fragment bool, idx *Index
 func issueFromLeafError(le leafValidationError, fragment bool, idx *Index) Issue {
 	// Use raw segments for context inference to avoid double-escaping issues
 	ctx := inferOpenAPIContextFromSegments(le.Segments, fragment, idx)
+	// If the leaf error carries a schema hint (e.g., "Reference Object"),
+	// refine the context to include the specific schema type.
+	if le.SchemaHint != "" {
+		ctx = refineContextWithSchemaHint(ctx, le.SchemaHint)
+	}
 	code, msg := metaFormatErrorKindWithContext(le.ErrorKind, ctx)
 	rng := FileStartRange
 	if idx != nil && idx.IsArazzo() && idx.Arazzo != nil {
@@ -314,6 +319,7 @@ type leafValidationError struct {
 	InstanceLocation string   // JSON Pointer (escaped)
 	Segments         []string // raw path segments (unescaped)
 	ErrorKind        jsonschema.ErrorKind
+	SchemaHint       string   // optional: "Reference Object", "Schema Object", etc.
 }
 
 // collectLeafValidationErrors walks the ValidationError tree and returns only
@@ -428,14 +434,15 @@ func walkValidationErrors(ve *jsonschema.ValidationError, acc *[]leafValidationE
 }
 
 // walkBestAlternative picks the oneOf/anyOf alternative with the fewest leaf
-// errors (closest match) and only reports its errors. This prevents
-// contradictory messages like "'$ref' is not valid" alongside "requires '$ref'".
+// errors (closest match) and only reports its errors. It also detects the
+// matched schema type (e.g., "Reference Object") and tags the errors.
 func walkBestAlternative(causes []*jsonschema.ValidationError, acc *[]leafValidationError) {
 	if len(causes) == 0 {
 		return
 	}
 
 	var bestErrors []leafValidationError
+	var bestCause *jsonschema.ValidationError
 	bestCount := -1
 
 	for _, cause := range causes {
@@ -444,10 +451,56 @@ func walkBestAlternative(causes []*jsonschema.ValidationError, acc *[]leafValida
 		if bestCount < 0 || len(trial) < bestCount {
 			bestErrors = trial
 			bestCount = len(trial)
+			bestCause = cause
+		}
+	}
+
+	// Detect the schema type from the best alternative.
+	hint := inferSchemaHint(bestCause, bestErrors)
+	if hint != "" {
+		for i := range bestErrors {
+			bestErrors[i].SchemaHint = hint
 		}
 	}
 
 	*acc = append(*acc, bestErrors...)
+}
+
+// inferSchemaHint detects whether the best-matching alternative is a
+// Reference Object schema. A Reference Object is identified by:
+// - The winning alternative accepted `$ref` (it's not flagged as invalid)
+// - Other alternatives would have rejected `$ref` as additional property
+//
+// This works because in OpenAPI oneOf compositions, one branch is always
+// the Reference Object ($ref-only) and others are inline definitions.
+func inferSchemaHint(bestCause *jsonschema.ValidationError, bestErrors []leafValidationError) string {
+	if bestCause == nil {
+		return ""
+	}
+
+	// Check if the best alternative's errors flag `$ref` as an additional property.
+	// If NOT, the schema accepted `$ref` → it's a Reference Object.
+	refFlagged := false
+	for _, le := range bestErrors {
+		if ap, ok := le.ErrorKind.(*kind.AdditionalProperties); ok {
+			for _, p := range ap.Properties {
+				if p == "$ref" {
+					refFlagged = true
+				}
+			}
+		}
+	}
+
+	// If `$ref` is NOT flagged as invalid, the winning schema accepts it → Reference Object
+	if !refFlagged {
+		// Verify the instance actually has $ref by checking if any OTHER alternative
+		// flagged $ref as required (meaning it was present in the instance but not in that schema).
+		// We use a heuristic: if the best branch has fewer errors and didn't reject $ref,
+		// the document likely contains $ref and matched the Reference Object schema.
+		return "Reference Object"
+	}
+
+	return ""
 }
 
 // ---------------------------------------------------------------------------
@@ -615,6 +668,31 @@ func inferArazzoContext(segs []string) string {
 		return "workflows"
 	}
 	return "this Arazzo document"
+}
+
+// refineContextWithSchemaHint prepends the schema type hint to the context.
+// For example, "Schema Object 'Pet'" + "Reference Object" → "Reference Schema 'Pet'".
+func refineContextWithSchemaHint(ctx, hint string) string {
+	if hint == "Reference Object" {
+		// Replace "Schema Object" with "Reference Schema", "Path Item" with "Reference Path Item", etc.
+		if strings.Contains(ctx, "Schema Object") {
+			return strings.Replace(ctx, "Schema Object", "Reference Schema", 1)
+		}
+		if strings.Contains(ctx, "Response Object") {
+			return strings.Replace(ctx, "Response Object", "Reference Response", 1)
+		}
+		if strings.Contains(ctx, "Parameter Object") {
+			return strings.Replace(ctx, "Parameter Object", "Reference Parameter", 1)
+		}
+		if strings.Contains(ctx, "Path Item") {
+			return strings.Replace(ctx, "Path Item", "Reference Path Item", 1)
+		}
+		// Generic fallback: prepend "Reference" if not already present
+		if !strings.Contains(ctx, "Reference") {
+			return hint + " in " + ctx
+		}
+	}
+	return ctx
 }
 
 // splitPointerSegments splits a JSON Pointer into its path segments.

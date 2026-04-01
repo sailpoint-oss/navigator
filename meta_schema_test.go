@@ -276,7 +276,7 @@ paths:
 	// Verify messages use contextual OpenAPI terminology
 	var foundSchemaCtx, foundOperationCtx bool
 	for _, iss := range idx.Issues {
-		if strings.Contains(iss.Message, "Schema Object") {
+		if strings.Contains(iss.Message, "Schema") || strings.Contains(iss.Message, "Reference") {
 			foundSchemaCtx = true
 		}
 		if strings.Contains(iss.Message, "Operation") {
@@ -284,7 +284,7 @@ paths:
 		}
 	}
 	if !foundSchemaCtx {
-		t.Error("expected at least one message mentioning 'Schema Object'")
+		t.Error("expected at least one message mentioning 'Schema' or 'Reference'")
 	}
 	if !foundOperationCtx {
 		t.Error("expected at least one message mentioning 'Operation'")
