@@ -136,7 +136,7 @@ paths: {}
 			saw = true
 			break
 		}
-		if (iss.Code == "meta.any-of" || iss.Code == "meta.ref") && strings.Contains(iss.Message, "/openapi") {
+		if iss.Code == "meta.any-of" || iss.Code == "meta.ref" {
 			saw = true
 			break
 		}
@@ -245,5 +245,48 @@ sourceDescriptions:
 				t.Errorf("meta code %q not in knownIssueCodes", iss.Code)
 			}
 		}
+	}
+}
+
+func TestMetaSchema_ContextAwareMessages(t *testing.T) {
+	yaml := `openapi: "3.1.0"
+info:
+  title: Test
+  version: "1.0"
+components:
+  schemas:
+    Pet:
+      yo: yo
+      type: object
+paths:
+  /test:
+    get:
+      summary: t
+      foo: bar
+      responses:
+        "200":
+          description: ok
+`
+	idx := ParseContent([]byte(yaml), "file:///test.yaml")
+	t.Logf("Total issues: %d", len(idx.Issues))
+	for _, iss := range idx.Issues {
+		t.Logf("  [%s] ptr=%s msg=%s", iss.Code, iss.Pointer, iss.Message)
+	}
+
+	// Verify messages use contextual OpenAPI terminology
+	var foundSchemaCtx, foundOperationCtx bool
+	for _, iss := range idx.Issues {
+		if strings.Contains(iss.Message, "Schema Object") {
+			foundSchemaCtx = true
+		}
+		if strings.Contains(iss.Message, "Operation") {
+			foundOperationCtx = true
+		}
+	}
+	if !foundSchemaCtx {
+		t.Error("expected at least one message mentioning 'Schema Object'")
+	}
+	if !foundOperationCtx {
+		t.Error("expected at least one message mentioning 'Operation'")
 	}
 }
