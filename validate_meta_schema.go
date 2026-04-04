@@ -22,10 +22,7 @@ func validateMetaSchema(idx *Index, sink *issueSink) {
 		return
 	}
 	doc := idx.Document
-	if doc == nil || doc.DocType == DocTypeUnknown {
-		return
-	}
-	if doc.DocType != DocTypeRoot && doc.DocType != DocTypeFragment {
+	if doc == nil || doc.DocType == DocTypeUnknown || doc.DocType == DocTypeNonOpenAPI {
 		return
 	}
 

@@ -611,3 +611,98 @@ func formatIssues(issues []Issue) string {
 	}
 	return strings.TrimSuffix(b.String(), "; ")
 }
+
+func TestNonOpenAPI_DockerCompose_NoIssues(t *testing.T) {
+	content := []byte(`version: "3"
+services:
+  web:
+    image: nginx
+    ports:
+      - "80:80"
+`)
+	idx := ParseContent(content, "file:///docker-compose.yaml")
+	if idx == nil {
+		t.Fatal("nil index")
+	}
+	if idx.Document != nil && idx.Document.DocType != DocTypeNonOpenAPI {
+		t.Errorf("expected DocTypeNonOpenAPI for docker-compose, got %v", idx.Document.DocType)
+	}
+	for _, iss := range idx.Issues {
+		if iss.Category == CategoryStructural || iss.Category == CategorySchema || iss.Category == CategoryMeta {
+			t.Errorf("non-OpenAPI file should not produce %v issue: %s", iss.Category, iss.Message)
+		}
+	}
+}
+
+func TestNonOpenAPI_GitHubActions_NoIssues(t *testing.T) {
+	content := []byte(`name: CI
+on:
+  push:
+    branches: [main]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+`)
+	idx := ParseContent(content, "file:///.github/workflows/ci.yaml")
+	if idx == nil {
+		t.Fatal("nil index")
+	}
+	if idx.Document != nil && idx.Document.DocType != DocTypeNonOpenAPI {
+		t.Errorf("expected DocTypeNonOpenAPI for GitHub Actions, got %v", idx.Document.DocType)
+	}
+	for _, iss := range idx.Issues {
+		if iss.Category == CategoryStructural || iss.Category == CategorySchema || iss.Category == CategoryMeta {
+			t.Errorf("non-OpenAPI file should not produce %v issue: %s", iss.Category, iss.Message)
+		}
+	}
+}
+
+func TestNonOpenAPI_KubernetesManifest_NoIssues(t *testing.T) {
+	content := []byte(`apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+`)
+	idx := ParseContent(content, "file:///deployment.yaml")
+	if idx == nil {
+		t.Fatal("nil index")
+	}
+	if idx.Document != nil && idx.Document.DocType != DocTypeNonOpenAPI {
+		t.Errorf("expected DocTypeNonOpenAPI for Kubernetes manifest, got %v", idx.Document.DocType)
+	}
+	for _, iss := range idx.Issues {
+		if iss.Category == CategoryStructural || iss.Category == CategorySchema || iss.Category == CategoryMeta {
+			t.Errorf("non-OpenAPI file should not produce %v issue: %s", iss.Category, iss.Message)
+		}
+	}
+}
+
+func TestNonOpenAPI_PlainYAMLConfig_NoIssues(t *testing.T) {
+	content := []byte(`database:
+  host: localhost
+  port: 5432
+  name: myapp
+logging:
+  level: debug
+  format: json
+`)
+	idx := ParseContent(content, "file:///config.yaml")
+	if idx == nil {
+		t.Fatal("nil index")
+	}
+	if idx.Document != nil && idx.Document.DocType != DocTypeNonOpenAPI {
+		t.Errorf("expected DocTypeNonOpenAPI for plain config, got %v", idx.Document.DocType)
+	}
+	for _, iss := range idx.Issues {
+		if iss.Category == CategoryStructural || iss.Category == CategorySchema || iss.Category == CategoryMeta {
+			t.Errorf("non-OpenAPI file should not produce %v issue: %s", iss.Category, iss.Message)
+		}
+	}
+}

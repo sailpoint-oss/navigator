@@ -81,7 +81,7 @@ func (sp *standaloneParser) parseDocument() *Document {
 	}
 
 	rootKeys := yamlMapKeys(node)
-	doc.DocType = DetectDocType(rootKeys)
+	doc.DocType = DetectDocType(rootKeys, false)
 
 	if v := yamlStr(node, "openapi"); v != "" {
 		doc.Version = v

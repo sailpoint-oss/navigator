@@ -31,6 +31,10 @@ func validateStructural(idx *Index, sink *issueSink) {
 		return
 	}
 
+	if doc.DocType == DocTypeNonOpenAPI {
+		return
+	}
+
 	if doc.DocType == DocTypeFragment {
 		validateFragmentStructural(idx, sink)
 		return

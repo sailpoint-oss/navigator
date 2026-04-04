@@ -75,6 +75,7 @@ func TestDocType_String(t *testing.T) {
 	}{
 		{DocTypeRoot, "root"},
 		{DocTypeFragment, "fragment"},
+		{DocTypeNonOpenAPI, "non-openapi"},
 		{DocTypeUnknown, "unknown"},
 	}
 	for _, tt := range tests {
@@ -85,13 +86,28 @@ func TestDocType_String(t *testing.T) {
 }
 
 func TestDetectDocType(t *testing.T) {
-	if DetectDocType([]string{"openapi", "info", "paths"}) != DocTypeRoot {
-		t.Error("should detect root from openapi key")
+	tests := []struct {
+		name          string
+		keys          []string
+		isGraphMember bool
+		want          DocType
+	}{
+		{"root from openapi key", []string{"openapi", "info", "paths"}, false, DocTypeRoot},
+		{"root from swagger key", []string{"swagger", "info"}, false, DocTypeRoot},
+		{"fragment from schema keys", []string{"type", "properties"}, false, DocTypeFragment},
+		{"fragment from path-item keys", []string{"get", "post"}, false, DocTypeFragment},
+		{"fragment from operation keys", []string{"operationId", "responses"}, false, DocTypeFragment},
+		{"fragment via graph membership", []string{"random", "keys"}, true, DocTypeFragment},
+		{"non-openapi with unrecognized keys", []string{"random", "keys"}, false, DocTypeNonOpenAPI},
+		{"non-openapi empty keys", []string{}, false, DocTypeNonOpenAPI},
+		{"root overrides graph membership", []string{"openapi", "info"}, true, DocTypeRoot},
 	}
-	if DetectDocType([]string{"swagger", "info"}) != DocTypeRoot {
-		t.Error("should detect root from swagger key")
-	}
-	if DetectDocType([]string{"type", "properties"}) != DocTypeFragment {
-		t.Error("should detect fragment without openapi/swagger key")
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := DetectDocType(tt.keys, tt.isGraphMember)
+			if got != tt.want {
+				t.Errorf("DetectDocType(%v, %v) = %v, want %v", tt.keys, tt.isGraphMember, got, tt.want)
+			}
+		})
 	}
 }

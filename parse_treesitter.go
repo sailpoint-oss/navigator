@@ -272,7 +272,7 @@ func (tp *treeParser) parseDocument(sn *SemanticNode) *Document {
 	for k := range sn.Children {
 		rootKeys = append(rootKeys, k)
 	}
-	doc.DocType = DetectDocType(rootKeys)
+	doc.DocType = DetectDocType(rootKeys, false)
 
 	if v := sn.Get("openapi"); v != nil {
 		doc.Version = v.StringValue()

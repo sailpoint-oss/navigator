@@ -14,6 +14,9 @@ func validateSchemaShape(idx *Index, sink *issueSink) {
 	if idx == nil || idx.Document == nil {
 		return
 	}
+	if idx.Document.DocType == DocTypeNonOpenAPI {
+		return
+	}
 	doc := idx.Document
 	treeBacked := idx.Tree() != nil
 

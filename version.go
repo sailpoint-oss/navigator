@@ -73,9 +73,10 @@ func (v Version) IsZero() bool {
 type DocType int
 
 const (
-	DocTypeUnknown  DocType = iota
-	DocTypeRoot             // A root OpenAPI document (has openapi or swagger key)
-	DocTypeFragment         // A partial document referenced via $ref
+	DocTypeUnknown    DocType = iota
+	DocTypeRoot               // A root OpenAPI document (has openapi or swagger key)
+	DocTypeFragment           // A partial document referenced via $ref or with recognized fragment shape
+	DocTypeNonOpenAPI         // Not an OpenAPI document (no root key, no fragment shape, not a graph member)
 )
 
 // String returns a human-readable name for the DocType.
@@ -85,20 +86,31 @@ func (d DocType) String() string {
 		return "root"
 	case DocTypeFragment:
 		return "fragment"
+	case DocTypeNonOpenAPI:
+		return "non-openapi"
 	default:
 		return "unknown"
 	}
 }
 
-// DetectDocType examines root-level keys to classify a document as root or fragment.
-func DetectDocType(rootKeys []string) DocType {
+// DetectDocType classifies a document using root-level keys and optional graph
+// membership. A file with an openapi/swagger key is always Root. A known $ref
+// target (isGraphMember) or a file whose keys match a recognized OpenAPI
+// fragment shape is Fragment. Everything else is NonOpenAPI.
+func DetectDocType(rootKeys []string, isGraphMember bool) DocType {
 	for _, k := range rootKeys {
 		switch k {
 		case "openapi", "swagger":
 			return DocTypeRoot
 		}
 	}
-	return DocTypeFragment
+	if isGraphMember {
+		return DocTypeFragment
+	}
+	if DetectFragmentType(rootKeys) != FragmentUnknown {
+		return DocTypeFragment
+	}
+	return DocTypeNonOpenAPI
 }
 
 func parseVersionParts(s string) [3]int {
