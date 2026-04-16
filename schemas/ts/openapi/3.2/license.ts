@@ -24,26 +24,25 @@ export const LicenseNameSchema = z.string().meta({
 export const LicenseObjectSchema = z
 	.looseObject({
 		name: LicenseNameSchema,
+		url: LicenseUrlSchema.optional(),
+		identifier: LicenseIdentifierSchema.optional(),
 	})
-	
-	.and(
-		z
-			.xor([
-				z.looseObject({
-					url: LicenseUrlSchema.optional(),
-				}),
-				z.looseObject({
-					identifier: LicenseIdentifierSchema.optional(),
-				}),
-			])
-			.meta({
-				title: "License",
-				description: "License information for the exposed API.",
-				examples: [
-					{ name: "Apache 2.0", identifier: "Apache-2.0" },
-					{ name: "MIT", url: "https://opensource.org/licenses/MIT" },
-				],
-			}),
-	);
+	.superRefine((value, ctx) => {
+		if (value.url && value.identifier) {
+			ctx.addIssue({
+				code: "custom",
+				message: "License Object: 'url' and 'identifier' are mutually exclusive",
+				path: ["url"],
+			});
+		}
+	})
+	.meta({
+		title: "License",
+		description: "License information for the exposed API.",
+		examples: [
+			{ name: "Apache 2.0", identifier: "Apache-2.0" },
+			{ name: "MIT", url: "https://opensource.org/licenses/MIT" },
+		],
+	});
 
 export type LicenseObject = z.infer<typeof LicenseObjectSchema>;
